@@ -1,0 +1,39 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.*;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+
+@TeleOp(name = "Nume", group = "Concept" )
+//creeaza in aplicatie un profil de tip Grup_0:Main_0
+//asemanator cu Miscare : Rotire sau alte chestii gen Test:senzo
+//tele_op adica controlat de la distanta
+public class Main extends LinearOpMode {
+	//linear op mode:
+	//algoritm clasic de c++ cu inceput si final
+	//iterativeOpMode acelasi concept ca pe arduino, mers la infinit
+	
+	private DcMotor motor1; //doar din funtiile de aici se poate modifica
+	public String s = "string public modificabil de toata lumea";
+	
+	@Override 
+	public void runOpMode() {
+		waitForStart();
+		motor1 = hardwareMap.get(DcMotor.class, "left_drive");
+		while(opModeIsActive()){//cat timp nu e apasat butonul de stop din aplicatie
+			motor1.setPower(0.50);
+			sleep(100);
+			motor1.setPower(0.51);
+			sleep(100);
+			telemetry.addData("lol","apare doar o data, pe telefon" );
+			telemetry.update();
+			//interval -1,1
+		}
+		motor1.setPower(0);
+		sleep(100);
+		telemetry.addData(">","sfarsit");
+		telemetry.update();
+	}
+	
+}
