@@ -27,6 +27,7 @@ public class CinciFebruarie extends LinearOpMode{
 		m4 = hardwareMap.get(DcMotor.class,"m4");
 		
 		telemetry.addData("Inceput","ok");
+		telemetry.update();
 		waitForStart();
 		sleep(100);
 		while(opModeIsActive()){
