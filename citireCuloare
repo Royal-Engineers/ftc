@@ -1,0 +1,44 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.Blinker;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.TouchSensor;
+
+@TeleOp(name = "Senzori", group = "CinciFeb")
+public class CinciFebruarie extends LinearOpMode{
+	private Blinker control_Hub;
+	private ColorSensor col;
+	private DistanceSensor dist;
+	private DcMotor m4;
+	private TouchSensor touch;
+	
+	@Override
+	public void runOpMode(){
+		touch = hardwareMap.get(TouchSensor.class,"touch");
+
+		col = hardwareMap.get(ColorSensor.class,"col");
+		dist = hardwareMap.get(DistanceSensor.class,"dist");
+		m4 = hardwareMap.get(DcMotor.class,"m4");
+		
+		telemetry.addData("Inceput","ok");
+		telemetry.update();
+		waitForStart();
+		sleep(100);
+		int r,g,b;
+		while(opModeIsActive()){
+			r = col.red();
+			g = col.green();
+			b = col.blue();
+			telemetry.addData("RED: ",r);
+			telemetry.addData("GREEN: ", g);
+			telemetry.addData("BLUE: ", b);
+			telemetry.update();
+		}
+	}
+}
