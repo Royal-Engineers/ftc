@@ -1,0 +1,45 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.Blinker;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.TouchSensor;
+
+@TeleOp(name = "4GoBilda", group = "CinciFeb")
+public class PatruGoBIlda extends LinearOpMode{
+	private Blinker control_Hub;
+	private DcMotor o1,o2,v1,v2;
+	private TouchSensor touch;
+	
+	@Override
+	public void runOpMode(){
+		o1 = hardwareMap.get(DcMotor.class,"o1");
+		o2 = hardwareMap.get(DcMotor.class,"o2");
+		v1 = hardwareMap.get(DcMotor.class,"v1");
+		v2 = hardwareMap.get(DcMotor.class,"v2");
+		touch = hardwareMap.get(TouchSensor.class,"touch");
+		
+		telemetry.addData("Inceput","ok");
+		telemetry.update();
+		waitForStart();
+		boolean apasat = false;
+		while(opModeIsActive()){
+			apasat = touch.isPressed();
+			while(apasat == true){
+				o1.setPower(0.1);
+				o2.setPower(0.1);
+				v1.setPower(0.1);
+				v2.setPower(0.1);
+				apasat = touch.isPressed();
+			}
+			o1.setPower(0);
+			o2.setPower(0);
+			v1.setPower(0);
+			v2.setPower(0);
+		}
+	}
+	// todo: write your code here
+}
