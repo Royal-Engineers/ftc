@@ -1,0 +1,75 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.Blinker;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.TouchSensor;
+
+@TeleOp(name = "Controller SIlviu", group = "Controller")
+
+public class ControllerSilviu extends LinearOpMode{
+	private Blinker control_Hub;
+	private DcMotor t1;
+	private DcMotor t2;
+	private TouchSensor touch;
+	private DcMotor l_m;
+	private DcMotor r_m;
+	
+	boolean lastA = false ; 
+	
+	@Override
+	public void runOpMode(){
+		//senzori
+		touch = hardwareMap.get(TouchSensor.class,"touch");
+		//motoare
+		t1 = hardwareMap.get(DcMotor.class,"tractiune_1");
+		t2 = hardwareMap.get(DcMotor.class,"tractiune_2");
+		l_m = hardwareMap.get(DcMotor.class,"brat_stang");
+		r_m = hardwareMap.get(DcMotor.class,"brat_drept");
+		//gamepad
+		boolean currentA = gamepad1.a ;
+		/*boolean currentB = gamepad1.b ;
+		boolean currentX = gamepad1.x ;
+		boolean currentY = gamepad1.y ;
+		boolean currentLB = gamepad1.left_bumper ;
+		boolean currentRB = gamepad1.right_bumper;
+		*/
+		telemetry.addData("Inceput","ok");
+		telemetry.update();
+		waitForStart();
+		while(opModeIsActive()){
+			if(gamepad1.a) {
+				telemetry.addData("Buton","A");
+				telemetry.update();
+				t1.setPower(1);
+				t2.setPower(-1);
+			}
+			if(gamepad1.right_bumper){
+				t1.setPower(0);
+				t2.setPower(0);
+				l_m.setPower(1);
+				r_m.setPower(1);
+			}
+			if(gamepad1.left_bumper){
+				t1.setPower(0);
+				t2.setPower(0);
+				l_m.setPower(-1);
+				r_m.setPower(-1);
+			}
+			if(gamepad1.b) {
+				telemetry.addData("Buton","B");
+				telemetry.update();
+				t1.setPower(-1);
+				t2.setPower(1);
+			}
+			t1.setPower(0);
+			t2.setPower(0);
+			l_m.setPower(0);
+			r_m.setPower(0);
+			
+			
+		}
+	}
+	
+}
