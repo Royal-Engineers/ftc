@@ -1,0 +1,69 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import org.firstinspires.ftc.robotcore.external.navigation.Position;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.Blinker;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
+
+@TeleOp(name = "Ubot Servo", group = "Controller")
+
+public class Servo_Ubot extends LinearOpMode{
+	//private Blinker control_Hub;
+	private DcMotor t1;
+	private DcMotor t2;
+	private TouchSensor touch;
+	private DcMotor l_m;
+	private DcMotor r_m;
+	private Servo mana;
+	private float joy_l_x;
+	private float joy_l_y;
+	private float joy_r_x;
+	private float joy_r_y;
+	private double t;
+	
+	@Override
+	public void runOpMode(){
+		//senzori
+		touch = hardwareMap.get(TouchSensor.class,"touch");
+		//motoare
+		t1 = hardwareMap.get(DcMotor.class,"tractiune_1");
+		t2 = hardwareMap.get(DcMotor.class,"tractiune_2");
+		l_m = hardwareMap.get(DcMotor.class,"brat_stang");
+		r_m = hardwareMap.get(DcMotor.class,"brat_drept");
+		mana = hardwareMap.get(Servo.class,"mana");
+		double t = 0.01;
+		
+		telemetry.addData("Inceput","ok");
+		telemetry.update();
+		waitForStart();
+		while(opModeIsActive()){
+			joy_l_x = gamepad1.left_stick_x/2;
+			joy_l_y = gamepad1.left_stick_y/2;
+			joy_r_x = gamepad1.right_stick_x/2;
+			joy_r_y = gamepad1.right_stick_y/2;
+			
+			//if(gamepad1.left_bumper){
+			telemetry.addData("Servo",mana.getPosition());
+			telemetry.addData("Directie:","Stanga");
+			telemetry.addData("joy_l_x",joy_l_x);
+			l_m.setPower(-joy_l_x);
+			r_m.setPower(-joy_l_x);
+			mana.setPosition(joy_r_y/3);
+			
+			//}
+			//telemetry.addData("Buton","A");
+			telemetry.update();
+			t1.setPower(-gamepad1.right_trigger);
+			t2.setPower(gamepad1.right_trigger);
+			
+			t1.setPower(gamepad1.left_trigger);
+			t2.setPower(-gamepad1.left_trigger);
+			
+			telemetry.update();
+		}
+	}
+	
+}
