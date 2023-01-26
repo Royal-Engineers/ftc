@@ -31,7 +31,8 @@ public class ProiectPrincipal extends LinearOpMode {
 		telemetry.update();
  
 		// --- lift init, vezi ../subsystems/Lift.java
-		Lift lift = new Lift();
+		// uncomment
+		// Lift lift = new Lift();
 		// ---
 
 		// --- motoare sasiu init
@@ -42,9 +43,10 @@ public class ProiectPrincipal extends LinearOpMode {
 		// ---
  
 		// --- continuous servo init
-		CRServo servo1 = hardwareMap.crservo.get("servoRotatie");
-		CRServo servo2 = hardwareMap.crservo.get("gheara1");
-		CRServo servo3 = hardwareMap.crservo.get("gheara2");
+		// uncomment astea:
+		// CRServo servo1 = hardwareMap.crservo.get("servoRotatie");
+		// CRServo servo2 = hardwareMap.crservo.get("gheara1");
+		// CRServo servo3 = hardwareMap.crservo.get("gheara2");
 		
 		// ---
  
@@ -52,8 +54,9 @@ public class ProiectPrincipal extends LinearOpMode {
  
 		// Reverse the right side motors
 		// Reverse left motors if you are using NeveRests
+		// uncomment:
 		motorFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-		motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+		motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
  
 		motorFrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 		motorBackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -63,14 +66,16 @@ public class ProiectPrincipal extends LinearOpMode {
  
 		waitForStart();
 		
-		lift.init(hardwareMap);
+		// uncomment:
+		// lift.init(hardwareMap);
 
 		if (isStopRequested()) return;
  
 		while (opModeIsActive()) {
 			// --- servo rotatie brat
-			double y2 = -gamepad2.left_stick_x * 0.2; // Remember, this is reversed!
-			servo1.setPower(y2); // sper ca e de la -1 la 1
+			// uncomment
+			// double y2 = -gamepad2.left_stick_x * 0.2; // Remember, this is reversed!
+			// servo1.setPower(y2); // sper ca e de la -1 la 1
 			// ---
  
 			// --- reset gheara, INLOCUIESTE while(System.currentTimeMillis() < t)...
@@ -90,58 +95,60 @@ public class ProiectPrincipal extends LinearOpMode {
 			// ---
 			
 			// --- Moving lift
-			if (gamepad2.dpad_up) {
-				lift.moveLift(Constants.LiftTargets.HIGH);
-			} else if (gamepad2.dpad_right) {
-				lift.moveLift(Constants.LiftTargets.LOW);
-			} else if (gamepad2.dpad_left) {
-				lift.moveLift(Constants.LiftTargets.MEDIUM);
-			} else if (gamepad2.dpad_down) {
-				// belt.moveBelt(Constants.IntakeTargets.UP);
-				lift.moveLift(Constants.LiftTargets.PICKUP);
-			}
-			else if (gamepad2.right_bumper) {
-				lift.moveLift(400);
-			}
-			else if (gamepad2.right_stick_y>0.3){
-				lift.moveLift(200);
-			}
-			else if (gamepad2.right_stick_y<-0.3){
-				lift.moveLift(100);
-			}
+			// uncomment:
+			// if (gamepad2.dpad_up) {
+			// 	lift.moveLift(Constants.LiftTargets.HIGH);
+			// } else if (gamepad2.dpad_right) {
+			// 	lift.moveLift(Constants.LiftTargets.LOW);
+			// } else if (gamepad2.dpad_left) {
+			// 	lift.moveLift(Constants.LiftTargets.MEDIUM);
+			// } else if (gamepad2.dpad_down) {
+			// 	// belt.moveBelt(Constants.IntakeTargets.UP);
+			// 	lift.moveLift(Constants.LiftTargets.PICKUP);
+			// }
+			// else if (gamepad2.right_bumper) {
+			// 	lift.moveLift(400);
+			// }
+			// else if (gamepad2.right_stick_y>0.3){
+			// 	lift.moveLift(200);
+			// }
+			// else if (gamepad2.right_stick_y<-0.3){
+			// 	lift.moveLift(100);
+			// }
 			// ---
  
 			// --- servouri gheara
 			
-			if (gamepad2.left_bumper){
-				am_con=!am_con;
-				TimeUnit.MILLISECONDS.sleep(150);
-				// if(!am_con) { // reset, ca sa nu mai dai pe abxy
-				//	 servo2.setPower(0.0);
-				//	 servo3.setPower(0.0);
-				// }
-			}
+			// uncomment:
+			// if (gamepad2.left_bumper){
+			// 	am_con=!am_con;
+			// 	TimeUnit.MILLISECONDS.sleep(150);
+			// 	// if(!am_con) { // reset, ca sa nu mai dai pe abxy
+			// 	//	 servo2.setPower(0.0);
+			// 	//	 servo3.setPower(0.0);
+			// 	// }
+			// }
 			
-			if(am_con){
-				// servo2.setPower(0.1);
-				// servo3.setPower(-0.1);
-				// TimeUnit.MILLISECONDS.sleep(150);
-				servo2.setPower(0.04);
-				servo3.setPower(0.04);
-			}
-			else {
-			if (gamepad2.x)
-				servo2.setPower(0.2);
-			else if (gamepad2.a)
-				servo2.setPower(-0.2);
-			else servo2.setPower(0.0);
+			// if(am_con){
+			// 	// servo2.setPower(0.1);
+			// 	// servo3.setPower(-0.1);
+			// 	// TimeUnit.MILLISECONDS.sleep(150);
+			// 	servo2.setPower(0.04);
+			// 	servo3.setPower(0.04);
+			// }
+			// else {
+			// if (gamepad2.x)
+			// 	servo2.setPower(0.2);
+			// else if (gamepad2.a)
+			// 	servo2.setPower(-0.2);
+			// else servo2.setPower(0.0);
 			
-			if (gamepad2.y)
-				servo3.setPower(-0.2);
-			else if (gamepad2.b)
-				servo3.setPower(0.2);
-			else servo3.setPower(0.0);
-			}
+			// if (gamepad2.y)
+			// 	servo3.setPower(-0.2);
+			// else if (gamepad2.b)
+			// 	servo3.setPower(0.2);
+			// else servo3.setPower(0.0);
+			// }
 			
 			
 			
@@ -149,48 +156,43 @@ public class ProiectPrincipal extends LinearOpMode {
  
  
 			// --- gamepad 1 directie
-			double y = gamepad1.right_stick_x; // Remember, this is reversed!
-			double x = -gamepad1.left_stick_x *1.1 ; // Counteract imperfect strafing
-			double rx = -gamepad1.left_stick_y;
- 
-			if(x != 0)
-			{
-				motorFrontLeft.setPower(-gamepad1.left_stick_x);
-				motorFrontRight.setPower(gamepad1.left_stick_x);
-				motorBackLeft.setPower(gamepad1.left_stick_x);
-				motorBackRight.setPower(-gamepad1.left_stick_x);
-				continue ;
-			}
 			
- 
-			// Denominator is the largest motor power (absolute value) or 1
-			// This ensures all the powers maintain the same ratio, but only when
-			// at least one is out of the range [-1, 1]
-			double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-			double frontLeftPower = ((y + x + rx) / denominator)*0.5;
-			double backLeftPower = ((y - x + rx) / denominator)*0.5;
-			double frontRightPower =((y - x - rx) / denominator)*0.5;
-			double backRightPower = ((y + x - rx) / denominator)*0.5;
- 
-			motorFrontLeft.setPower(frontLeftPower);
-			motorBackLeft.setPower(backLeftPower);
-			motorFrontRight.setPower(frontRightPower);
-			motorBackRight.setPower(backRightPower);
+			// motorFrontLeft.setPower(frontLeftPower);
+			// motorBackLeft.setPower(backLeftPower);
+			// motorFrontRight.setPower(frontRightPower);
+			// motorBackRight.setPower(backRightPower);
+			
+			double r = Math.hypot(-gamepad1.left_stick_x, gamepad1.left_stick_y);
+			double robotAngle = Math.atan2(gamepad1.left_stick_y, -gamepad1.left_stick_x) - Math.PI / 4;
+			double rightX = -gamepad1.right_stick_x;
+			final double v1 = r * Math.cos(robotAngle) + rightX;
+			final double v2 = r * Math.sin(robotAngle) - rightX;
+			final double v3 = r * Math.sin(robotAngle) + rightX;
+			final double v4 = r * Math.cos(robotAngle) - rightX;
+
+			motorFrontLeft.setPower(v1);
+			motorFrontRight.setPower(v2);
+			motorBackLeft.setPower(v3);
+			motorBackRight.setPower(v4);
+			
+			
 			// ---
 			
-			telemetry.addData("Mode", "running");
-			telemetry.addData("servo1 power", " = " + servo1.getPower());
-			telemetry.addData("servo2 power", " = " + servo2.getPower());
-			telemetry.addData("servo3 power", " = " + servo3.getPower());
-			telemetry.addData("Lift Position", lift.getPosition());
-			telemetry.addData("A2", gamepad2.a); // gheara
-			// -- lift
-			telemetry.addData("Dpad2 Up", gamepad2.dpad_up);
-			telemetry.addData("Dpad2 right", gamepad2.dpad_right);
-			telemetry.addData("Dpad2 down", gamepad2.dpad_down);
-			telemetry.addData("Dpad2 left", gamepad2.dpad_left);
-			// --
-			telemetry.update();
+			// uncomment:
+			// telemetry.addData("Mode", "running");
+			// telemetry.addData("servo1 power", " = " + servo1.getPower());
+			// telemetry.addData("servo2 power", " = " + servo2.getPower());
+			// telemetry.addData("servo3 power", " = " + servo3.getPower());
+			// telemetry.addData("Lift Position", lift.getPosition());
+			// telemetry.addData("A2", gamepad2.a); // gheara
+			// // -- lift
+			// telemetry.addData("Dpad2 Up", gamepad2.dpad_up);
+			// telemetry.addData("Dpad2 right", gamepad2.dpad_right);
+			// telemetry.addData("Dpad2 down", gamepad2.dpad_down);
+			// telemetry.addData("Dpad2 left", gamepad2.dpad_left);
+			// // --
+			// telemetry.update();
 		}
 	}
 }
+
