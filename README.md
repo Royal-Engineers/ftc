@@ -4,10 +4,10 @@
 
  - [x] Minimizat dimensiune șasiu
  - [x] Translație bună șasiu
- - [ ] Rework gheară - un singur servo, rotițe; cele două părți printate mai groase
- - [ ] De programat CRservo in servo normal cu gobilda dual-mode programmer
+ - [x] Rework gheară - un singur servo, rotițe; cele două părți printate mai groase
+ - [x] De programat CRservo in servo normal cu gobilda dual-mode programmer
  - [ ] Sfoară/ață mai subțire
- - [ ] Un lift? 2?
- - [ ] Cutie din lemn
+ - [x] ~~Un lift?~~ 2?
+ - [x] Cutie din lemn
  - [ ] Autonomous cu senzor de culoare
  - [ ] Pozitie senzor
