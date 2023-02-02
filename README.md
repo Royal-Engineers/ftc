@@ -6,8 +6,9 @@
  - [x] Translație bună șasiu
  - [x] Rework gheară - un singur servo, rotițe; cele două părți printate mai groase
  - [x] De programat CRservo in servo normal cu gobilda dual-mode programmer
- - [ ] Sfoară/ață mai subțire
+ - [x] Sfoară/ață mai subțire
  - [x] ~~Un lift?~~ 2?
  - [x] Cutie din lemn
- - [ ] Autonomous cu senzor de culoare
+ - [ ] Autonomous cu senzor de culoare - WIP
  - [ ] Pozitie senzor
+ - [ ] Mecanism de prindere a conului pe gheara

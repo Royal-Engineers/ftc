@@ -17,120 +17,132 @@ import java.util.concurrent.TimeUnit;
 
 @TeleOp
 public class ProiectPrincipal extends LinearOpMode {
-        // double poz_servo1=0.5;
-        double MIN_POSITION = 0;
-        double MAX_POSITION = 1;
-        boolean gheara_toggle = true;
-        boolean am_con = false;
-        // long t; // gheara
-        // boolean okg=true; // pot intra sa verific daca e apasat?
+	// private DcMotor motorFrontLeft = null;
+	// private DcMotor motorFrontRight = null;
+	// private DcMotor motorBackLeft = null;
+	// private DcMotor motorBackRight = null;
 
-        @Override
-        public void runOpMode() throws InterruptedException {
-                telemetry.addData(Mode, waiting);
-                telemetry.update();
+	// double poz_servo1=0.5;
+	double MIN_POSITION = 0;
+	double MAX_POSITION = 1;
+	boolean gheara_toggle = true;
+	boolean am_con = false;
+	// long t; // gheara
+	// boolean okg=true; // pot intra sa verific daca e apasat?
 
-                // --- lift init, vezi ../subsystems/Lift.java
-                Lift lift = new Lift();
-                // ---
+	@Override
+	public void runOpMode() throws InterruptedException {
+		telemetry.addData("Mode", "waiting");
+		telemetry.update();
 
-                // --- motoare sasiu init
-                DcMotor motorFrontLeft = hardwareMap.dcMotor.get(motorFrontLeft);
-                DcMotor motorBackLeft = hardwareMap.dcMotor.get(motorBackLeft);
-                DcMotor motorFrontRight = hardwareMap.dcMotor.get(motorFrontRight);
-                DcMotor motorBackRight = hardwareMap.dcMotor.get(motorBackRight);
-                // ---
+		// --- lift init, vezi ../subsystems/Lift.java
+		Lift lift = new Lift();
+		// ---
 
-                // --- servo init
-                Servo servo_gheara = hardwareMap.servo.get(servo_gheara);
-                // CRServo servo1 = hardwareMap.crservo.get(servoRotatie);
-                // CRServo servo2 = hardwareMap.crservo.get(gheara1);
-                // CRServo servo3 = hardwareMap.crservo.get(gheara2);
+		// --- motoare sasiu init
+		DcMotor motorFrontLeft = hardwareMap.dcMotor.get("motorFrontLeft");
+		DcMotor motorBackLeft = hardwareMap.dcMotor.get("motorBackLeft");
+		DcMotor motorFrontRight = hardwareMap.dcMotor.get("motorFrontRight");
+		DcMotor motorBackRight = hardwareMap.dcMotor.get("motorBackRight");
+		// ---
 
-                // ---
+		// --- servo init
+		Servo servo_gheara = hardwareMap.servo.get("servo_gheara");
+		// CRServo servo1 = hardwareMap.crservo.get("servoRotatie");
+		// CRServo servo2 = hardwareMap.crservo.get("gheara1");
+		// CRServo servo3 = hardwareMap.crservo.get("gheara2");
 
-                // --- motoare sasiu directie, pe zero input/power = stationar
+		// ---
 
-                // Reverse the right side motors
-                // Reverse left motors if you are using NeveRests
-                motorFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-                motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
+		// --- motoare sasiu directie, pe zero input/power = stationar
 
-                motorFrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                motorBackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                motorFrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                motorBackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                // ---
+		// Reverse the right side motors
+		// Reverse left motors if you are using NeveRests
+		motorFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+		motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
-                waitForStart();
+		motorFrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+		motorBackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+		motorFrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+		motorBackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+		// ---
 
-                lift.init(hardwareMap);
+		waitForStart();
 
-                if (isStopRequested())
-                        return;
+		lift.init(hardwareMap);
 
-                while (opModeIsActive()) {
-                        // --- Moving lift
-                        if (gamepad2.dpad_up) {
-                                lift.moveLift(Constants.LiftTargets.HIGH);
-                        } else if (gamepad2.dpad_right) {
-                                lift.moveLift(Constants.LiftTargets.LOW);
-                        } else if (gamepad2.dpad_left) {
-                                lift.moveLift(Constants.LiftTargets.MEDIUM);
-                        } else if (gamepad2.dpad_down) {
-                                // belt.moveBelt(Constants.IntakeTargets.UP);
-                                lift.moveLift(Constants.LiftTargets.PICKUP);
-                        } else if (gamepad2.right_bumper) {
-                                lift.moveLift(400);
-                        } else if (gamepad2.right_stick_y > 0.3) {
-                                lift.moveLift(200);
-                        } else if (gamepad2.right_stick_y < -0.3) {
-                                lift.moveLift(100);
-                        }
-                        // ---
+		if (isStopRequested())
+			return;
 
-                        // --- servo pozitii
+		while (opModeIsActive()) {
+			// --- Moving lift
+			if (gamepad2.dpad_up) {
+				lift.moveLift(Constants.LiftTargets.HIGH);
+			} else if (gamepad2.dpad_right) {
+				lift.moveLift(Constants.LiftTargets.LOW);
+			} else if (gamepad2.dpad_left) {
+				lift.moveLift(Constants.LiftTargets.MEDIUM);
+			} else if (gamepad2.dpad_down) {
+				// belt.moveBelt(Constants.IntakeTargets.UP);
+				lift.moveLift(Constants.LiftTargets.PICKUP);
+			} else if (gamepad2.left_stick_y < -0.01) {
+				if (lift.getPosition() < 3950)
+					lift.moveLift(lift.getPosition() + (150 * Math.abs((int) gamepad2.left_stick_y)));
+			} else if (gamepad2.left_stick_y > 0.01) {
+				if (lift.getPosition() > 150)
+					lift.moveLift(lift.getPosition() - (150 * Math.abs((int) gamepad2.left_stick_y)));
+				else if (lift.getPosition() > 20)
+					lift.moveLift(lift.getPosition() - 20); // aici e plus fiindca LSY devine negativ
+				else if (lift.getPosition() > 2)
+					lift.moveLift(lift.getPosition() - 2); // control mai bun
+			}
 
-                        servo_gheara.setPosition(Range.clip(0, MIN_POSITION, MAX_POSITION));
+			// ---
 
-                        // ---
+			// --- servo pozitii
+			if (gamepad2.a)
+				servo_gheara.setPosition(Range.clip(0.1, MIN_POSITION, MAX_POSITION));
+			else if (gamepad2.b)
+				servo_gheara.setPosition(Range.clip(0.9, MIN_POSITION, MAX_POSITION));
 
-                        // --- gamepad 1 directie
+			// ---
 
-                        // motorFrontLeft.setPower(frontLeftPower);
-                        // motorBackLeft.setPower(backLeftPower);
-                        // motorFrontRight.setPower(frontRightPower);
-                        // motorBackRight.setPower(backRightPower);
+			// --- gamepad 1 directie
 
-                        double r = Math.hypot(-gamepad1.left_stick_x, gamepad1.left_stick_y);
-                        double robotAngle = Math.atan2(gamepad1.left_stick_y, -gamepad1.left_stick_x) - Math.PI / 4;
-                        double rightX = -gamepad1.right_stick_x;
-                        final double v1 = r * Math.cos(robotAngle) + rightX;
-                        final double v2 = r * Math.sin(robotAngle) - rightX;
-                        final double v3 = r * Math.sin(robotAngle) + rightX;
-                        final double v4 = r * Math.cos(robotAngle) - rightX;
+			// motorFrontLeft.setPower(frontLeftPower);
+			// motorBackLeft.setPower(backLeftPower);
+			// motorFrontRight.setPower(frontRightPower);
+			// motorBackRight.setPower(backRightPower);
 
-                        motorFrontLeft.setPower(v1);
-                        motorFrontRight.setPower(v2);
-                        motorBackLeft.setPower(v3);
-                        motorBackRight.setPower(v4);
+			double r = Math.hypot(-gamepad1.left_stick_x, gamepad1.left_stick_y);
+			double robotAngle = Math.atan2(gamepad1.left_stick_y, -gamepad1.left_stick_x) - Math.PI / 4;
+			double rightX = -gamepad1.right_stick_x;
+			final double v1 = r * Math.cos(robotAngle) + rightX;
+			final double v2 = r * Math.sin(robotAngle) - rightX;
+			final double v3 = r * Math.sin(robotAngle) + rightX;
+			final double v4 = r * Math.cos(robotAngle) - rightX;
 
-                        // ---
+			motorFrontLeft.setPower(v1);
+			motorFrontRight.setPower(v2);
+			motorBackLeft.setPower(v3);
+			motorBackRight.setPower(v4);
 
-                        // uncomment:
-                        // telemetry.addData(Mode, running);
-                        // telemetry.addData(servo1 power, = + servo1.getPower());
-                        // telemetry.addData(servo2 power, = + servo2.getPower());
-                        // telemetry.addData(servo3 power, = + servo3.getPower());
-                        // telemetry.addData(Lift Position, lift.getPosition());
-                        // telemetry.addData(A2, gamepad2.a); // gheara
-                        // // -- lift
-                        // telemetry.addData(Dpad2 Up, gamepad2.dpad_up);
-                        // telemetry.addData(Dpad2 right, gamepad2.dpad_right);
-                        // telemetry.addData(Dpad2 down, gamepad2.dpad_down);
-                        // telemetry.addData(Dpad2 left, gamepad2.dpad_left);
-                        // // --
-                        // telemetry.update();
-                }
-        }
+			// ---
+
+			// uncomment:
+			// telemetry.addData("Mode", "running");
+			// telemetry.addData("servo1 power", " = " + servo1.getPower());
+			// telemetry.addData("servo2 power", " = " + servo2.getPower());
+			// telemetry.addData("servo3 power", " = " + servo3.getPower());
+			// telemetry.addData("Lift Position", lift.getPosition());
+			// telemetry.addData("A2", gamepad2.a); // gheara
+			// // -- lift
+			// telemetry.addData("Dpad2 Up", gamepad2.dpad_up);
+			// telemetry.addData("Dpad2 right", gamepad2.dpad_right);
+			// telemetry.addData("Dpad2 down", gamepad2.dpad_down);
+			// telemetry.addData("Dpad2 left", gamepad2.dpad_left);
+			// // --
+			// telemetry.update();
+		}
+	}
 }
