@@ -26,7 +26,6 @@ public class ProiectPrincipal extends LinearOpMode {
 	double MIN_POSITION = 0;
 	double MAX_POSITION = 1;
 	boolean gheara_toggle = true;
-	boolean am_con = false;
 	// long t; // gheara
 	// boolean okg=true; // pot intra sa verific daca e apasat?
 
@@ -86,11 +85,11 @@ public class ProiectPrincipal extends LinearOpMode {
 				// belt.moveBelt(Constants.IntakeTargets.UP);
 				lift.moveLift(Constants.LiftTargets.PICKUP);
 			} else if (gamepad2.left_stick_y < -0.01) {
-				if (lift.getPosition() < 3950)
-					lift.moveLift(lift.getPosition() + (150 * Math.abs((int) gamepad2.left_stick_y)));
+				if (lift.getPosition() < 4000)
+					lift.moveLift(lift.getPosition() + (int) (150 * (-gamepad2.left_stick_y)));
 			} else if (gamepad2.left_stick_y > 0.01) {
 				if (lift.getPosition() > 150)
-					lift.moveLift(lift.getPosition() - (150 * Math.abs((int) gamepad2.left_stick_y)));
+					lift.moveLift(lift.getPosition() - (int) (150 * (gamepad2.left_stick_y)));
 				else if (lift.getPosition() > 20)
 					lift.moveLift(lift.getPosition() - 20); // aici e plus fiindca LSY devine negativ
 				else if (lift.getPosition() > 2)
@@ -100,10 +99,18 @@ public class ProiectPrincipal extends LinearOpMode {
 			// ---
 
 			// --- servo pozitii
-			if (gamepad2.a)
-				servo_gheara.setPosition(Range.clip(0.1, MIN_POSITION, MAX_POSITION));
-			else if (gamepad2.b)
-				servo_gheara.setPosition(Range.clip(0.9, MIN_POSITION, MAX_POSITION));
+
+			if (gamepad2.a) {
+				gheara_toggle = !gheara_toggle;
+				if (gheara_toggle) {
+					servo_gheara.setPosition(Range.clip(0.07, MIN_POSITION, MAX_POSITION));
+					// TimeUnit.MILLISECONDS.sleep(30);
+				} else {
+					servo_gheara.setPosition(Range.clip(0.18, MIN_POSITION, MAX_POSITION));
+					// TimeUnit.MILLISECONDS.sleep(30);
+				}
+				TimeUnit.MILLISECONDS.sleep(100);
+			}
 
 			// ---
 

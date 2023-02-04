@@ -28,7 +28,7 @@ public class Lift {
 				break;
 
 			case HIGH:
-				moveLift(4050); // 3867.727272727
+				moveLift(4100); // 3867.727272727
 				break;
 
 			case PUTDOWN:
