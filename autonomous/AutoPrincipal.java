@@ -30,6 +30,8 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.util.Range;
+import java.util.concurrent.TimeUnit;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -42,13 +44,28 @@ import android.graphics.Color;
 import android.view.View;
 
 import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
+// import com.qualcomm.robotcore.hardware.DistanceSensor;
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+// import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
-import java.util.Locale;
+// import java.util.Locale;
 
-@Autonomous(name = "Robot: Auto Drive By Encoder", group = "Robot")
+import org.firstinspires.ftc.teamcode.subsystems.Constants;
+import org.firstinspires.ftc.teamcode.subsystems.Lift;
+
+@Autonomous(name = 
+	"🟦🟦🟦🟦🟦🟦🟦🟦🟦⬛⬛⬛⬛⬛🟦🟦🟦🟦🟦🟦🟦\n" +
+	"🟦🟦🟦🟦🟦🟦🟦🟦⬛⬛🟥🟥🟥⬛⬛⬛🟦🟦🟦🟦🟦\n" +
+	"🟦🟦🟦🟦🟦🟦🟦⬛⬛🟥🟥🟥🟥🟥🟥🟥⬛🟦🟦🟦🟦\n" +
+	"🟦🟦🟦🟦🟦🟦🟦⬛🟥🟥🟥🟥🟥🟥🟥🟥⬛🟦🟦🟦🟦\n" +
+	"🟦🟦🟦🟦🟦🟦🟦⬛🟥🟥🟥🟥🟥🟥🟥🟥🟥⬛🟦🟦🟦\n" +
+	"🟦🟦🟦🟦🟦🟦🟦⬛🟥🟥🟥⬜⬜⬜⬜⬜⬜⬛⬛🟦🟦\n" +
+	"🟦🟦🟦🟦⬛⬛⬛🟥🟥🟥⬜⬜⬜⬜⬜⬜⬜⬜⬛🟦🟦\n" +
+	"🟦🟦🟦⬛🟥⬛⬛🟥🟥🟥⬜⬜⬜⬜⬜⬜⬜⬜⬛🟦🟦\n" +
+	"🟦🟦🟦⬛🟥⬛⬛🟥🟥🟥⬛⬜⬜⬜⬜⬜⬜⬜⬛🟦🟦\n" +
+	"🟦🟦⬛⬛🟥⬛⬛🟥🟥🟥🟥⬛⬛⬛⬛⬛⬛⬛🟦🟦🟦\n" +
+	"🟦🟦🟦🟦🟦⬛⬛⬛🟥🟥⬛⬛⬛🟥🟥🟥⬛🟦🟦🟦🟦\n" +
+	"🟦🟦🟦🟦🟦🟦🟦⬛⬛⬛⬛🟦⬛⬛⬛⬛⬛🟦🟦🟦🟦", group = "Robot")
 public class AutoPrincipal extends LinearOpMode {
 	static final double COUNTS_PER_MOTOR_REV = 537.69; // nice
 	static final double WHEEL_DIAMETER_INCHES = 3.78; // 96 mm diametru
@@ -59,7 +76,7 @@ public class AutoPrincipal extends LinearOpMode {
 	private DcMotor motorFrontRight = null;
 	private DcMotor motorBackLeft = null;
 	private DcMotor motorBackRight = null;
-
+	
 	// --- senzor de culoare
 	// ColorSensor sensorColor;
 	// DistanceSensor sensorDistance;
@@ -74,6 +91,8 @@ public class AutoPrincipal extends LinearOpMode {
 
 	@Override
 	public void runOpMode() {
+		Lift lift = new Lift();
+		
 		motorFrontLeft = hardwareMap.dcMotor.get("motorFrontLeft");
 		motorBackLeft = hardwareMap.dcMotor.get("motorBackLeft");
 		motorFrontRight = hardwareMap.dcMotor.get("motorFrontRight");
@@ -98,6 +117,9 @@ public class AutoPrincipal extends LinearOpMode {
 		motorBackLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 		motorFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 		motorBackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		
+		Servo servo_gheara = hardwareMap.servo.get("servo_gheara");
+
 		// ---
 
 		// Wait for the game to start (driver presses PLAY)
@@ -130,7 +152,121 @@ public class AutoPrincipal extends LinearOpMode {
 
 		waitForStart();
 
-		encoderDrive(1, 0, 10); // S1: Forward 47 Inches with 5 Sec timeout
+		lift.init(hardwareMap);
+
+		// JOYSTICK
+			// fata = -
+			// spate = +
+			// stanga = -
+			// dreapta = +
+		
+		// --- start sequence: se misca pana la conul cu culori
+		servo_gheara.setPosition(Range.clip(0.08, 0, 1)); // inchis
+		// servo_gheara.setPosition(Range.clip(0.135, MIN_POSITION, MAX_POSITION)); // deschis
+		sleep(500);
+		lift.moveLift(1000);
+		//encoderDrive(0, -1, 0, 37.5, 0.2);
+		// encoderDrive(1, 0, 0, 10);  // dreapta
+		// encoderDrive(0, 1, 0, 10);  // spate
+		// encoderDrive(-1, 0, 0, 10); // stanga
+		// encoderDrive(0, -1, 0, 10); // fata
+		// lift.moveLift(Constants.LiftTargets.PICKUP);
+		encoderDrive(0, -1, 0, 5, 0.3); //merge fata
+		encoderDrive(1 ,  0, 0, 6.5, 0.3); //merge dreapta
+		
+		
+		encoderDrive(0, -1, 0, 29, 0.6); // merge fata
+		encoderDrive(0, -1, 0, 3, 0.35);
+		ColorSensor color_sensor;
+		color_sensor = hardwareMap.colorSensor.get("sensor_color");
+		color_sensor.enableLed(true);  // Turn the LED on
+	
+		telemetry.addData("red", color_sensor.red());   // Red channel value
+		telemetry.addData("green", color_sensor.green()); // Green channel value
+		telemetry.addData("blue", color_sensor.blue());  // Blue channel value
+ 
+		telemetry.addData("alpha", color_sensor.alpha()); // Total luminosity
+		telemetry.addData("argb", color_sensor.argb());  // Combined color value
+		// telemetry.update();
+		 // dupa asta citeste iar
+
+		sleep(100);
+
+		telemetry.addData("red", color_sensor.red());   // Red channel value
+		telemetry.addData("green", color_sensor.green()); // Green channel value
+		telemetry.addData("blue", color_sensor.blue());  // Blue channel value
+ 
+		telemetry.addData("alpha", color_sensor.alpha()); // Total luminosity
+		telemetry.addData("argb", color_sensor.argb());  // Combined color value
+		// telemetry.update();
+		int zona = 0;
+		int v_red   = color_sensor.red();
+		int v_green = color_sensor.green();
+		int v_blue  = color_sensor.blue();
+		if (v_green>v_red && v_green>v_blue)
+			zona = 2;
+		else if (v_red>v_blue && v_red>v_green)
+			zona = 3;
+		else if (v_blue>v_green && v_blue>v_red)
+			zona = 1;
+		telemetry.addData("zona", zona);
+		telemetry.update();
+		sleep(200);
+		color_sensor.enableLed(false); // Turn the LED off
+		
+		
+		
+		
+		
+		encoderDrive(0, -1, 0, 60.3, 0.55); // merge fata
+		
+		// ---
+		
+		// ---
+		// switch(zona)
+		// {
+		// 	case 1: 
+		// 		encoderDrive(-1, 0, 0, 37.5, 0.2);
+			
+		// 	case 2:
+		// 		break;
+				
+		// 	case 3:
+		// 		encoderDrive(1, 0, 0, 37.5, 0.2);
+				
+		// 	default:
+		// 		break;
+				
+		// }
+		sleep(50);
+		encoderDrive(0, 1, 0, 20, 0.55); // merge in spate
+		encoderDrive(0, 0, 1, 10, 0.555); // intoarce spre dreapta
+
+		lift.moveLift(3800); // ridica lift
+		sleep(1600);
+		encoderDrive(0, -1, 0, 10, 0.3); // merge in fata
+		sleep(200);
+		servo_gheara.setPosition(Range.clip(0.13, 0, 1)); // deschis
+		sleep(50);
+		encoderDrive(0, 1, 0, 13, 0.3); // spate
+		//sleep(250);
+		//servo_gheara.setPosition(Range.clip(0.08, 0, 1)); // inchis
+		sleep(100);
+		lift.moveLift(750); // coboara lift
+		sleep(50);
+		
+		encoderDrive(0, 0, -1, 28.2, 0.554); //invarte stanga
+		encoderDrive(0,  -1, 0, 31.5, 0.54); // fata
+		sleep(50);
+		servo_gheara.setPosition(Range.clip(0.08, 0, 1)); // inchis
+		
+		
+		// 2.4cm 1 unitatea imagibnara
+		// encoderDrive(-1,  0, 0, 10); // fata
+		// encoderDrive(-1 ,  1, 0, 10); // dreapta
+		// encoderDrive(1 ,  1, 0, 10); // spate
+		// encoderDrive(1 , -1, 0, 10); // stanga
+		
 		// convert the RGB values to HSV values.
 		// multiply by the SCALE_FACTOR.
 		// then cast it back to int (SCALE_FACTOR is a double)
@@ -168,17 +304,24 @@ public class AutoPrincipal extends LinearOpMode {
 		// }
 		// });
 
-		sleep(1000); // pause to display final telemetry message.
+		//sleep(1000); // pause to display final telemetry message.
 	}
 
-	public void encoderDrive(double leftv, double rightv, double lungime) {
+	public void encoderDrive(double leftv, double rightv, double rotatie, double lungime, double viteza) {
 		// lungime = in inch; de inmultit cu COUNTS_PER_INCH
 
 		if (opModeIsActive()) {
 			// daca nu e activ => nasol
+			
+			// JOYSTICK
+			// fata = -
+			// spate = +
+			// stanga = -
+			// dreapta = +
+			
 			double r = Math.hypot(-leftv, rightv);
 			double robotAngle = Math.atan2(rightv, -leftv) - Math.PI / 4;
-			double rightX = 0; // fara rotatie deocamdata
+			double rightX = -rotatie;
 			final double v1 = r * Math.cos(robotAngle) + rightX;
 			final double v2 = r * Math.sin(robotAngle) - rightX;
 			final double v3 = r * Math.sin(robotAngle) + rightX;
@@ -187,10 +330,10 @@ public class AutoPrincipal extends LinearOpMode {
 
 			// nu stiu daca ma lasa sa pun long aici, poate trebuie double, dar in fine...
 			// vom vedea
-			int v1f = (int) (v1 * lungime * COUNTS_PER_INCH);
-			int v2f = (int) (v2 * lungime * COUNTS_PER_INCH);
-			int v3f = (int) (v3 * lungime * COUNTS_PER_INCH);
-			int v4f = (int) (v4 * lungime * COUNTS_PER_INCH);
+			int v1f = (int) (v1 * lungime * COUNTS_PER_INCH) + motorFrontLeft.getCurrentPosition();
+			int v2f = (int) (v2 * lungime * COUNTS_PER_INCH) + motorFrontRight.getCurrentPosition();
+			int v3f = (int) (v3 * lungime * COUNTS_PER_INCH) + motorBackLeft.getCurrentPosition();
+			int v4f = (int) (v4 * lungime * COUNTS_PER_INCH) + motorBackRight.getCurrentPosition();
 
 			motorFrontLeft.setTargetPosition(v1f);
 			motorFrontRight.setTargetPosition(v2f);
@@ -204,23 +347,23 @@ public class AutoPrincipal extends LinearOpMode {
 
 			// runtime.reset();
 
-			motorFrontLeft.setPower(CSPEED);
-			motorFrontRight.setPower(CSPEED);
-			motorBackLeft.setPower(CSPEED);
-			motorBackRight.setPower(CSPEED);
+			motorFrontLeft.setPower(viteza);
+			motorFrontRight.setPower(viteza);
+			motorBackLeft.setPower(viteza);
+			motorBackRight.setPower(viteza);
 
 			while (opModeIsActive()
 					/* && (runtime.seconds() < timeoutS) */
 					&& (motorFrontLeft.isBusy() || motorFrontRight.isBusy() ||
 							motorBackLeft.isBusy() || motorBackRight.isBusy())) {
 				// telemetrie in bucla
-				telemetry.addData("Merg la front:", " %7d :%7d", v1f, v2f);
-				telemetry.addData("Merg la back:", "%7d :%7d", v2f, v3f);
-				telemetry.addData("Acum sunt front:", " %7d :%7d", motorFrontLeft.getCurrentPosition(),
-						motorFrontRight.getCurrentPosition());
-				telemetry.addData("Acum sunt back:", " %7d :%7d", motorBackLeft.getCurrentPosition(),
-						motorBackRight.getCurrentPosition());
-				telemetry.update();
+				// telemetry.addData("Merg la front:", " %7d :%7d", v1f, v2f);
+				// telemetry.addData("Merg la back:", "%7d :%7d", v3f, v4f);
+				// telemetry.addData("Acum sunt front:", " %7d :%7d", motorFrontLeft.getCurrentPosition(),
+				// 		motorFrontRight.getCurrentPosition());
+				// telemetry.addData("Acum sunt back:", " %7d :%7d", motorBackLeft.getCurrentPosition(),
+				// 		motorBackRight.getCurrentPosition());
+				// telemetry.update();
 			}
 
 			// // Stop all motion;
@@ -235,6 +378,6 @@ public class AutoPrincipal extends LinearOpMode {
 			motorBackLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 			motorBackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 		}
-		sleep(250); // optional pause after each move.
+	// optional pause after each move.
 	} // end functie encoderdrive
 }
