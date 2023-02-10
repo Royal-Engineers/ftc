@@ -16,19 +16,19 @@ public class Lift {
 	public void moveLift(Constants.LiftTargets input) {
 		switch (input) {
 			case PICKUP:
-				moveLift(4);
+				moveLift(15);
 				break;
 
 			case LOW:
-				moveLift(1700); // 1558.636363636
+				moveLift(1625); // 1700  // 1558.636363636
 				break;
 
 			case MEDIUM:
-				moveLift(2900); // 2713.181818182
+				moveLift(2700); // 2713.181818182
 				break;
 
 			case HIGH:
-				moveLift(4100); // 3867.727272727
+				moveLift(3800); // 3867.727272727
 				break;
 
 			case PUTDOWN:
