@@ -122,34 +122,6 @@ public class AutoPrincipal extends LinearOpMode {
 
 		// ---
 
-		// Wait for the game to start (driver presses PLAY)
-		// https://github.com/REVrobotics/Color-Sensor-v3-Examples/blob/master/Java/Color%20Match/src/main/java/frc/robot/Robot.java
-
-		// sensorColor = hardwareMap.get(ColorSensor.class, "senzor_culoare");
-
-		// // get a reference to the distance sensor that shares the same name.
-		// sensorDistance = hardwareMap.get(DistanceSensor.class, "senzor_dist");
-
-		// // hsvValues is an array that will hold the hue, saturation, and value
-		// information.
-		// float hsvValues[] = {0F, 0F, 0F};
-
-		// // values is a reference to the hsvValues array.
-		// final float values[] = hsvValues;
-
-		// // sometimes it helps to multiply the raw RGB values with a scale factor
-		// // to amplify/attentuate the measured values.
-		// final double SCALE_FACTOR = 255;
-
-		// // get a reference to the RelativeLayout so we can change the background
-		// // color of the Robot Controller app to match the hue detected by the RGB
-		// sensor.
-		// int relativeLayoutId =
-		// hardwareMap.appContext.getResources().getIdentifier("RelativeLayout", "id",
-		// hardwareMap.appContext.getPackageName());
-		// final View relativeLayout = ((Activity)
-		// hardwareMap.appContext).findViewById(relativeLayoutId);
-
 		waitForStart();
 
 		lift.init(hardwareMap);
@@ -163,7 +135,7 @@ public class AutoPrincipal extends LinearOpMode {
 		// --- start sequence: se misca pana la conul cu culori
 		servo_gheara.setPosition(Range.clip(0.08, 0, 1)); // inchis
 		// servo_gheara.setPosition(Range.clip(0.135, MIN_POSITION, MAX_POSITION)); // deschis
-		sleep(500);
+		sleep(381);
 		lift.moveLift(1000);
 		//encoderDrive(0, -1, 0, 37.5, 0.2);
 		// encoderDrive(1, 0, 0, 10);  // dreapta
@@ -171,12 +143,14 @@ public class AutoPrincipal extends LinearOpMode {
 		// encoderDrive(-1, 0, 0, 10); // stanga
 		// encoderDrive(0, -1, 0, 10); // fata
 		// lift.moveLift(Constants.LiftTargets.PICKUP);
-		encoderDrive(0, -1, 0, 5, 0.3); //merge fata
-		encoderDrive(1 ,  0, 0, 6.5, 0.3); //merge dreapta
+		encoderDrive(0, 1, 0, 2, 0.3, 1000); // spate
+		encoderDrive(0, -1, 0, 7, 0.3, 1000); //merge fata
 		
+		encoderDrive(1 ,  0, 0, 6.5, 0.3, 1000); //merge dreapta
 		
-		encoderDrive(0, -1, 0, 29, 0.6); // merge fata
-		encoderDrive(0, -1, 0, 3, 0.35);
+	
+		 encoderDrive(0, -1, 0, 32, 0.5, 1000); // merge fata
+	
 		ColorSensor color_sensor;
 		color_sensor = hardwareMap.colorSensor.get("sensor_color");
 		color_sensor.enableLed(true);  // Turn the LED on
@@ -190,7 +164,7 @@ public class AutoPrincipal extends LinearOpMode {
 		// telemetry.update();
 		 // dupa asta citeste iar
 
-		sleep(100);
+	
 
 		telemetry.addData("red", color_sensor.red());   // Red channel value
 		telemetry.addData("green", color_sensor.green()); // Green channel value
@@ -211,14 +185,14 @@ public class AutoPrincipal extends LinearOpMode {
 			zona = 1;
 		telemetry.addData("zona", zona);
 		telemetry.update();
-		sleep(200);
+		sleep(300);
 		color_sensor.enableLed(false); // Turn the LED off
 		
 		
 		
 		
-		
-		encoderDrive(0, -1, 0, 60.3, 0.55); // merge fata
+	
+		encoderDrive(0, -1, 0, 60, 0.55, 3000); // merge fata
 		
 		// ---
 		
@@ -237,30 +211,32 @@ public class AutoPrincipal extends LinearOpMode {
 		// 	default:
 		// 		break;
 				
-		// }
-		sleep(50);
-		encoderDrive(0, 1, 0, 20, 0.55); // merge in spate
-		encoderDrive(0, 0, 1, 10, 0.555); // intoarce spre dreapta
 
+		encoderDrive(0, 1, 0, 20, 0.55, 1000); // merge in spate
+		encoderDrive(0, 0, 1, 10, 0.555, 1000); // intoarce spre dreapta
+		
 		lift.moveLift(3800); // ridica lift
 		sleep(1600);
-		encoderDrive(0, -1, 0, 10, 0.3); // merge in fata
-		sleep(200);
+		encoderDrive(0, -1, 0, 10, 0.3, 1000); // merge in fata
 		servo_gheara.setPosition(Range.clip(0.13, 0, 1)); // deschis
-		sleep(50);
-		encoderDrive(0, 1, 0, 13, 0.3); // spate
-		//sleep(250);
-		//servo_gheara.setPosition(Range.clip(0.08, 0, 1)); // inchis
-		sleep(100);
-		lift.moveLift(750); // coboara lift
-		sleep(50);
+		sleep(1000);
+		servo_gheara.setPosition(Range.clip(0.13, 0, 1)); // deschis
+		sleep(1000);
 		
-		encoderDrive(0, 0, -1, 28.2, 0.554); //invarte stanga
-		encoderDrive(0,  -1, 0, 31.5, 0.54); // fata
-		sleep(50);
+		encoderDrive(0, 1, 0, 13, 0.3, 1000); // spate
+		lift.moveLift(645); // coboara lift
+			sleep(1000);
+		
+		
+		encoderDrive(0, 0, -1, 50, 0.554, 1185); //invarte stanga
+		encoderDrive(0,  -1, 0, 35, 0.54, 106); // fata
+		
+		
 		servo_gheara.setPosition(Range.clip(0.08, 0, 1)); // inchis
-		
-		
+		sleep(1000);
+		lift.moveLift(1500);
+		sleep(2000);
+		encoderDrive(0,  1, 0, 31.5, 0.54, 900); // spate
 		// 2.4cm 1 unitatea imagibnara
 		// encoderDrive(-1,  0, 0, 10); // fata
 		// encoderDrive(-1 ,  1, 0, 10); // dreapta
@@ -307,7 +283,7 @@ public class AutoPrincipal extends LinearOpMode {
 		//sleep(1000); // pause to display final telemetry message.
 	}
 
-	public void encoderDrive(double leftv, double rightv, double rotatie, double lungime, double viteza) {
+	public void encoderDrive(double leftv, double rightv, double rotatie, double lungime, double viteza, long timp) {
 		// lungime = in inch; de inmultit cu COUNTS_PER_INCH
 
 		if (opModeIsActive()) {
@@ -352,10 +328,12 @@ public class AutoPrincipal extends LinearOpMode {
 			motorBackLeft.setPower(viteza);
 			motorBackRight.setPower(viteza);
 
-			while (opModeIsActive()
+			// while (opModeIsActive()
 					/* && (runtime.seconds() < timeoutS) */
-					&& (motorFrontLeft.isBusy() || motorFrontRight.isBusy() ||
-							motorBackLeft.isBusy() || motorBackRight.isBusy())) {
+					// && (motorFrontLeft.isBusy() || motorFrontRight.isBusy() ||
+					// 		motorBackLeft.isBusy() || motorBackRight.isBusy())
+							// ) {
+								// ;
 				// telemetrie in bucla
 				// telemetry.addData("Merg la front:", " %7d :%7d", v1f, v2f);
 				// telemetry.addData("Merg la back:", "%7d :%7d", v3f, v4f);
@@ -364,7 +342,9 @@ public class AutoPrincipal extends LinearOpMode {
 				// telemetry.addData("Acum sunt back:", " %7d :%7d", motorBackLeft.getCurrentPosition(),
 				// 		motorBackRight.getCurrentPosition());
 				// telemetry.update();
-			}
+			// }
+
+			sleep(timp);
 
 			// // Stop all motion;
 			motorFrontLeft.setPower(0);
