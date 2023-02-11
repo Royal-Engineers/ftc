@@ -9,6 +9,6 @@
  - [x] Sfoară/ață mai subțire
  - [x] ~~Un lift?~~ 2?
  - [x] Cutie din lemn
- - [ ] Autonomous cu senzor de culoare - WIP
- - [ ] Pozitie senzor
- - [ ] Mecanism de prindere a conului pe gheara
+ - [x] Autonomous cu senzor de culoare - WIP
+ - [x] Pozitie senzor
+ - [x] Mecanism de prindere a conului pe gheara
