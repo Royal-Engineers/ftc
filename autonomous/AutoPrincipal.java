@@ -136,20 +136,21 @@ public class AutoPrincipal extends LinearOpMode {
 		servo_gheara.setPosition(Range.clip(0.08, 0, 1)); // inchis
 		// servo_gheara.setPosition(Range.clip(0.135, MIN_POSITION, MAX_POSITION)); // deschis
 		sleep(381);
-		lift.moveLift(1000);
+		lift.moveLift(800);
 		//encoderDrive(0, -1, 0, 37.5, 0.2);
 		// encoderDrive(1, 0, 0, 10);  // dreapta
 		// encoderDrive(0, 1, 0, 10);  // spate
 		// encoderDrive(-1, 0, 0, 10); // stanga
 		// encoderDrive(0, -1, 0, 10); // fata
 		// lift.moveLift(Constants.LiftTargets.PICKUP);
-		encoderDrive(0, 1, 0, 2, 0.3, 1000); // spate
-		encoderDrive(0, -1, 0, 7, 0.3, 1000); //merge fata
+		encoderDrive(0, 1, 0, 1, 0.3, 400); // spate
+		encoderDrive(0, -1, 0, 7, 0.3, 400); //merge fata
 		
-		encoderDrive(1 ,  0, 0, 6.5, 0.3, 1000); //merge dreapta
-		
+		encoderDrive(1 ,  0, 0, 7, 0.3, 700); //merge dreapta
 	
-		 encoderDrive(0, -1, 0, 32, 0.5, 1000); // merge fata
+		 encoderDrive(0, -1, 0, 35, 0.5, 1000); // merge fata
+		 
+		 sleep(100);
 	
 		ColorSensor color_sensor;
 		color_sensor = hardwareMap.colorSensor.get("sensor_color");
@@ -187,100 +188,50 @@ public class AutoPrincipal extends LinearOpMode {
 		telemetry.update();
 		sleep(300);
 		color_sensor.enableLed(false); // Turn the LED off
-		
-		
-		
-		
-	
-		encoderDrive(0, -1, 0, 60, 0.55, 3000); // merge fata
-		
-		// ---
-		
-		// ---
-		// switch(zona)
-		// {
-		// 	case 1: 
-		// 		encoderDrive(-1, 0, 0, 37.5, 0.2);
-			
-		// 	case 2:
-		// 		break;
-				
-		// 	case 3:
-		// 		encoderDrive(1, 0, 0, 37.5, 0.2);
-				
-		// 	default:
-		// 		break;
-				
 
-		encoderDrive(0, 1, 0, 20, 0.55, 1000); // merge in spate
-		encoderDrive(0, 0, 1, 10, 0.555, 1000); // intoarce spre dreapta
+		// encoderDrive(-1,0,0,3,0.3,100);
+
+		encoderDrive(0, -1, 0, 60, 0.55, 2000); // merge fata
+
+		encoderDrive(0, 1, 0, 27.5, 0.3, 1000); // merge in spate
+		encoderDrive(0, 0, 1, 15, 0.3, 1000); // intoarce spre dreapta
 		
 		lift.moveLift(3800); // ridica lift
-		sleep(1600);
-		encoderDrive(0, -1, 0, 10, 0.3, 1000); // merge in fata
+		sleep(1800);
+		encoderDrive(0, -1, 0, 5, 0.3, 400); // merge in fata
 		servo_gheara.setPosition(Range.clip(0.13, 0, 1)); // deschis
 		sleep(1000);
-		servo_gheara.setPosition(Range.clip(0.13, 0, 1)); // deschis
-		sleep(1000);
+		//servo_gheara.setPosition(Range.clip(0.13, 0, 1)); // deschis
+		//sleep(1000);
 		
-		encoderDrive(0, 1, 0, 13, 0.3, 1000); // spate
+		encoderDrive(0, 1, 0, 9, 0.3, 700); // spate
 		lift.moveLift(645); // coboara lift
-			sleep(1000);
-		
-		
-		encoderDrive(0, 0, -1, 50, 0.554, 1185); //invarte stanga
-		encoderDrive(0,  -1, 0, 35, 0.54, 106); // fata
-		
-		
-		servo_gheara.setPosition(Range.clip(0.08, 0, 1)); // inchis
 		sleep(1000);
-		lift.moveLift(1500);
-		sleep(2000);
-		encoderDrive(0,  1, 0, 31.5, 0.54, 900); // spate
-		// 2.4cm 1 unitatea imagibnara
-		// encoderDrive(-1,  0, 0, 10); // fata
-		// encoderDrive(-1 ,  1, 0, 10); // dreapta
-		// encoderDrive(1 ,  1, 0, 10); // spate
-		// encoderDrive(1 , -1, 0, 10); // stanga
+	
 		
-		// convert the RGB values to HSV values.
-		// multiply by the SCALE_FACTOR.
-		// then cast it back to int (SCALE_FACTOR is a double)
-		// Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
-		// (int) (sensorColor.green() * SCALE_FACTOR),
-		// (int) (sensorColor.blue() * SCALE_FACTOR),
-		// hsvValues);
-
-		// // send the info back to driver station using telemetry function.
-		// telemetry.addData("Distance (cm)",
-		// String.format(Locale.US, "%.02f",
-		// sensorDistance.getDistance(DistanceUnit.CM)));
-		// telemetry.addData("Alpha", sensorColor.alpha());
-		// telemetry.addData("Red ", sensorColor.red());
-		// telemetry.addData("Green", sensorColor.green());
-		// telemetry.addData("Blue ", sensorColor.blue());
-		// telemetry.addData("Hue", hsvValues[0]);
-
-		// // change the background color to match the color detected by the RGB sensor.
-		// // pass a reference to the hue, saturation, and value array as an argument
-		// // to the HSVToColor method.
-		// relativeLayout.post(new Runnable() {
-		// public void run() {
-		// relativeLayout.setBackgroundColor(Color.HSVToColor(0xff, values));
-		// }
-		// });
-
-		// telemetry.update();
-		// }
-
-		// // Set the panel back to the default color
-		// relativeLayout.post(new Runnable() {
-		// public void run() {
-		// relativeLayout.setBackgroundColor(Color.WHITE);
-		// }
-		// });
-
-		//sleep(1000); // pause to display final telemetry message.
+		encoderDrive(0, 0, 1, 55, 0.554, 1000); //invarte dreapta
+		sleep(100);
+		encoderDrive(0 ,  -1, 0, 330, 0.6, 1000); //fata
+		
+		
+		switch(zona)
+		{
+			case 1: {
+				encoderDrive(1, 0, 0, 240, 0.6, 1300);
+				break;
+			}
+			case 2: {
+				break;
+			}			
+			case 3: {
+				encoderDrive(-1, 0, 0, 240, 0.6, 1300);
+				break;
+			}
+				
+			default: // nasol
+				break;
+	}
+	
 	}
 
 	public void encoderDrive(double leftv, double rightv, double rotatie, double lungime, double viteza, long timp) {
