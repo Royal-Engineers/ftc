@@ -67,7 +67,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Lift;
 	"🟦🟦⬛⬛🟥⬛⬛🟥🟥🟥🟥⬛⬛⬛⬛⬛⬛⬛🟦🟦🟦\n" +
 	"🟦🟦🟦🟦🟦⬛⬛⬛🟥🟥⬛⬛⬛🟥🟥🟥⬛🟦🟦🟦🟦\n" +
 	"🟦🟦🟦🟦🟦🟦🟦⬛⬛⬛⬛🟦⬛⬛⬛⬛⬛🟦🟦🟦🟦", group = "Robot")
-public class AutoDreapta extends LinearOpMode {
+public class AutoPrincipal extends LinearOpMode {
 	static final double COUNTS_PER_MOTOR_REV = 537.69; // nice
 	static final double WHEEL_DIAMETER_INCHES = 3.78; // 96 mm diametru
 	static final double CONSTANTA_SABIN = 1.9; // nu intreba
@@ -140,7 +140,7 @@ public class AutoDreapta extends LinearOpMode {
 		sleep(200);
 		
 		encoderDrive( 0, -1, 0, 5, 0.5, 500); // fata
-		encoderDrive(-1,  0, 0, 17, 0.5, 1000); // stanga
+		encoderDrive( 1,  0, 0, 17, 0.5, 1000); // dreapta
 		encoderDrive( 0, -1, 0, 21, 0.5, 1500); // fata, ajuns la robot
 		
 		ColorSensor color_sensor;
@@ -183,7 +183,7 @@ public class AutoDreapta extends LinearOpMode {
 		color_sensor.enableLed(false); // Turn the LED off
 
 		encoderDrive( 0, -1, 0, 31+45, 0.5, 4000); // fata; ~40cm e robotul
-		encoderDrive(-1,  0, 0, 30, 0.5, 1500); // stanga, am HIGH junction in fata
+		encoderDrive( 1,  0, 0, 30, 0.5, 1500); // dreapta, am HIGH junction in fata
 		lift.moveLift(3900); // lift sus, HIGH+100
 		sleep(5000);
 		encoderDrive( 0, -1, 0, 21, 0.2, 1000); // fata, punem conul dupa
@@ -192,8 +192,8 @@ public class AutoDreapta extends LinearOpMode {
 		servo_gheara.setPosition(Range.clip(0.08, 0, 1));
 		encoderDrive( 0,  1, 0, 21, 0.2, 1000); // inapoi
 		lift.moveLift(50); // trebuie dat la ~0 la sfarsitul de auto, pentru manual
-		encoderDrive( 1,  0, 0, 30, 0.5, 1500); // dreapta, inapoi in mijloc la C5
-		encoderDrive( 0,  1, 0, 60, 0.5, 3000); // -1 tile, merge la B5
+		encoderDrive(-1,  0, 0, 30, 0.5, 1500); // stanga, inapoi in mijloc la C2
+		encoderDrive( 0,  1, 0, 60, 0.5, 3000); // -1 tile, merge la B2
 		
 		switch(zona)
 		{
