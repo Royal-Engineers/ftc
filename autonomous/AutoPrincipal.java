@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import org.firstinspires.ftc.robotcore.external.Const;
 import com.qualcomm.robotcore.util.Range;
 import java.util.concurrent.TimeUnit;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -66,10 +67,11 @@ import org.firstinspires.ftc.teamcode.subsystems.Lift;
 	"🟦🟦⬛⬛🟥⬛⬛🟥🟥🟥🟥⬛⬛⬛⬛⬛⬛⬛🟦🟦🟦\n" +
 	"🟦🟦🟦🟦🟦⬛⬛⬛🟥🟥⬛⬛⬛🟥🟥🟥⬛🟦🟦🟦🟦\n" +
 	"🟦🟦🟦🟦🟦🟦🟦⬛⬛⬛⬛🟦⬛⬛⬛⬛⬛🟦🟦🟦🟦", group = "Robot")
-public class AutoPrincipal extends LinearOpMode {
+public class AutoDreapta extends LinearOpMode {
 	static final double COUNTS_PER_MOTOR_REV = 537.69; // nice
 	static final double WHEEL_DIAMETER_INCHES = 3.78; // 96 mm diametru
-	static final double COUNTS_PER_INCH = COUNTS_PER_MOTOR_REV / (WHEEL_DIAMETER_INCHES * 3.1415);
+	static final double CONSTANTA_SABIN = 1.9; // nu intreba
+	static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV / (WHEEL_DIAMETER_INCHES * 3.1415)) / CONSTANTA_SABIN;
 	static final double CSPEED = 0.4; // viteza "constanta" pentru motoare
 
 	private DcMotor motorFrontLeft = null;
@@ -132,26 +134,15 @@ public class AutoPrincipal extends LinearOpMode {
 			// stanga = -
 			// dreapta = +
 		
-		// --- start sequence: se misca pana la conul cu culori
-		servo_gheara.setPosition(Range.clip(0.08, 0, 1)); // inchis
-		// servo_gheara.setPosition(Range.clip(0.135, MIN_POSITION, MAX_POSITION)); // deschis
-		sleep(381);
-		lift.moveLift(800);
-		//encoderDrive(0, -1, 0, 37.5, 0.2);
-		// encoderDrive(1, 0, 0, 10);  // dreapta
-		// encoderDrive(0, 1, 0, 10);  // spate
-		// encoderDrive(-1, 0, 0, 10); // stanga
-		// encoderDrive(0, -1, 0, 10); // fata
-		// lift.moveLift(Constants.LiftTargets.PICKUP);
-		encoderDrive(0, 1, 0, 1, 0.3, 400); // spate
-		encoderDrive(0, -1, 0, 7, 0.3, 400); //merge fata
+		servo_gheara.setPosition(Range.clip(0.08, 0, 1));
+		sleep(250);
+		lift.moveLift(100);
+		sleep(200);
 		
-		encoderDrive(1 ,  0, 0, 7, 0.3, 700); //merge dreapta
-	
-		 encoderDrive(0, -1, 0, 35, 0.5, 1000); // merge fata
-		 
-		 sleep(100);
-	
+		encoderDrive( 0, -1, 0, 5, 0.5, 500); // fata
+		encoderDrive(-1,  0, 0, 17, 0.5, 1000); // stanga
+		encoderDrive( 0, -1, 0, 21, 0.5, 1500); // fata, ajuns la robot
+		
 		ColorSensor color_sensor;
 		color_sensor = hardwareMap.colorSensor.get("sensor_color");
 		color_sensor.enableLed(true);  // Turn the LED on
@@ -162,10 +153,8 @@ public class AutoPrincipal extends LinearOpMode {
  
 		telemetry.addData("alpha", color_sensor.alpha()); // Total luminosity
 		telemetry.addData("argb", color_sensor.argb());  // Combined color value
-		// telemetry.update();
-		 // dupa asta citeste iar
 
-	
+		sleep(500);
 
 		telemetry.addData("red", color_sensor.red());   // Red channel value
 		telemetry.addData("green", color_sensor.green()); // Green channel value
@@ -173,64 +162,56 @@ public class AutoPrincipal extends LinearOpMode {
  
 		telemetry.addData("alpha", color_sensor.alpha()); // Total luminosity
 		telemetry.addData("argb", color_sensor.argb());  // Combined color value
-		// telemetry.update();
+		
 		int zona = 0;
 		int v_red   = color_sensor.red();
 		int v_green = color_sensor.green();
 		int v_blue  = color_sensor.blue();
+		
 		if (v_green>v_red && v_green>v_blue)
 			zona = 2;
 		else if (v_red>v_blue && v_red>v_green)
 			zona = 3;
 		else if (v_blue>v_green && v_blue>v_red)
 			zona = 1;
+			
 		telemetry.addData("zona", zona);
 		telemetry.update();
+		
 		sleep(300);
+		
 		color_sensor.enableLed(false); // Turn the LED off
 
-		// encoderDrive(-1,0,0,3,0.3,100);
-
-		encoderDrive(0, -1, 0, 60, 0.55, 2000); // merge fata
-
-		encoderDrive(0, 1, 0, 27.5, 0.3, 1000); // merge in spate
-		encoderDrive(0, 0, 1, 15, 0.3, 1000); // intoarce spre dreapta
-		
-		lift.moveLift(3800); // ridica lift
-		sleep(1800);
-		encoderDrive(0, -1, 0, 5, 0.3, 400); // merge in fata
-		servo_gheara.setPosition(Range.clip(0.13, 0, 1)); // deschis
-		sleep(1000);
-		//servo_gheara.setPosition(Range.clip(0.13, 0, 1)); // deschis
-		//sleep(1000);
-		
-		encoderDrive(0, 1, 0, 9, 0.3, 700); // spate
-		lift.moveLift(645); // coboara lift
-		sleep(1000);
-	
-		
-		encoderDrive(0, 0, 1, 55, 0.554, 1000); //invarte dreapta
-		sleep(100);
-		encoderDrive(0 ,  -1, 0, 330, 0.6, 1000); //fata
-		
+		encoderDrive( 0, -1, 0, 31+45, 0.5, 4000); // fata; ~40cm e robotul
+		encoderDrive(-1,  0, 0, 30, 0.5, 1500); // stanga, am HIGH junction in fata
+		lift.moveLift(3900); // lift sus, HIGH+100
+		sleep(5000);
+		encoderDrive( 0, -1, 0, 21, 0.2, 1000); // fata, punem conul dupa
+		servo_gheara.setPosition(Range.clip(0.13, 0, 1));
+		sleep(200);
+		servo_gheara.setPosition(Range.clip(0.08, 0, 1));
+		encoderDrive( 0,  1, 0, 21, 0.2, 1000); // inapoi
+		lift.moveLift(50); // trebuie dat la ~0 la sfarsitul de auto, pentru manual
+		encoderDrive( 1,  0, 0, 30, 0.5, 1500); // dreapta, inapoi in mijloc la C5
+		encoderDrive( 0,  1, 0, 60, 0.5, 3000); // -1 tile, merge la B5
 		
 		switch(zona)
 		{
 			case 1: {
-				encoderDrive(1, 0, 0, 240, 0.6, 1300);
+				encoderDrive(-1, 0, 0, 60, 0.5, 3000);
 				break;
 			}
 			case 2: {
 				break;
 			}			
 			case 3: {
-				encoderDrive(-1, 0, 0, 240, 0.6, 1300);
+				encoderDrive(1, 0, 0, 60, 0.5, 3000);
 				break;
 			}
 				
 			default: // nasol
 				break;
-	}
+		}
 	
 	}
 
