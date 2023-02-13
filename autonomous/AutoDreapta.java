@@ -55,7 +55,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Constants;
 import org.firstinspires.ftc.teamcode.subsystems.Lift;
 
 @Autonomous(name = 
-	"🟦🟦🟦🟦🟦🟦🟦🟦🟦⬛⬛⬛⬛⬛🟦🟦🟦🟦🟦🟦🟦\n" +
+	"dr🟦🟦🟦🟦🟦🟦🟦🟦⬛⬛⬛⬛⬛🟦🟦🟦🟦🟦🟦🟦\n" +
 	"🟦🟦🟦🟦🟦🟦🟦🟦⬛⬛🟥🟥🟥⬛⬛⬛🟦🟦🟦🟦🟦\n" +
 	"🟦🟦🟦🟦🟦🟦🟦⬛⬛🟥🟥🟥🟥🟥🟥🟥⬛🟦🟦🟦🟦\n" +
 	"🟦🟦🟦🟦🟦🟦🟦⬛🟥🟥🟥🟥🟥🟥🟥🟥⬛🟦🟦🟦🟦\n" +
@@ -135,13 +135,13 @@ public class AutoDreapta extends LinearOpMode {
 			// dreapta = +
 		
 		servo_gheara.setPosition(Range.clip(0.08, 0, 1));
-		sleep(250);
+		sleep(750);
 		lift.moveLift(100);
 		sleep(200);
 		
 		encoderDrive( 0, -1, 0, 5, 0.5, 500); // fata
-		encoderDrive(-1,  0, 0, 17, 0.5, 1000); // stanga
-		encoderDrive( 0, -1, 0, 21, 0.5, 1500); // fata, ajuns la robot
+		encoderDrive(-1,  0, 0, 17, 0.5, 700); // stanga
+		encoderDrive( 0, -1, 0, 21, 0.5, 1200); // fata, ajuns la robot
 		
 		ColorSensor color_sensor;
 		color_sensor = hardwareMap.colorSensor.get("sensor_color");
@@ -154,7 +154,7 @@ public class AutoDreapta extends LinearOpMode {
 		telemetry.addData("alpha", color_sensor.alpha()); // Total luminosity
 		telemetry.addData("argb", color_sensor.argb());  // Combined color value
 
-		sleep(500);
+		sleep(150);
 
 		telemetry.addData("red", color_sensor.red());   // Red channel value
 		telemetry.addData("green", color_sensor.green()); // Green channel value
@@ -178,20 +178,21 @@ public class AutoDreapta extends LinearOpMode {
 		telemetry.addData("zona", zona);
 		telemetry.update();
 		
-		sleep(300);
+		sleep(150);
 		
 		color_sensor.enableLed(false); // Turn the LED off
 
-		encoderDrive( 0, -1, 0, 31+45, 0.5, 4000); // fata; ~40cm e robotul
+		encoderDrive( 0, -1, 0, 31+45, 0.5, 3000); // fata; ~40cm e robotul
 		encoderDrive(-1,  0, 0, 30, 0.5, 1500); // stanga, am HIGH junction in fata
 		lift.moveLift(3900); // lift sus, HIGH+100
-		sleep(5000);
-		encoderDrive( 0, -1, 0, 21, 0.2, 1000); // fata, punem conul dupa
+		sleep(3500);
+		encoderDrive( 0, -1, 0, 21, 0.2, 1500); // fata, punem conul dupa
 		servo_gheara.setPosition(Range.clip(0.13, 0, 1));
-		sleep(200);
+		sleep(1000);
 		servo_gheara.setPosition(Range.clip(0.08, 0, 1));
 		encoderDrive( 0,  1, 0, 21, 0.2, 1000); // inapoi
 		lift.moveLift(50); // trebuie dat la ~0 la sfarsitul de auto, pentru manual
+		sleep(1500);
 		encoderDrive( 1,  0, 0, 30, 0.5, 1500); // dreapta, inapoi in mijloc la C5
 		encoderDrive( 0,  1, 0, 60, 0.5, 3000); // -1 tile, merge la B5
 		
@@ -208,11 +209,11 @@ public class AutoDreapta extends LinearOpMode {
 				encoderDrive(1, 0, 0, 60, 0.5, 3000);
 				break;
 			}
-				
 			default: // nasol
 				break;
 		}
-	
+		lift.moveLift(3);
+		sleep(150);
 	}
 
 	public void encoderDrive(double leftv, double rightv, double rotatie, double lungime, double viteza, long timp) {
