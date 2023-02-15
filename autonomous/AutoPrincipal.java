@@ -54,24 +54,12 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import org.firstinspires.ftc.teamcode.subsystems.Constants;
 import org.firstinspires.ftc.teamcode.subsystems.Lift;
 
-@Autonomous(name = 
-	"🟦🟦🟦🟦🟦🟦🟦🟦🟦⬛⬛⬛⬛⬛🟦🟦🟦🟦🟦🟦🟦\n" +
-	"🟦🟦🟦🟦🟦🟦🟦🟦⬛⬛🟥🟥🟥⬛⬛⬛🟦🟦🟦🟦🟦\n" +
-	"🟦🟦🟦🟦🟦🟦🟦⬛⬛🟥🟥🟥🟥🟥🟥🟥⬛🟦🟦🟦🟦\n" +
-	"🟦🟦🟦🟦🟦🟦🟦⬛🟥🟥🟥🟥🟥🟥🟥🟥⬛🟦🟦🟦🟦\n" +
-	"🟦🟦🟦🟦🟦🟦🟦⬛🟥🟥🟥🟥🟥🟥🟥🟥🟥⬛🟦🟦🟦\n" +
-	"🟦🟦🟦🟦🟦🟦🟦⬛🟥🟥🟥⬜⬜⬜⬜⬜⬜⬛⬛🟦🟦\n" +
-	"🟦🟦🟦🟦⬛⬛⬛🟥🟥🟥⬜⬜⬜⬜⬜⬜⬜⬜⬛🟦🟦\n" +
-	"🟦🟦🟦⬛🟥⬛⬛🟥🟥🟥⬜⬜⬜⬜⬜⬜⬜⬜⬛🟦🟦\n" +
-	"🟦🟦🟦⬛🟥⬛⬛🟥🟥🟥⬛⬜⬜⬜⬜⬜⬜⬜⬛🟦🟦\n" +
-	"🟦🟦⬛⬛🟥⬛⬛🟥🟥🟥🟥⬛⬛⬛⬛⬛⬛⬛🟦🟦🟦\n" +
-	"🟦🟦🟦🟦🟦⬛⬛⬛🟥🟥⬛⬛⬛🟥🟥🟥⬛🟦🟦🟦🟦\n" +
-	"🟦🟦🟦🟦🟦🟦🟦⬛⬛⬛⬛🟦⬛⬛⬛⬛⬛🟦🟦🟦🟦", group = "Robot")
+@Autonomous(name = "autoprincipal", group = "Robot")
 public class AutoPrincipal extends LinearOpMode {
 	static final double COUNTS_PER_MOTOR_REV = 537.69; // nice
 	static final double WHEEL_DIAMETER_INCHES = 3.78; // 96 mm diametru
-	static final double CONSTANTA_SABIN = 1.9; // nu intreba
-	static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV / (WHEEL_DIAMETER_INCHES * 3.1415)) / CONSTANTA_SABIN;
+	static final double CONSTANTA_SABIN = 0.53 /*1.9*/; // nu intreba
+	static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV / (WHEEL_DIAMETER_INCHES * 3.1415)) * CONSTANTA_SABIN;
 	static final double CSPEED = 0.4; // viteza "constanta" pentru motoare
 
 	private DcMotor motorFrontLeft = null;
@@ -136,14 +124,14 @@ public class AutoPrincipal extends LinearOpMode {
 		
 		servo_gheara.setPosition(Range.clip(0.08, 0, 1));
 		sleep(750);
-		lift.moveLift(100);
+		lift.moveLift(Constants.LiftTargets.LOW);
 		sleep(200);
 		
-		encoderDrive( 0, -1, 0, 5, 0.5, 500); // fata
-		encoderDrive( 1,  0, 0, 17, 0.5, 700); // dreapta
-		encoderDrive( 0, -1, 0, 21, 0.5, 1200); // fata, ajuns la robot
+		encoderDrive( 0, -1, 0, 5, 0.35, 500); // fata
+		encoderDrive( 1,  0, 0, 11, 0.35, 700); // dreapta
+		encoderDrive( 0, -1, 0, 65.5, 0.35, 3000); // fata, ajuns la con
 		
-		ColorSensor color_sensor;
+		ColorSensor color_sensor; 
 		color_sensor = hardwareMap.colorSensor.get("sensor_color");
 		color_sensor.enableLed(true);  // Turn the LED on
 	
@@ -182,31 +170,32 @@ public class AutoPrincipal extends LinearOpMode {
 		
 		color_sensor.enableLed(false); // Turn the LED off
 
-		encoderDrive( 0, -1, 0, 31+45, 0.5, 3000); // fata; ~40cm e robotul
-		encoderDrive( 1,  0, 0, 30, 0.5, 1500); // dreapta, am HIGH junction in fata
+		encoderDrive( 0, -1, 0, 26.5+45, 0.35, 3700); // fata; ~40cm e robotul
+		encoderDrive( 1,  0, 0, 36.5, 0.5, 1500); // dreapta, am HIGH junction in fata
 		lift.moveLift(3900); // lift sus, HIGH+100
-		sleep(3500);
-		encoderDrive( 0, -1, 0, 21, 0.2, 1500); // fata, punem conul dupa
+		sleep(3600);
+		encoderDrive( 0, -1, 0, 8, 0.2, 1500); // fata, punem conul dupa
 		servo_gheara.setPosition(Range.clip(0.13, 0, 1));
 		sleep(1000);
 		servo_gheara.setPosition(Range.clip(0.08, 0, 1));
-		encoderDrive( 0,  1, 0, 21, 0.2, 1000); // inapoi
-		lift.moveLift(50); // trebuie dat la ~0 la sfarsitul de auto, pentru manual
+		encoderDrive( 0,  1, 0, 10.5, 0.2, 1000); // inapoi
+		lift.moveLift(1000); // trebuie dat la ~0 la sfarsitul de auto, pentru manual
 		sleep(1500);
-		encoderDrive(-1,  0, 0, 30, 0.5, 1700); // stanga, inapoi in mijloc la C2
-		encoderDrive( 0,  1, 0, 60, 0.5, 3000); // -1 tile, merge la B2
+		
+		encoderDrive(-1,  0, 0, 36.5, 0.5, 1700); // stanga, inapoi in mijloc la C2
+		encoderDrive( 0,  1, 0, 65, 0.5, 3000); // -1 tile, merge la B2
 		
 		switch(zona)
 		{
 			case 1: {
-				encoderDrive(-1, 0, 0, 60, 0.5, 3000);
+				encoderDrive(-1, 0, 0, 69, 0.5, 3000);
 				break;
 			}
 			case 2: {
 				break;
 			}			
 			case 3: {
-				encoderDrive(1, 0, 0, 60, 0.5, 3000);
+				encoderDrive(1, 0, 0, 69, 0.5, 3000);
 				break;
 			}
 			default: // nasol
@@ -214,7 +203,7 @@ public class AutoPrincipal extends LinearOpMode {
 		}
 		
 		lift.moveLift(3); // pregatire pentru auto
-		sleep(150);
+		sleep(1000);
 	}
 
 	public void encoderDrive(double leftv, double rightv, double rotatie, double lungime, double viteza, long timp) {
