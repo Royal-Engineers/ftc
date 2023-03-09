@@ -1,1 +1,1 @@
-## Electrified Titans 2024
+# 2024
