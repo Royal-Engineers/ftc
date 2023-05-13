@@ -9,6 +9,8 @@ import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.controller.PIDFController;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
@@ -43,17 +45,33 @@ public class teleop extends LinearOpMode{
         Servo servo_brat2 = hardwareMap.servo.get("servo_brat2");
         DistanceSensor sensorDistanta = hardwareMap.get(DistanceSensor.class, "senzor_gheara");
 
-        Motor motorFrontRight = new Motor(hardwareMap, "motorFrontRight", Motor.GoBILDA.RPM_312);
-        Motor motorFrontLeft = new Motor(hardwareMap, "motorFrontLeft", Motor.GoBILDA.RPM_312);
-        Motor motorBackRight = new Motor(hardwareMap, "motorBackRight", Motor.GoBILDA.RPM_312);
-        Motor motorBackLeft = new Motor(hardwareMap, "motorBackLeft", Motor.GoBILDA.RPM_312);
 
-        motorFrontLeft.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-        motorBackLeft.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-        motorFrontRight.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-        motorBackRight.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        DcMotor motorFrontLeft = hardwareMap.dcMotor.get("motorFrontLeft");
+        DcMotor motorBackLeft = hardwareMap.dcMotor.get("motorBackLeft");
+        DcMotor motorFrontRight = hardwareMap.dcMotor.get("motorFrontRight");
+        DcMotor motorBackRight = hardwareMap.dcMotor.get("motorBackRight");
+        // ---
 
-        MecanumDrive mecanum = new MecanumDrive (motorFrontLeft, motorFrontRight, motorBackLeft, motorBackRight);
+//        Motor motorFrontRight = new Motor(hardwareMap, "motorFrontRight", Motor.GoBILDA.RPM_312);
+//        Motor motorFrontLeft = new Motor(hardwareMap, "motorFrontLeft", Motor.GoBILDA.RPM_312);
+//        Motor motorBackRight = new Motor(hardwareMap, "motorBackRight", Motor.GoBILDA.RPM_312);
+//        Motor motorBackLeft = new Motor(hardwareMap, "motorBackLeft", Motor.GoBILDA.RPM_312);
+
+//        motorFrontLeft.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+//        motorBackLeft.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+//        motorFrontRight.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+//        motorBackRight.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+
+
+        motorFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        motorFrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorBackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorFrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorBackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+//        MecanumDrive mecanum = new MecanumDrive (motorFrontLeft, motorFrontRight, motorBackLeft, motorBackRight);
 
         servo_brat1.setPosition(Range.clip(0.55, MIN_POSITION, MAX_POSITION));
         servo_brat2.setPosition(Range.clip(0.5, MIN_POSITION, MAX_POSITION));
@@ -105,9 +123,9 @@ public class teleop extends LinearOpMode{
 
             telemetry.addData("Status", "Running");
 
-            mecanum.driveRobotCentric(controller1.getRightX(),
-                    -controller1.getLeftY(),
-                    controller1.getLeftX());
+//            mecanum.driveRobotCentric(controller1.getRightX(),
+//                    -controller1.getLeftY(),
+//                    controller1.getLeftX());
 
             if(servo_gheara.getPosition() < 0.3)
             {
@@ -135,6 +153,20 @@ public class teleop extends LinearOpMode{
 
 
             }
+
+            double r = Math.hypot(-gamepad1.left_stick_x, gamepad1.left_stick_y);
+            double robotAngle = Math.atan2(gamepad1.left_stick_y, -gamepad1.left_stick_x) - Math.PI / 4;
+            double rightX = -gamepad1.right_stick_x;
+            final double v1 = r * Math.cos(robotAngle) + rightX;
+            final double v2 = r * Math.sin(robotAngle) - rightX;
+            final double v3 = r * Math.sin(robotAngle) + rightX;
+            final double v4 = r * Math.cos(robotAngle) - rightX;
+
+            motorFrontLeft.setPower(v1);
+            motorFrontRight.setPower(v2);
+            motorBackLeft.setPower(v3);
+            motorBackRight.setPower(v4);
+
             telemetry.addData("lift pos", lift.getPosition());
             telemetry.update();
         }
