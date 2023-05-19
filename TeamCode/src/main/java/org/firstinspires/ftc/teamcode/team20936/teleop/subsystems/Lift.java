@@ -20,19 +20,19 @@ public class Lift {
                 break;
 
             case LOW:
-                moveLift(1700); // 1558.636363636
+                moveLift(435); //480 // 1558.636363636
                 break;
 
             case MEDIUM:
-                moveLift(2900); // 2713.181818182
+                moveLift(1030); // 1200 // 2713.181818182
                 break;
 
             case HIGH:
-                moveLift(4050); // 3867.727272727
+                moveLift(1740); // 1910 // 3867.727272727
                 break;
 
             case PUTDOWN:
-                moveLift(870);
+                moveLift(400);
                 break;
         }
     }
@@ -55,16 +55,16 @@ public class Lift {
 
     public void setLiftPosition(int height) {
         target = height;
-        double currentPos = left.getCurrentPosition();
+        double currentPos = -left.getCurrentPosition();
 
         if (currentPos < target) {
             // Going up
-            leftPower = 1;
-            rightPower = -1;
-        } else if (currentPos > target) {
-            // Going down
             leftPower = -1;
             rightPower = 1;
+        } else if (currentPos > target) {
+            // Going down
+            leftPower = 1;
+            rightPower = -1;
         }
 
         // se schimba aici cu + sau - in functie de directie
@@ -73,8 +73,8 @@ public class Lift {
 
         // nou: stanga = stanga sus
         // drapta = drapta sus
-        left.setTargetPosition((int) target);
-        right.setTargetPosition((int) -target);
+        left.setTargetPosition((int) -target);
+        right.setTargetPosition((int) target);
 
         left.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         right.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
@@ -85,7 +85,7 @@ public class Lift {
 
     public int getPosition() {
         // Using the average of two left and right
-        return (left.getCurrentPosition())/* - (right.getCurrentPosition())) / 2 */;
+        return (-left.getCurrentPosition())/* - (right.getCurrentPosition())) / 2 */;
     }
 
     public int getTarget() {
