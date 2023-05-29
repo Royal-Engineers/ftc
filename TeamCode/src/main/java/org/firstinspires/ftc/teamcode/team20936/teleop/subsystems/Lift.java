@@ -24,11 +24,11 @@ public class Lift {
                 break;
 
             case MEDIUM:
-                moveLift(1030); // 1200 // 2713.181818182
+                moveLift(1015); // 1200 // 2713.181818182
                 break;
 
             case HIGH:
-                moveLift(1740); // 1910 // 3867.727272727
+                moveLift(1725); // 1910 // 3867.727272727
                 break;
 
             case PUTDOWN:
