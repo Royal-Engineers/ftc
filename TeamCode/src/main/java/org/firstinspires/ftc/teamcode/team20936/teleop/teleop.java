@@ -193,10 +193,10 @@ public class teleop extends LinearOpMode{
                 servo_brat3.setPosition(0.98);
                 sleep(200);
                 brat_rev_toggle = !brat_rev_toggle;
-                rev_hd_brat.setTargetPosition(poz0_rev - 47);
+                rev_hd_brat.setTargetPosition(poz0_rev - 48);
                 rev_hd_brat.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
                 rev_hd_brat.setPower(0.25);
-                servo_brat2.setPosition(0.544);
+                servo_brat2.setPosition(0.549);
                 sleep(450);
 
                 servo_gheara.setPosition(Range.clip(0.15,0,1));
