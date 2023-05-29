@@ -168,7 +168,7 @@ public class teleop extends LinearOpMode{
                 servo_brat2.setPosition(0.312);
                 servo_brat3.setPosition(0.413);
 
-                TimeUnit.MILLISECONDS.sleep(250);
+                TimeUnit.MILLISECONDS.sleep(50);
             }
             if (gamepad2.b) {
 
