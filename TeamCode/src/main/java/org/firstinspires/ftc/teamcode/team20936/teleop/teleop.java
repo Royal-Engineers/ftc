@@ -177,7 +177,7 @@ public class teleop extends LinearOpMode{
                 rev_hd_brat.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
                 rev_hd_brat.setPower(0.45);
 
-                servo_brat2.setPosition(0.133);
+                servo_brat2.setPosition(0.186);
                 servo_brat3.setPosition(0.41);
 
                 servo_gheara.setPosition(0.0);
@@ -196,14 +196,14 @@ public class teleop extends LinearOpMode{
                 rev_hd_brat.setTargetPosition(poz0_rev - 48);
                 rev_hd_brat.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
                 rev_hd_brat.setPower(0.25);
-                servo_brat2.setPosition(0.549);
+                servo_brat2.setPosition(0.6);
                 sleep(450);
 
                 servo_gheara.setPosition(Range.clip(0.15,0,1));
                 servo_deposit.setPosition(Range.clip(0.23,0,1));
                 sleep(300);
 
-                servo_brat2.setPosition(Range.clip(0.37,0,1));
+                servo_brat2.setPosition(Range.clip(0.9,0,1));
 
                 rev_hd_brat.setTargetPosition(poz0_rev-25);
                 rev_hd_brat.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
@@ -222,7 +222,7 @@ public class teleop extends LinearOpMode{
                 rev_hd_brat.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
                 rev_hd_brat.setPower(0.45);
 
-                servo_brat2.setPosition(0.133);
+                servo_brat2.setPosition(0.186);
                 servo_brat3.setPosition(0.41);
 
 //                servo_gheara.setPosition(0.0);
