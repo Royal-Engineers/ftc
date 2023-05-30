@@ -165,7 +165,7 @@ public class teleop extends LinearOpMode{
                 rev_hd_brat.setTargetPosition(poz0_rev-463);
                 rev_hd_brat.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
                 rev_hd_brat.setPower(0.25);
-                servo_brat2.setPosition(0.312);
+                servo_brat2.setPosition(0.365);
                 servo_brat3.setPosition(0.413);
 
                 TimeUnit.MILLISECONDS.sleep(50);
@@ -273,7 +273,7 @@ public class teleop extends LinearOpMode{
             motorBackRight.setPower(r * Math.cos(robotAngle) - rightX);
 
             telemetry.addData("poz lift", lift.getPosition());
-            telemetry.addData("rev poz",  rev_hd_brat.getCurrentPosition());
+            telemetry.addData("poz0_rev - rev poz", poz0_rev - rev_hd_brat.getCurrentPosition());
             telemetry.addData("servo_brat2 pos: ", servo_brat2.getPosition());
             telemetry.addData("servo_brat3 pos: ", servo_brat3.getPosition());
             telemetry.update();
