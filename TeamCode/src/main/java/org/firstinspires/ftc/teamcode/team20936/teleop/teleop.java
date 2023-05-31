@@ -27,6 +27,7 @@ public class teleop extends LinearOpMode{
     boolean gheara_toggle = true;
     boolean brat_rev_toggle = true;
     boolean brat_sus_toggle = true;
+    int secv = -1;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -57,16 +58,14 @@ public class teleop extends LinearOpMode{
 
         final int poz0_rev = rev_hd_brat.getCurrentPosition();
 
-        while (opModeIsActive())
-        {
+        while (opModeIsActive()) {
             if (gamepad1.options) {
                 if (brat_sus_toggle) {
                     servo_deposit.setPosition(Range.clip(0.1, 0, 1));
                     brat_sus_toggle = !brat_sus_toggle;
 
                     sleep(100);
-                }
-                else {
+                } else {
                     servo_deposit.setPosition(Range.clip(0.23, 0, 1));
                     brat_sus_toggle = !brat_sus_toggle;
 
@@ -80,7 +79,7 @@ public class teleop extends LinearOpMode{
                 lift_height = 2;
             } else if (gamepad1.y) {
                 lift_height = 3;
-            } else if (gamepad1.right_trigger > 0.01 && lift.getPosition()<2650)
+            } else if (gamepad1.right_trigger > 0.01 && lift.getPosition() < 2650)
                 lift.moveLift(lift.getPosition() + 80 * (Math.abs((int) gamepad1.right_trigger)));
             else if (gamepad1.left_trigger > 0.01) {
                 if (lift.getPosition() > 0)
@@ -88,7 +87,7 @@ public class teleop extends LinearOpMode{
             }
 
             if (gamepad1.left_bumper)
-                switch (lift_height){
+                switch (lift_height) {
                     case 2: {
                         lift.moveLift(Constants.LiftTargets.MEDIUM);
                         break;
@@ -100,10 +99,9 @@ public class teleop extends LinearOpMode{
                 }
             else if (gamepad1.right_bumper) {
                 lift.moveLift(1);
-                servo_deposit.setPosition(Range.clip(0.1,0,1));
+                servo_deposit.setPosition(Range.clip(0.1, 0, 1));
             }
-            if(servo_gheara.getPosition() > 0.2 && sensorDistanta_intake.getDistance(DistanceUnit.MM) < 30)
-            {
+            if (servo_gheara.getPosition() > 0.2 && sensorDistanta_intake.getDistance(DistanceUnit.MM) < 30 && secv == -1) {
 
                 gheara_toggle = !gheara_toggle;
                 servo_gheara.setPosition(Range.clip(0, 0, 1));
@@ -123,27 +121,28 @@ public class teleop extends LinearOpMode{
                 telemetry.addData("auto pickup", "picked");
 
             }
-            if (gamepad2.right_bumper)
-            {
+            if (gamepad2.right_bumper) {
 
                 gheara_toggle = !gheara_toggle;
-                if (gheara_toggle) { servo_gheara.setPosition(Range.clip(0.22, 0, 1)); }
-                else { servo_gheara.setPosition(Range.clip(0.0, 0, 1)); TimeUnit.MILLISECONDS.sleep(400);} // DESCHIS ( SE EXECUTA PRIMA)
+                if (gheara_toggle) {
+                    servo_gheara.setPosition(Range.clip(0.22, 0, 1));
+                } else {
+                    servo_gheara.setPosition(Range.clip(0.0, 0, 1));
+                    TimeUnit.MILLISECONDS.sleep(400);
+                } // DESCHIS ( SE EXECUTA PRIMA)
 
                 sleep(200);
 //                sensorDistanta_intake.wait(1000);
 
             }
 
-            if(gamepad2.right_trigger > 0.3)
-            {
-                servo_brat2.setPosition(Range.clip(0.37,0,1));
+            if (gamepad2.right_trigger > 0.3) {
+                servo_brat2.setPosition(Range.clip(0.37, 0, 1));
                 servo_brat3.setPosition(Range.clip(0.5, 0, 1));
             }
 
-            if(gamepad2.left_stick_y < -0.01)
-            {
-                int dist = (int)Math.abs(gamepad2.left_stick_y*25);
+            if (gamepad2.left_stick_y < -0.01) {
+                int dist = (int) Math.abs(gamepad2.left_stick_y * 25);
 
                 rev_hd_brat.setTargetPosition(rev_hd_brat.getCurrentPosition() + dist);
 
@@ -151,10 +150,8 @@ public class teleop extends LinearOpMode{
 
                 rev_hd_brat.setPower(0.7);
 
-            }
-            else if(gamepad2.left_stick_y > 0.01)
-            {
-                rev_hd_brat.setTargetPosition(rev_hd_brat.getCurrentPosition() - (int)(gamepad2.left_stick_y*25));
+            } else if (gamepad2.left_stick_y > 0.01) {
+                rev_hd_brat.setTargetPosition(rev_hd_brat.getCurrentPosition() - (int) (gamepad2.left_stick_y * 25));
                 rev_hd_brat.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
 
                 rev_hd_brat.setPower(-1);
@@ -162,7 +159,7 @@ public class teleop extends LinearOpMode{
 
             if (gamepad2.a) {
 
-                rev_hd_brat.setTargetPosition(poz0_rev-463);
+                rev_hd_brat.setTargetPosition(poz0_rev - 465);
                 rev_hd_brat.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
                 rev_hd_brat.setPower(0.25);
                 servo_brat2.setPosition(0.365);
@@ -172,7 +169,7 @@ public class teleop extends LinearOpMode{
             }
             if (gamepad2.b) {
 
-                rev_hd_brat.setTargetPosition(poz0_rev-25);
+                rev_hd_brat.setTargetPosition(poz0_rev - 25);
 
                 rev_hd_brat.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
                 rev_hd_brat.setPower(0.45);
@@ -184,54 +181,57 @@ public class teleop extends LinearOpMode{
 
 
             }
-            if (gamepad2.y) {
-
-                servo_deposit.setPosition(Range.clip(0.1,0,1));
-
-//                sleep(400);
-
-                servo_brat3.setPosition(0.98);
-                sleep(200);
-                brat_rev_toggle = !brat_rev_toggle;
-                rev_hd_brat.setTargetPosition(poz0_rev - 48);
-                rev_hd_brat.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-                rev_hd_brat.setPower(0.25);
-                servo_brat2.setPosition(0.6);
-                sleep(450);
-
-                servo_gheara.setPosition(Range.clip(0.15,0,1));
-                servo_deposit.setPosition(Range.clip(0.23,0,1));
-                sleep(300);
-
-                servo_brat2.setPosition(Range.clip(0.9,0,1));
-
-                rev_hd_brat.setTargetPosition(poz0_rev-25);
-                rev_hd_brat.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-                rev_hd_brat.setPower(0.45);
-
-                sleep(150);
-
-//                servo_brat3.setPosition(Range.clip(0.41,0,1));
-
-                servo_gheara.setPosition(Range.clip(0.22,0,1));
-
-
-                // --- asta e b:
-                rev_hd_brat.setTargetPosition(poz0_rev-25);
-
-                rev_hd_brat.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-                rev_hd_brat.setPower(0.45);
-
-                servo_brat2.setPosition(0.186);
-                servo_brat3.setPosition(0.41);
-
-//                servo_gheara.setPosition(0.0);
-                // ---
-
-
+            if (gamepad2.y && secv == -1)
+                secv = 0;
+            switch (secv) {
+                case 0: {
+                    servo_deposit.setPosition(Range.clip(0.1, 0, 1));
+                    servo_brat3.setPosition(0.974);
+                    secv = 1;
+                    sleep(200);
+                    break;
+                }
+                case 1: {
+                    rev_hd_brat.setTargetPosition(poz0_rev - 50);
+                    rev_hd_brat.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+                    rev_hd_brat.setPower(0.25);
+                    servo_brat2.setPosition(0.567);
+                    secv = 2;
+                    sleep(450);
+                    break;
+                }
+                case 2: {
+                    servo_gheara.setPosition(Range.clip(0.15, 0, 1));
+                    servo_deposit.setPosition(Range.clip(0.23, 0, 1));
+                    secv = 3;
+                    sleep(300);
+                    break;
+                }
+                case 3: {
+                    servo_brat2.setPosition(Range.clip(0.574, 0, 1));
+//                    sleep(1000);
+                    rev_hd_brat.setTargetPosition(poz0_rev - 64);
+                    rev_hd_brat.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+                    rev_hd_brat.setPower(0.45);
+                    servo_gheara.setPosition(Range.clip(0.22,0,1));
+                    secv = 4;
+                    sleep(150);
+                    break;
+                }
+                case 4: {
+                    rev_hd_brat.setTargetPosition(poz0_rev-80);
+                    rev_hd_brat.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+                    rev_hd_brat.setPower(0.45);
+                    sleep(250);
+                    servo_brat2.setPosition(0.186);
+                    servo_brat3.setPosition(0.41);
+                    secv = -1;
+                    break;
+                }
+                default: {
+                    break;
+                }
             }
-
-
 
             if(gamepad2.right_stick_y > 0.01 && servo_brat2.getPosition() >= 0)
             {
