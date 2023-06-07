@@ -35,8 +35,8 @@ public class DriveConstants {
      * from DriveVelocityPIDTuner.
      */
     public static final boolean RUN_USING_ENCODER = true;
-    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(16, 0, 8,12.4);
-           // getMotorVelocityF(MAX_RPM / 60 * TICKS_PER_REV));
+    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(16, 0, 12,12.4);
+    // getMotorVelocityF(MAX_RPM / 60 * TICKS_PER_REV));
 
     /*
      * These are physical constants that can be determined from your robot (including the track
@@ -100,7 +100,7 @@ public class DriveConstants {
      * https://github.com/acmerobotics/road-runner-quickstart/issues/91
 
      */
-    public static double MAX_VEL = 45;
+    public static double MAX_VEL = 80; // 45
     public static double MAX_ACCEL = 90;
     public static double MAX_ANG_VEL = 1.7;
     public static double MAX_ANG_ACCEL = 3.5;
