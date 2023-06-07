@@ -172,7 +172,7 @@ public class teleop extends LinearOpMode{
             }
             if (gamepad2.b) {
 
-                rev_hd_brat.setTargetPosition(poz0_rev-25);
+                rev_hd_brat.setTargetPosition(poz0_rev-40);
 
                 rev_hd_brat.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
                 rev_hd_brat.setPower(0.45);
@@ -193,18 +193,17 @@ public class teleop extends LinearOpMode{
                 servo_brat3.setPosition(0.99);
                 sleep(200);
                 brat_rev_toggle = !brat_rev_toggle;
-                rev_hd_brat.setTargetPosition(poz0_rev - 49);
+                rev_hd_brat.setTargetPosition(poz0_rev - 40);
                 rev_hd_brat.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
                 rev_hd_brat.setPower(0.25);
-                servo_brat2.setPosition(0.6244444);
+                servo_brat2.setPosition(0.623);
                 sleep(450);
 
                 servo_gheara.setPosition(Range.clip(0.15,0,1));
                 servo_deposit.setPosition(Range.clip(0.23,0,1));
                 sleep(300);
 
-
-                rev_hd_brat.setTargetPosition(poz0_rev-25);
+                rev_hd_brat.setTargetPosition(poz0_rev-40);
                 rev_hd_brat.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
                 rev_hd_brat.setPower(0.45);
 
@@ -216,7 +215,7 @@ public class teleop extends LinearOpMode{
 
 
                 // --- asta e b:
-                rev_hd_brat.setTargetPosition(poz0_rev-25);
+                rev_hd_brat.setTargetPosition(poz0_rev-40);
 
                 rev_hd_brat.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
                 rev_hd_brat.setPower(0.45);
@@ -260,8 +259,6 @@ public class teleop extends LinearOpMode{
 
                 servo_brat3.setPosition(Range.clip(servo_brat3.getPosition() + dist, 0, 1));
             }
-
-
 
             double r = Math.hypot(-gamepad1.left_stick_x, gamepad1.left_stick_y);
             double robotAngle = Math.atan2(gamepad1.left_stick_y, -gamepad1.left_stick_x) - Math.PI / 4;
