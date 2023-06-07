@@ -4,6 +4,9 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -16,6 +19,7 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.team20936.auto.subsystems.Lift;
@@ -56,12 +60,24 @@ public class autostanga extends LinearOpMode
     @Override
     public void runOpMode() throws InterruptedException
     {
+        ElapsedTime timer = new ElapsedTime();
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         Pose2d startPose = new Pose2d(0, 0, 0);
 
-        Lift lift = new Lift();
+        Lift lift = new Lift(); lift.init(hardwareMap);
+
+        Servo servo_brat2 = hardwareMap.servo.get("servo_brat2");
+        Servo servo_brat3 = hardwareMap.servo.get("servo_brat3");
         Servo servo_gheara = hardwareMap.servo.get("servo_gheara");
+
+        Servo servo_deposit = hardwareMap.servo.get("servo_deposit");
+
+        DcMotor rev_hd_brat = hardwareMap.dcMotor.get("rev_hd_brat"); rev_hd_brat.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        DistanceSensor sensorDistanta_intake = hardwareMap.get(DistanceSensor.class, "senzor_gheara");
+
+
         double MIN_POSITION = 0;
         double MAX_POSITION = 1;
 
@@ -87,6 +103,9 @@ public class autostanga extends LinearOpMode
 
         telemetry.setMsTransmissionInterval(100);
 
+        final int poz0_rev = rev_hd_brat.getCurrentPosition();
+
+
         /*
          * The INIT-loop:
          * This REPLACES waitForStart!
@@ -94,7 +113,12 @@ public class autostanga extends LinearOpMode
         while (!isStarted() && !isStopRequested())
         {
 
-            servo_gheara.setPosition(Range.clip(0.06, MIN_POSITION, MAX_POSITION));
+            servo_brat2.setPosition(Range.clip(0.133, 0, 1));
+            servo_brat3.setPosition(Range.clip(0.41, 0, 1));
+            servo_gheara.setPosition(Range.clip(0.22, 0, 1));
+
+            servo_deposit.setPosition(Range.clip(0.23, 0, 1));
+
 
             ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
 
@@ -157,50 +181,115 @@ public class autostanga extends LinearOpMode
          * The START command just came in: now work off the latest snapshot acquired
          * during the init loop.
          */
-        lift.init(hardwareMap);
 
-//        lift.moveLift(4050);
-        // sab: mai trebuie lucrat
         TrajectorySequence traj1 = drive.trajectorySequenceBuilder(startPose)
-//        drive.trajectorySequenceBuilder(new Pose2d(0, 0, 0))
-                .lineToConstantHeading(new Vector2d(0,2))
-                .lineToLinearHeading(new Pose2d(6, 15, Math.toRadians(45)))
-                .addDisplacementMarker(40, () -> {
-                    ;
-                                    lift.moveLift(4030);
+
+                .lineToConstantHeading(new Vector2d(5,0))
+                .lineToConstantHeading(new Vector2d(0,45))
+                .lineToLinearHeading(new Pose2d(9.1,45,-45))
+
+                // poz medium
+
+                .addDisplacementMarker( () -> {
+                    lift.moveLift(1010);
                 })
-                .lineToConstantHeading(new Vector2d(6, 55))
-                .lineToConstantHeading(new Vector2d(12, 57))
-                .lineToConstantHeading(new Vector2d(14, 59.3))
-                .waitSeconds(4)
-                .addSpatialMarker(new Vector2d(14, 59.3), () -> {
-                    ;
-                                    servo_gheara.setPosition(0.13);
-                })
-                .waitSeconds(2)
-                .lineToConstantHeading(new Vector2d(12.1, 57.8))
-                .waitSeconds(2)
+                .lineToLinearHeading(new Pose2d(9,45,-45))
+                .waitSeconds(0.7)
+                .lineToLinearHeading(new Pose2d(9.1,45,-45))
                 .addDisplacementMarker(() -> {
-                    ;
-                                    lift.moveLift(500);
+                    servo_deposit.setPosition(0.1);
+                    lift.moveLift(0);
+
                 })
-                .waitSeconds(4)
-//                                .lineToConstantHeading(new Vector2d(6, 56))
-//                                .waitSeconds(2)
-                .lineToLinearHeading(new Pose2d(-10, 58, Math.toRadians(180)))
-                .waitSeconds(3)
+                .lineToLinearHeading(new Pose2d(9,45,-45))
+
+                .lineToLinearHeading(new Pose2d(-7.5,50,0))
+                .lineToLinearHeading(new Pose2d(-7.6,50,0))
+                .addDisplacementMarker(() -> {
+                    servo_brat2.setPosition(0.28);
+                    rev_hd_brat.setTargetPosition(poz0_rev-315);
+                    rev_hd_brat.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+                    rev_hd_brat.setPower(0.45);
+                })
+                .lineToLinearHeading(new Pose2d(-7.5,50,0))
+                .waitSeconds(1)
+                .lineToLinearHeading(new Pose2d(-7.6,50,0))
+                .addDisplacementMarker(() -> {
+                    servo_gheara.setPosition(0);
+                })
+                .lineToLinearHeading(new Pose2d(-7.5,50,0))
+                .waitSeconds(1)
+                .lineToLinearHeading(new Pose2d(-7.6,50,0))
+                .addDisplacementMarker(() -> {
+                    servo_brat2.setPosition(0.4);
+
+                    rev_hd_brat.setTargetPosition(poz0_rev-48);
+                    rev_hd_brat.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+                    rev_hd_brat.setPower(0.45);
+                })
+
+                .lineToLinearHeading(new Pose2d(-7.5,50,0))
+                .waitSeconds(0.420)
+                .lineToLinearHeading(new Pose2d(-7.6,50,0))
+
+                .addDisplacementMarker(() -> {
+                    servo_brat3.setPosition(0.98);
+                })
+                .lineToLinearHeading(new Pose2d(-7.5,50,0))
+                .waitSeconds(0.420)
+                .lineToLinearHeading(new Pose2d(-7.6,50,0))
+                .addDisplacementMarker(() -> {
+                            servo_brat2.setPosition(0.549);
+                })
+                .lineToLinearHeading(new Pose2d(-7.5,50,0))
+                .waitSeconds(0.450)
+                .lineToLinearHeading(new Pose2d(-7.6,50,0))
+                .addDisplacementMarker(() -> {
+                            servo_gheara.setPosition(Range.clip(0.15, 0, 1));
+                            servo_deposit.setPosition(Range.clip(0.23, 0, 1));
+                })
+                .lineToLinearHeading(new Pose2d(-7.5,50,0))
+                .waitSeconds(0.300)
+                .lineToLinearHeading(new Pose2d(-7.6,50,0))
+                .addDisplacementMarker(() -> {
+                            servo_brat2.setPosition(Range.clip(0.37, 0, 1));
+
+                            rev_hd_brat.setTargetPosition(poz0_rev - 25);
+                            rev_hd_brat.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+                            rev_hd_brat.setPower(0.45);
+                })
+                .lineToLinearHeading(new Pose2d(-7.5,50,0))
+                .waitSeconds(0.150)
+                .lineToLinearHeading(new Pose2d(-7.6,50,0))
+                .addDisplacementMarker(() -> {
+                    servo_gheara.setPosition(Range.clip(0.22,0,1));
+                    rev_hd_brat.setTargetPosition(poz0_rev-25);
+                    rev_hd_brat.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+                    rev_hd_brat.setPower(0.45);
+                    servo_brat2.setPosition(0.133);
+                    servo_brat3.setPosition(0.41);
+                })
+                .lineToLinearHeading(new Pose2d(9,45,-45))
+                .waitSeconds(0.1)
+                .lineToLinearHeading(new Pose2d(9.1,45,-45))
+
+                // inapoi mid
+                .addDisplacementMarker( () -> {
+                    lift.moveLift(1010);
+                })
+                .lineToLinearHeading(new Pose2d(9,45,-45))
+                .waitSeconds(0.7)
+                .lineToLinearHeading(new Pose2d(9.1,45,-45))
+                .addDisplacementMarker(() -> {
+                    servo_deposit.setPosition(0.1);
+                    lift.moveLift(0);
+                })
+                .lineToLinearHeading(new Pose2d(9,45,-45))
+                .waitSeconds(5)
+                .lineToLinearHeading(new Pose2d(9.1,45,-45))
+
                 .build();
         drive.followTrajectorySequence(traj1);
-//        drive.setPoseEstimate(new Pose2d(6, 55, Math.toRadians(45)));
-//        startPose = new Pose2d(6, 55, Math.toRadians(45));
-//
-//        TrajectorySequence traj2 = drive.trajectorySequenceBuilder(startPose)
-//                .lineToConstantHeading(new Vector2d(16, 62))
-//                .build();
-//        drive.followTrajectorySequence(traj2);
-
-        sleep(2000);
-        servo_gheara.setPosition(0.13);
 
         /* Update the telemetry */
         if(tagOfInterest != null)
@@ -226,57 +315,7 @@ public class autostanga extends LinearOpMode
 //            //right trajectory
 //        }
 
-        //ajunge in patratul din fata high-ului
 
-        /* sab
-        if(tagOfInterest == null){
-            Trajectory rotatie = drive.trajectoryBuilder(startPose)
-                    .lineToLinearHeading(new Pose2d(0, 0, Math.toRadians(-90)))
-                    .addTemporalMarker(4, () ->{
-                        //lift.moveLift(0);
-                    })
-                    .build();
-            drive.followTrajectory(rotatie);
-
-        }else{
-            switch(tagOfInterest.id){
-                case 1:
-                {
-                    Trajectory stanga = drive.trajectoryBuilder(startPose)
-                            .lineToLinearHeading(new Pose2d(-30, 0, Math.toRadians(-90)))
-                            .addTemporalMarker(4, () ->{
-                                //lift.moveLift(0);
-                            })
-                            .build();
-                    drive.followTrajectory(stanga);
-                }
-                    break;
-                case 2:
-                {
-                    Trajectory rotatie = drive.trajectoryBuilder(startPose)
-                            .lineToLinearHeading(new Pose2d(0, 0, Math.toRadians(-90)))
-                            .addTemporalMarker(4, () ->{
-                                //lift.moveLift(0);
-                            })
-                            .build();
-                    drive.followTrajectory(rotatie);
-                }
-                    break;
-                case 3:
-                {
-
-                    Trajectory dreapta = drive.trajectoryBuilder(startPose)
-                            .lineToLinearHeading(new Pose2d(30, 0, Math.toRadians(-90)))
-                            .addTemporalMarker(4, () ->{
-                                //lift.moveLift(0);
-                            })
-                            .build();
-                    drive.followTrajectory(dreapta);
-                }
-                    break;
-            }
-        }
-        */ // sab end
         /* You wouldn't have this in your autonomous, this is just to prevent the sample from ending */
         while (opModeIsActive()) {sleep(20);}
     }
