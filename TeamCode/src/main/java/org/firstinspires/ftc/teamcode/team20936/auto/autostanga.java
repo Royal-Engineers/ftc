@@ -185,82 +185,91 @@ public class autostanga extends LinearOpMode
         TrajectorySequence traj1 = drive.trajectorySequenceBuilder(startPose)
 
                 .lineToConstantHeading(new Vector2d(5,0))
-                .lineToConstantHeading(new Vector2d(0,45))
-                .lineToLinearHeading(new Pose2d(9.1,45,-45))
+                .lineToConstantHeading(new Vector2d(0,47))
+                .lineToLinearHeading(new Pose2d(9.1,47,-45))
 
                 // poz medium
-
                 .addDisplacementMarker( () -> {
-                    lift.moveLift(1010);
+                    lift.moveLift(1000);
+
+                    rev_hd_brat.setTargetPosition(poz0_rev-80);
+                    rev_hd_brat.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+                    rev_hd_brat.setPower(0.45);
                 })
-                .lineToLinearHeading(new Pose2d(9,45,-45))
+                .lineToLinearHeading(new Pose2d(9,47,-45))
                 .waitSeconds(0.7)
-                .lineToLinearHeading(new Pose2d(9.1,45,-45))
+                .lineToLinearHeading(new Pose2d(9.1,47,-45))
                 .addDisplacementMarker(() -> {
                     servo_deposit.setPosition(0.1);
                     lift.moveLift(0);
-
                 })
-                .lineToLinearHeading(new Pose2d(9,45,-45))
+                .lineToLinearHeading(new Pose2d(-8,52,0))
+                .waitSeconds(0.1)
+                .lineToLinearHeading(new Pose2d(-8.1,52,0))
 
-                .lineToLinearHeading(new Pose2d(-7.5,50,0))
-                .lineToLinearHeading(new Pose2d(-7.6,50,0))
+                .build();
+        drive.followTrajectorySequence(traj1);
+
+
+        TrajectorySequence traj_med = drive.trajectorySequenceBuilder(new Pose2d(-8,52,0))
+
+                .lineToLinearHeading(new Pose2d(-8.1,52,0))
                 .addDisplacementMarker(() -> {
-                    servo_brat2.setPosition(0.28);
-                    rev_hd_brat.setTargetPosition(poz0_rev-315);
+                    servo_brat2.setPosition(0.35222);
+                    rev_hd_brat.setTargetPosition(poz0_rev-350);
                     rev_hd_brat.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
                     rev_hd_brat.setPower(0.45);
                 })
-                .lineToLinearHeading(new Pose2d(-7.5,50,0))
-                .waitSeconds(1)
-                .lineToLinearHeading(new Pose2d(-7.6,50,0))
+                .lineToLinearHeading(new Pose2d(-8,52,0))
+                .waitSeconds(0.5)
+                .lineToLinearHeading(new Pose2d(-8.1,52,0))
                 .addDisplacementMarker(() -> {
                     servo_gheara.setPosition(0);
                 })
-                .lineToLinearHeading(new Pose2d(-7.5,50,0))
+                .lineToLinearHeading(new Pose2d(-8,52,0))
                 .waitSeconds(1)
-                .lineToLinearHeading(new Pose2d(-7.6,50,0))
+                .lineToLinearHeading(new Pose2d(-8.1,52,0))
                 .addDisplacementMarker(() -> {
                     servo_brat2.setPosition(0.4);
 
-                    rev_hd_brat.setTargetPosition(poz0_rev-48);
+                    rev_hd_brat.setTargetPosition(poz0_rev-49);
                     rev_hd_brat.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
                     rev_hd_brat.setPower(0.45);
                 })
 
-                .lineToLinearHeading(new Pose2d(-7.5,50,0))
+                .lineToLinearHeading(new Pose2d(-8,52,0))
                 .waitSeconds(0.420)
-                .lineToLinearHeading(new Pose2d(-7.6,50,0))
+                .lineToLinearHeading(new Pose2d(-8.1,52,0))
 
                 .addDisplacementMarker(() -> {
-                    servo_brat3.setPosition(0.98);
+                    servo_brat3.setPosition(0.99);
                 })
-                .lineToLinearHeading(new Pose2d(-7.5,50,0))
-                .waitSeconds(0.420)
-                .lineToLinearHeading(new Pose2d(-7.6,50,0))
+                .lineToLinearHeading(new Pose2d(-8,52,0))
+                .waitSeconds(0.2)
+                .lineToLinearHeading(new Pose2d(-8.1,52,0))
                 .addDisplacementMarker(() -> {
-                            servo_brat2.setPosition(0.549);
+                    servo_brat2.setPosition(0.624444);
                 })
-                .lineToLinearHeading(new Pose2d(-7.5,50,0))
+                .lineToLinearHeading(new Pose2d(-8,52,0))
                 .waitSeconds(0.450)
-                .lineToLinearHeading(new Pose2d(-7.6,50,0))
+                .lineToLinearHeading(new Pose2d(-8.1,52,0))
                 .addDisplacementMarker(() -> {
-                            servo_gheara.setPosition(Range.clip(0.15, 0, 1));
-                            servo_deposit.setPosition(Range.clip(0.23, 0, 1));
+                    servo_gheara.setPosition(Range.clip(0.15, 0, 1));
+                    servo_deposit.setPosition(Range.clip(0.23, 0, 1));
                 })
-                .lineToLinearHeading(new Pose2d(-7.5,50,0))
+                .lineToLinearHeading(new Pose2d(-8,52,0))
                 .waitSeconds(0.300)
-                .lineToLinearHeading(new Pose2d(-7.6,50,0))
+                .lineToLinearHeading(new Pose2d(-8.1,52,0))
                 .addDisplacementMarker(() -> {
-                            servo_brat2.setPosition(Range.clip(0.37, 0, 1));
+                    servo_brat2.setPosition(Range.clip(0.37, 0, 1));
 
-                            rev_hd_brat.setTargetPosition(poz0_rev - 25);
-                            rev_hd_brat.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-                            rev_hd_brat.setPower(0.45);
+                    rev_hd_brat.setTargetPosition(poz0_rev - 25);
+                    rev_hd_brat.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+                    rev_hd_brat.setPower(0.45);
                 })
-                .lineToLinearHeading(new Pose2d(-7.5,50,0))
+                .lineToLinearHeading(new Pose2d(-8,52,0))
                 .waitSeconds(0.150)
-                .lineToLinearHeading(new Pose2d(-7.6,50,0))
+                .lineToLinearHeading(new Pose2d(-8.1,52,0))
                 .addDisplacementMarker(() -> {
                     servo_gheara.setPosition(Range.clip(0.22,0,1));
                     rev_hd_brat.setTargetPosition(poz0_rev-25);
@@ -269,27 +278,208 @@ public class autostanga extends LinearOpMode
                     servo_brat2.setPosition(0.133);
                     servo_brat3.setPosition(0.41);
                 })
-                .lineToLinearHeading(new Pose2d(9,45,-45))
+                .lineToLinearHeading(new Pose2d(9,47,-45))
                 .waitSeconds(0.1)
-                .lineToLinearHeading(new Pose2d(9.1,45,-45))
+                .lineToLinearHeading(new Pose2d(9.1,47,-45))
 
                 // inapoi mid
                 .addDisplacementMarker( () -> {
-                    lift.moveLift(1010);
+                    lift.moveLift(1000);
                 })
-                .lineToLinearHeading(new Pose2d(9,45,-45))
+                .lineToLinearHeading(new Pose2d(9,47,-45))
                 .waitSeconds(0.7)
-                .lineToLinearHeading(new Pose2d(9.1,45,-45))
+                .lineToLinearHeading(new Pose2d(9.1,47,-45))
                 .addDisplacementMarker(() -> {
                     servo_deposit.setPosition(0.1);
                     lift.moveLift(0);
                 })
-                .lineToLinearHeading(new Pose2d(9,45,-45))
-                .waitSeconds(5)
-                .lineToLinearHeading(new Pose2d(9.1,45,-45))
+                .lineToLinearHeading(new Pose2d(-8,52,0))
+                .waitSeconds(0.1)
+                .lineToLinearHeading(new Pose2d(-8.1,52,0))
 
                 .build();
-        drive.followTrajectorySequence(traj1);
+        drive.followTrajectorySequence(traj_med);
+
+
+        TrajectorySequence traj_med1 = drive.trajectorySequenceBuilder(new Pose2d(-8,52,0))
+
+                .lineToLinearHeading(new Pose2d(-9.1,52,0))
+                .addDisplacementMarker(() -> {
+                    servo_brat2.setPosition(0.305555);
+                    rev_hd_brat.setTargetPosition(poz0_rev-345);
+                    rev_hd_brat.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+                    rev_hd_brat.setPower(0.45);
+                })
+                .lineToLinearHeading(new Pose2d(-9,52,0))
+                .waitSeconds(0.5)
+                .lineToLinearHeading(new Pose2d(-9.1,52,0))
+                .addDisplacementMarker(() -> {
+                    servo_gheara.setPosition(0);
+                })
+                .lineToLinearHeading(new Pose2d(-9,52,0))
+                .waitSeconds(1)
+                .lineToLinearHeading(new Pose2d(-9.1,52,0))
+                .addDisplacementMarker(() -> {
+                    servo_brat2.setPosition(0.4);
+
+                    rev_hd_brat.setTargetPosition(poz0_rev-49);
+                    rev_hd_brat.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+                    rev_hd_brat.setPower(0.45);
+                })
+
+                .lineToLinearHeading(new Pose2d(-9,52,0))
+                .waitSeconds(0.420)
+                .lineToLinearHeading(new Pose2d(-9.1,52,0))
+
+                .addDisplacementMarker(() -> {
+                    servo_brat3.setPosition(0.99);
+                })
+                .lineToLinearHeading(new Pose2d(-9,52,0))
+                .waitSeconds(0.2)
+                .lineToLinearHeading(new Pose2d(-9.1,52,0))
+                .addDisplacementMarker(() -> {
+                    servo_brat2.setPosition(0.624444);
+                })
+                .lineToLinearHeading(new Pose2d(-9,52,0))
+                .waitSeconds(0.450)
+                .lineToLinearHeading(new Pose2d(-9.1,52,0))
+                .addDisplacementMarker(() -> {
+                    servo_gheara.setPosition(Range.clip(0.15, 0, 1));
+                    servo_deposit.setPosition(Range.clip(0.23, 0, 1));
+                })
+                .lineToLinearHeading(new Pose2d(-9,52,0))
+                .waitSeconds(0.300)
+                .lineToLinearHeading(new Pose2d(-9.1,52,0))
+                .addDisplacementMarker(() -> {
+                    servo_brat2.setPosition(Range.clip(0.37, 0, 1));
+
+                    rev_hd_brat.setTargetPosition(poz0_rev - 25);
+                    rev_hd_brat.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+                    rev_hd_brat.setPower(0.45);
+                })
+                .lineToLinearHeading(new Pose2d(-9,52,0))
+                .waitSeconds(0.150)
+                .lineToLinearHeading(new Pose2d(-9.1,52,0))
+                .addDisplacementMarker(() -> {
+                    servo_gheara.setPosition(Range.clip(0.22,0,1));
+                    rev_hd_brat.setTargetPosition(poz0_rev-25);
+                    rev_hd_brat.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+                    rev_hd_brat.setPower(0.45);
+                    servo_brat2.setPosition(0.133);
+                    servo_brat3.setPosition(0.41);
+                })
+                .lineToLinearHeading(new Pose2d(9,47,-45))
+                .waitSeconds(0.1)
+                .lineToLinearHeading(new Pose2d(9.1,47,-45))
+
+                // inapoi mid
+                .addDisplacementMarker( () -> {
+                    lift.moveLift(1000);
+                })
+                .lineToLinearHeading(new Pose2d(9,47,-45))
+                .waitSeconds(0.7)
+                .lineToLinearHeading(new Pose2d(9.1,47,-45))
+                .addDisplacementMarker(() -> {
+                    servo_deposit.setPosition(0.1);
+                    lift.moveLift(0);
+                })
+                .lineToLinearHeading(new Pose2d(-8,52,0))
+                .waitSeconds(0.1)
+                .lineToLinearHeading(new Pose2d(-8.1,52,0))
+
+                .build();
+        drive.followTrajectorySequence(traj_med1);
+
+
+        TrajectorySequence traj_med2 = drive.trajectorySequenceBuilder(new Pose2d(-8,52,0))
+
+                .lineToLinearHeading(new Pose2d(-8.1,52,0))
+                .addDisplacementMarker(() -> {
+                    servo_brat2.setPosition(0.31666666);
+                    rev_hd_brat.setTargetPosition(poz0_rev-374);
+                    rev_hd_brat.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+                    rev_hd_brat.setPower(0.45);
+                })
+                .lineToLinearHeading(new Pose2d(-8,52,0))
+                .waitSeconds(1)
+                .lineToLinearHeading(new Pose2d(-8.1,52,0))
+                .addDisplacementMarker(() -> {
+                    servo_gheara.setPosition(0);
+                })
+                .lineToLinearHeading(new Pose2d(-8,52,0))
+                .waitSeconds(1)
+                .lineToLinearHeading(new Pose2d(-8.1,52,0))
+                .addDisplacementMarker(() -> {
+                    servo_brat2.setPosition(0.4);
+
+                    rev_hd_brat.setTargetPosition(poz0_rev-49);
+                    rev_hd_brat.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+                    rev_hd_brat.setPower(0.45);
+                })
+
+                .lineToLinearHeading(new Pose2d(-8,52,0))
+                .waitSeconds(0.420)
+                .lineToLinearHeading(new Pose2d(-8.1,52,0))
+
+                .addDisplacementMarker(() -> {
+                    servo_brat3.setPosition(0.99);
+                })
+                .lineToLinearHeading(new Pose2d(-8,52,0))
+                .waitSeconds(0.2)
+                .lineToLinearHeading(new Pose2d(-8.1,52,0))
+                .addDisplacementMarker(() -> {
+                    servo_brat2.setPosition(0.624444);
+                })
+                .lineToLinearHeading(new Pose2d(-8,52,0))
+                .waitSeconds(0.450)
+                .lineToLinearHeading(new Pose2d(-8.1,52,0))
+                .addDisplacementMarker(() -> {
+                    servo_gheara.setPosition(Range.clip(0.15, 0, 1));
+                    servo_deposit.setPosition(Range.clip(0.23, 0, 1));
+                })
+                .lineToLinearHeading(new Pose2d(-8,52,0))
+                .waitSeconds(0.300)
+                .lineToLinearHeading(new Pose2d(-8.1,52,0))
+                .addDisplacementMarker(() -> {
+                    servo_brat2.setPosition(Range.clip(0.37, 0, 1));
+
+                    rev_hd_brat.setTargetPosition(poz0_rev - 25);
+                    rev_hd_brat.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+                    rev_hd_brat.setPower(0.45);
+                })
+                .lineToLinearHeading(new Pose2d(-8,52,0))
+                .waitSeconds(0.150)
+                .lineToLinearHeading(new Pose2d(-8.1,52,0))
+                .addDisplacementMarker(() -> {
+                    servo_gheara.setPosition(Range.clip(0.22,0,1));
+                    rev_hd_brat.setTargetPosition(poz0_rev-25);
+                    rev_hd_brat.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+                    rev_hd_brat.setPower(0.45);
+                    servo_brat2.setPosition(0.133);
+                    servo_brat3.setPosition(0.41);
+                })
+                .lineToLinearHeading(new Pose2d(9,47,-45))
+                .waitSeconds(0.1)
+                .lineToLinearHeading(new Pose2d(9.1,47,-45))
+
+                // inapoi mid
+                .addDisplacementMarker( () -> {
+                    lift.moveLift(1000);
+                })
+                .lineToLinearHeading(new Pose2d(9,47,-45))
+                .waitSeconds(0.7)
+                .lineToLinearHeading(new Pose2d(9.1,47,-45))
+                .addDisplacementMarker(() -> {
+                    servo_deposit.setPosition(0.1);
+                    lift.moveLift(0);
+                })
+                .lineToLinearHeading(new Pose2d(-8,52,0))
+                .waitSeconds(0.1)
+                .lineToLinearHeading(new Pose2d(-8.1,52,0))
+
+                .build();
+        //drive.followTrajectorySequence(traj_med2);
+
 
         /* Update the telemetry */
         if(tagOfInterest != null)
@@ -304,16 +494,48 @@ public class autostanga extends LinearOpMode
             telemetry.update();
         }
 
+        Pose2d startParc = new Pose2d(-8.1,52,0);
+        TrajectorySequence parcare;
         /* Actually do something useful */
-//        if(tagOfInterest == null){
-//            //default trajectory here if preferred
-//        }else if(tagOfInterest.id == LEFT){
-//            //left trajectory
-//        }else if(tagOfInterest.id == MIDDLE){
-//            //middle trajectory
-//        }else{
-//            //right trajectory
-//        }
+        if(tagOfInterest == null || tagOfInterest.id == MIDDLE){
+            parcare = drive.trajectorySequenceBuilder(startParc)
+                    // lucky guess poz 2
+                    .lineToLinearHeading(new Pose2d(2,50,0))
+
+                    .addDisplacementMarker(() -> {
+                        servo_brat2.setPosition(Range.clip(0.37, 0, 1));
+                        servo_brat3.setPosition(Range.clip(0.4, 0, 1));
+                        servo_gheara.setPosition(Range.clip(0.22, 0, 1));
+                        servo_deposit.setPosition(Range.clip(0.1, 0, 1));
+                    })
+                    .build();
+        }else if(tagOfInterest.id == LEFT){
+            parcare = drive.trajectorySequenceBuilder(startParc)
+
+                    .lineToLinearHeading(new Pose2d(-20,50,0))
+
+                    .addDisplacementMarker(() -> {
+                        servo_brat2.setPosition(Range.clip(0.37, 0, 1));
+                        servo_brat3.setPosition(Range.clip(0.4, 0, 1));
+                        servo_gheara.setPosition(Range.clip(0.22, 0, 1));
+                        servo_deposit.setPosition(Range.clip(0.1, 0, 1));
+                    })
+                    .build();
+        }else{
+            parcare = drive.trajectorySequenceBuilder(startParc)
+
+                    .lineToLinearHeading(new Pose2d(25,50,0))
+
+                    .addDisplacementMarker(() -> {
+                        servo_brat2.setPosition(Range.clip(0.37, 0, 1));
+                        servo_brat3.setPosition(Range.clip(0.4, 0, 1));
+                        servo_gheara.setPosition(Range.clip(0.22, 0, 1));
+                        servo_deposit.setPosition(Range.clip(0.1, 0, 1));
+                    })
+                    .build();
+        }
+
+        drive.followTrajectorySequence(parcare);
 
 
         /* You wouldn't have this in your autonomous, this is just to prevent the sample from ending */
