@@ -186,26 +186,26 @@ public class autostanga extends LinearOpMode
 
                 .lineToConstantHeading(new Vector2d(5,0))
                 .lineToConstantHeading(new Vector2d(0,47))
-                .lineToLinearHeading(new Pose2d(9.1,47,-45))
+                .lineToLinearHeading(new Pose2d(11,47,-45))
 
                 // poz medium
                 .addDisplacementMarker( () -> {
-                    lift.moveLift(1000);
+                    lift.moveLift(1010);
 
                     rev_hd_brat.setTargetPosition(poz0_rev-80);
                     rev_hd_brat.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
                     rev_hd_brat.setPower(0.45);
                 })
-                .lineToLinearHeading(new Pose2d(9,47,-45))
+                .lineToLinearHeading(new Pose2d(11.1,47,-45))
                 .waitSeconds(0.7)
-                .lineToLinearHeading(new Pose2d(9.1,47,-45))
+                .lineToLinearHeading(new Pose2d(11,47,-45))
                 .addDisplacementMarker(() -> {
                     servo_deposit.setPosition(0.1);
                     lift.moveLift(0);
                 })
-                .lineToLinearHeading(new Pose2d(-8,52,0))
+                .lineToLinearHeading(new Pose2d(-5,52,0))
                 .waitSeconds(0.1)
-                .lineToLinearHeading(new Pose2d(-8.1,52,0))
+                .lineToLinearHeading(new Pose2d(-5.1,52,0))
 
                 .build();
         drive.followTrajectorySequence(traj1);
@@ -213,22 +213,22 @@ public class autostanga extends LinearOpMode
 
         TrajectorySequence traj_med = drive.trajectorySequenceBuilder(new Pose2d(-8,52,0))
 
-                .lineToLinearHeading(new Pose2d(-8.1,52,0))
+                .lineToLinearHeading(new Pose2d(-5.1,52,0))
                 .addDisplacementMarker(() -> {
                     servo_brat2.setPosition(0.35222);
                     rev_hd_brat.setTargetPosition(poz0_rev-350);
                     rev_hd_brat.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
                     rev_hd_brat.setPower(0.45);
                 })
-                .lineToLinearHeading(new Pose2d(-8,52,0))
+                .lineToLinearHeading(new Pose2d(-5,52,0))
                 .waitSeconds(0.5)
-                .lineToLinearHeading(new Pose2d(-8.1,52,0))
+                .lineToLinearHeading(new Pose2d(-5.1,52,0))
                 .addDisplacementMarker(() -> {
                     servo_gheara.setPosition(0);
                 })
-                .lineToLinearHeading(new Pose2d(-8,52,0))
+                .lineToLinearHeading(new Pose2d(-5,52,0))
                 .waitSeconds(1)
-                .lineToLinearHeading(new Pose2d(-8.1,52,0))
+                .lineToLinearHeading(new Pose2d(-5.1,52,0))
                 .addDisplacementMarker(() -> {
                     servo_brat2.setPosition(0.4);
 
@@ -237,9 +237,9 @@ public class autostanga extends LinearOpMode
                     rev_hd_brat.setPower(0.45);
                 })
 
-                .lineToLinearHeading(new Pose2d(-8,52,0))
+                .lineToLinearHeading(new Pose2d(-5,52,0))
                 .waitSeconds(0.420)
-                .lineToLinearHeading(new Pose2d(-8.1,52,0))
+                .lineToLinearHeading(new Pose2d(-5.1,52,0))
 
                 .addDisplacementMarker(() -> {
                     servo_brat3.setPosition(0.99);
@@ -278,24 +278,28 @@ public class autostanga extends LinearOpMode
                     servo_brat2.setPosition(0.133);
                     servo_brat3.setPosition(0.41);
                 })
-                .lineToLinearHeading(new Pose2d(9,47,-45))
+                .lineToLinearHeading(new Pose2d(10,47,-45))
                 .waitSeconds(0.1)
-                .lineToLinearHeading(new Pose2d(9.1,47,-45))
+                .lineToLinearHeading(new Pose2d(10.1,47,-45))
 
                 // inapoi mid
                 .addDisplacementMarker( () -> {
                     lift.moveLift(1000);
+
+                    rev_hd_brat.setTargetPosition(poz0_rev-80);
+                    rev_hd_brat.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+                    rev_hd_brat.setPower(0.45);
                 })
-                .lineToLinearHeading(new Pose2d(9,47,-45))
+                .lineToLinearHeading(new Pose2d(10,47,-45))
                 .waitSeconds(0.7)
-                .lineToLinearHeading(new Pose2d(9.1,47,-45))
+                .lineToLinearHeading(new Pose2d(10.1,47,-45))
                 .addDisplacementMarker(() -> {
                     servo_deposit.setPosition(0.1);
                     lift.moveLift(0);
                 })
-                .lineToLinearHeading(new Pose2d(-8,52,0))
+                .lineToLinearHeading(new Pose2d(-5,52,0))
                 .waitSeconds(0.1)
-                .lineToLinearHeading(new Pose2d(-8.1,52,0))
+                .lineToLinearHeading(new Pose2d(-5.1,52,0))
 
                 .build();
         drive.followTrajectorySequence(traj_med);
@@ -303,22 +307,22 @@ public class autostanga extends LinearOpMode
 
         TrajectorySequence traj_med1 = drive.trajectorySequenceBuilder(new Pose2d(-8,52,0))
 
-                .lineToLinearHeading(new Pose2d(-9.1,52,0))
+                .lineToLinearHeading(new Pose2d(-5.6,52,0))
                 .addDisplacementMarker(() -> {
                     servo_brat2.setPosition(0.305555);
                     rev_hd_brat.setTargetPosition(poz0_rev-345);
                     rev_hd_brat.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
                     rev_hd_brat.setPower(0.45);
                 })
-                .lineToLinearHeading(new Pose2d(-9,52,0))
+                .lineToLinearHeading(new Pose2d(-5.5,52,0))
                 .waitSeconds(0.5)
-                .lineToLinearHeading(new Pose2d(-9.1,52,0))
+                .lineToLinearHeading(new Pose2d(-5.6,52,0))
                 .addDisplacementMarker(() -> {
                     servo_gheara.setPosition(0);
                 })
-                .lineToLinearHeading(new Pose2d(-9,52,0))
+                .lineToLinearHeading(new Pose2d(-5.5,52,0))
                 .waitSeconds(1)
-                .lineToLinearHeading(new Pose2d(-9.1,52,0))
+                .lineToLinearHeading(new Pose2d(-5.6,52,0))
                 .addDisplacementMarker(() -> {
                     servo_brat2.setPosition(0.4);
 
@@ -327,9 +331,9 @@ public class autostanga extends LinearOpMode
                     rev_hd_brat.setPower(0.45);
                 })
 
-                .lineToLinearHeading(new Pose2d(-9,52,0))
+                .lineToLinearHeading(new Pose2d(-5.5,52,0))
                 .waitSeconds(0.420)
-                .lineToLinearHeading(new Pose2d(-9.1,52,0))
+                .lineToLinearHeading(new Pose2d(-5.6,52,0))
 
                 .addDisplacementMarker(() -> {
                     servo_brat3.setPosition(0.99);
@@ -368,17 +372,21 @@ public class autostanga extends LinearOpMode
                     servo_brat2.setPosition(0.133);
                     servo_brat3.setPosition(0.41);
                 })
-                .lineToLinearHeading(new Pose2d(9,47,-45))
+                .lineToLinearHeading(new Pose2d(11,47,-45))
                 .waitSeconds(0.1)
-                .lineToLinearHeading(new Pose2d(9.1,47,-45))
+                .lineToLinearHeading(new Pose2d(11.1,47,-45))
 
                 // inapoi mid
                 .addDisplacementMarker( () -> {
                     lift.moveLift(1000);
+
+                    rev_hd_brat.setTargetPosition(poz0_rev-80);
+                    rev_hd_brat.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+                    rev_hd_brat.setPower(0.45);
                 })
-                .lineToLinearHeading(new Pose2d(9,47,-45))
+                .lineToLinearHeading(new Pose2d(11,47,-45))
                 .waitSeconds(0.7)
-                .lineToLinearHeading(new Pose2d(9.1,47,-45))
+                .lineToLinearHeading(new Pose2d(11.1,47,-45))
                 .addDisplacementMarker(() -> {
                     servo_deposit.setPosition(0.1);
                     lift.moveLift(0);
@@ -503,7 +511,7 @@ public class autostanga extends LinearOpMode
                     .lineToLinearHeading(new Pose2d(2,50,0))
 
                     .addDisplacementMarker(() -> {
-                        servo_brat2.setPosition(Range.clip(0.37, 0, 1));
+                        servo_brat2.setPosition(Range.clip(0.5, 0, 1));
                         servo_brat3.setPosition(Range.clip(0.4, 0, 1));
                         servo_gheara.setPosition(Range.clip(0.22, 0, 1));
                         servo_deposit.setPosition(Range.clip(0.1, 0, 1));
@@ -515,7 +523,7 @@ public class autostanga extends LinearOpMode
                     .lineToLinearHeading(new Pose2d(-20,50,0))
 
                     .addDisplacementMarker(() -> {
-                        servo_brat2.setPosition(Range.clip(0.37, 0, 1));
+                        servo_brat2.setPosition(Range.clip(0.5, 0, 1));
                         servo_brat3.setPosition(Range.clip(0.4, 0, 1));
                         servo_gheara.setPosition(Range.clip(0.22, 0, 1));
                         servo_deposit.setPosition(Range.clip(0.1, 0, 1));
@@ -527,7 +535,7 @@ public class autostanga extends LinearOpMode
                     .lineToLinearHeading(new Pose2d(25,50,0))
 
                     .addDisplacementMarker(() -> {
-                        servo_brat2.setPosition(Range.clip(0.37, 0, 1));
+                        servo_brat2.setPosition(Range.clip(0.5, 0, 1));
                         servo_brat3.setPosition(Range.clip(0.4, 0, 1));
                         servo_gheara.setPosition(Range.clip(0.22, 0, 1));
                         servo_deposit.setPosition(Range.clip(0.1, 0, 1));
