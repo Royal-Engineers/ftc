@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.team20936.teleop.subsystems;
 import com.arcrobotics.ftclib.hardware.ServoEx;
 
 import com.arcrobotics.ftclib.command.SubsystemBase;
-import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
@@ -11,9 +10,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class intakeSubsystem extends SubsystemBase {
 
-    private final ServoEx claw;
-    private final ServoEx wristRev;
-    private final ServoEx wrist;
+    private final ServoEx claw, wristRev, wrist;
     private final DcMotor armRev;
     private final Telemetry telemetry;
     public static double grabPos = 0.00;
@@ -35,6 +32,9 @@ public class intakeSubsystem extends SubsystemBase {
 
     public void periodic() {
         telemetry.addData("claw pos: ", claw.getPosition());
+        telemetry.addData("wrist pos: ", wrist.getPosition());
+        telemetry.addData("wristRev pos: ", wristRev.getPosition());
+        telemetry.addData("revMotor pos: ", armRev.getCurrentPosition());
     }
 
     public void grab() {
@@ -59,9 +59,44 @@ public class intakeSubsystem extends SubsystemBase {
         wristRev.setPosition(wristRevFlat);
         wrist.setPosition(wristOne);
 
-        armRev.setTargetPosition(poz0_rev);
+        armRev.setTargetPosition(poz0_rev - 27);
         armRev.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         armRev.setPower(0.45);
+    }
+
+    public void setManualArmRevPos(double target) {
+        target*=25;
+        armRev.setTargetPosition(armRev.getCurrentPosition() - (int)target);
+        armRev.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        armRev.setPower(1);
+    }
+
+    public void setManualWristPos(double target) {
+        target*=0.01;
+        wrist.setPosition(wrist.getPosition() - target);
+    }
+
+    public void setManualWristRevPos(double target) {
+        target*=0.01;
+        wristRev.setPosition(wristRev.getPosition() - target);
+    }
+
+    public void setArmRevPos(int target) {
+        armRev.setTargetPosition(poz0_rev - target);
+        armRev.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        armRev.setPower(1);
+    }
+
+    public void setWristPos(double target) {
+        wrist.setPosition(target);
+    }
+
+    public void setWristRevPos(double target) {
+        wristRev.setPosition(target);
+    }
+
+    public void setClawPos(double target) {
+        claw.setPosition(target);
     }
 
 }
