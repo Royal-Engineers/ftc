@@ -4,6 +4,11 @@ import com.arcrobotics.ftclib.command.CommandOpMode;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
+import org.firstinspires.ftc.teamcode.team20936.teleop.commands.clawRelease;
+import org.firstinspires.ftc.teamcode.team20936.teleop.commands.down;
+import org.firstinspires.ftc.teamcode.team20936.teleop.commands.setManualWristPos;
+import org.firstinspires.ftc.teamcode.team20936.teleop.commands.setManualWristRevPos;
+import org.firstinspires.ftc.teamcode.team20936.teleop.commands.up;
 import org.firstinspires.ftc.teamcode.team20936.teleop.subsystems.depositSubsystem;
 import org.firstinspires.ftc.teamcode.team20936.teleop.subsystems.intakeSubsystem;
 
@@ -16,16 +21,14 @@ import org.firstinspires.ftc.teamcode.team20936.teleop.commands.raiseHigh;
 import org.firstinspires.ftc.teamcode.team20936.teleop.commands.retract;
 import org.firstinspires.ftc.teamcode.team20936.teleop.commands.raiseMiddle;
 import org.firstinspires.ftc.teamcode.team20936.teleop.commands.manualControl;
-import org.firstinspires.ftc.teamcode.team20936.teleop.commands.setManualArmRevPos;
-import org.firstinspires.ftc.teamcode.team20936.teleop.commands.setManualWristPos;
-import org.firstinspires.ftc.teamcode.team20936.teleop.commands.setManualWristRevPos;
-import org.firstinspires.ftc.teamcode.team20936.teleop.commands.setClawPos;
 import org.firstinspires.ftc.teamcode.team20936.teleop.commands.transfer;
+import org.firstinspires.ftc.teamcode.team20936.teleop.subsystems.revSubsystem;
 
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.hardware.ServoEx;
 import com.arcrobotics.ftclib.hardware.SimpleServo;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
@@ -43,8 +46,8 @@ public class commandBaseTeleOp extends CommandOpMode{
     private boolean latch_toggle = true;
     private boolean sens_toggle = true;
     private Motor fL, fR, bR, bL;
-    private DcMotor armRev;
-    private DcMotorEx leftMotor, rightMotor;
+
+    private DcMotorEx leftMotor, rightMotor, armRev;
     private MecanumDrive m_drive;
     private ServoEx claw, wristRev, wrist, latch;
     private GamepadEx controller1, controller2;
@@ -53,6 +56,7 @@ public class commandBaseTeleOp extends CommandOpMode{
 
     intakeSubsystem m_intakeSubsystem;
     depositSubsystem m_depositSubsystem;
+    revSubsystem m_revSubsystem;
 
     @Override
     public void initialize() {
@@ -67,9 +71,12 @@ public class commandBaseTeleOp extends CommandOpMode{
         wristRev.setPosition(Range.clip(0.4, 0, 1));
         wrist = new SimpleServo(hardwareMap, "servo_brat2", 0, 1);
         wrist.setPosition(Range.clip(0.37, 0, 1));
-        armRev = hardwareMap.dcMotor.get("rev_hd_brat");
-        armRev.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        m_intakeSubsystem = new intakeSubsystem(claw, wristRev, wrist, armRev, telemetry);
+
+        armRev = hardwareMap.get(DcMotorEx.class, "rev_hd_brat"); armRev.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        armRev.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);  final int poz0_rev = armRev.getCurrentPosition();
+        m_revSubsystem = new revSubsystem(armRev, poz0_rev, telemetry);
+
+        m_intakeSubsystem = new intakeSubsystem(claw, wristRev, wrist, telemetry);
 
         sensorDistanta_intake = hardwareMap.get(DistanceSensor.class, "senzor_gheara");
 
@@ -92,6 +99,24 @@ public class commandBaseTeleOp extends CommandOpMode{
         slideHeight = 1;
 
 
+        controller2.getGamepadButton(GamepadKeys.Button.A)
+                .whenPressed(new SequentialCommandGroup(
+                        new down(m_revSubsystem),
+                        new pickUp(m_intakeSubsystem),
+                        new clawRelease(m_intakeSubsystem)
+                ));
+
+        controller2.getGamepadButton(GamepadKeys.Button.B)
+                .whenPressed(new SequentialCommandGroup(
+                        new clawGrab(m_intakeSubsystem),
+                        new WaitCommand(200),
+                        new lowPos(m_intakeSubsystem),
+                        new up(m_revSubsystem)
+                ));
+
+        controller2.getGamepadButton(GamepadKeys.Button.Y)
+                .whenPressed(new transfer(m_intakeSubsystem, m_depositSubsystem, m_revSubsystem));
+
     }
 
     @Override
@@ -99,8 +124,6 @@ public class commandBaseTeleOp extends CommandOpMode{
 
 
         m_drive.driveRobotCentric(-controller1.getLeftX(), -controller1.getLeftY(), -controller1.getRightX());
-
-
 
         if (gamepad2.right_bumper)
         {
@@ -111,34 +134,24 @@ public class commandBaseTeleOp extends CommandOpMode{
             sleep(100);
         }
 
-        if(gamepad2.a){
-            CommandScheduler.getInstance().schedule(
-              new pickUp(m_intakeSubsystem)
-            );
-        }
-
-        if(gamepad2.b) {
-            CommandScheduler.getInstance().schedule(
-                    new SequentialCommandGroup(
-                            new clawGrab(m_intakeSubsystem),
-                            new WaitCommand(100),
-                            new lowPos(m_intakeSubsystem)
-                    )
-            );
-        }
-
         if (gamepad2.options) {
             sens_toggle = ! sens_toggle;
             sleep(100);
         }
+        telemetry.addData("sensor active: ", sens_toggle);
+        if (gamepad1.options) {
+            if (latch_toggle) {
+                CommandScheduler.getInstance().schedule(new latchOpen(m_depositSubsystem));
+                latch_toggle = !latch_toggle;
 
-        if(claw.getPosition() > 0.2 && sensorDistanta_intake.getDistance(DistanceUnit.MM) < 30 && sens_toggle == true)
-        {
-            CommandScheduler.getInstance().schedule(
-                    new clawGrab(m_intakeSubsystem),
-                    new WaitCommand(100),
-                    new lowPos(m_intakeSubsystem)
-            );
+                sleep(100);
+            }
+            else {
+                CommandScheduler.getInstance().schedule(new latchClose(m_depositSubsystem));
+                latch_toggle = !latch_toggle;
+
+                sleep(100);
+            }
         }
 
         if (gamepad1.a) {
@@ -183,42 +196,65 @@ public class commandBaseTeleOp extends CommandOpMode{
                 );
         }
 
-        if (gamepad1.options) {
-            if (latch_toggle) {
-                CommandScheduler.getInstance().schedule(new latchOpen(m_depositSubsystem));
-                latch_toggle = !latch_toggle;
-
-                sleep(100);
-            }
-            else {
-                CommandScheduler.getInstance().schedule(new latchClose(m_depositSubsystem));
-                latch_toggle = !latch_toggle;
-
-                sleep(100);
-            }
-        }
-
-        CommandScheduler.getInstance().schedule(
-                new setManualArmRevPos(m_intakeSubsystem, gamepad2.left_stick_y)
-        );
-        CommandScheduler.getInstance().schedule(
-                new setManualWristPos(m_intakeSubsystem, gamepad2.right_stick_y)
-        );
-        CommandScheduler.getInstance().schedule(
-                new setManualWristRevPos(m_intakeSubsystem, gamepad2.right_stick_x)
-        );
-
-        if(gamepad2.y) {
-            CommandScheduler.getInstance().schedule(
-                    new transfer(m_intakeSubsystem, m_depositSubsystem)
-            );
+        if(claw.getPosition() > 0.2 && sensorDistanta_intake.getDistance(DistanceUnit.MM) < 30 && sens_toggle == true)
+        {
+            schedule(new SequentialCommandGroup(
+                    new clawGrab(m_intakeSubsystem),
+                    new WaitCommand(200),
+                    new up(m_revSubsystem),
+                    new lowPos(m_intakeSubsystem)
+            ));
         }
 
 
+        if(gamepad2.right_stick_y > 0.01 && wrist.getPosition() >= 0)
+        {
+            double dist = Math.abs(gamepad2.right_stick_y) * 0.01;
+
+            wrist.setPosition(Range.clip(wrist.getPosition() - dist, 0, 1)) ;
+        }
+        else if(gamepad2.right_stick_y < 0.01 && wrist.getPosition() <= 0.7)
+        {
+            double dist = Math.abs(gamepad2.right_stick_y) * 0.01;
+
+            wrist.setPosition(Range.clip(wrist.getPosition() + dist, 0, 1));
+        }
+
+
+        if(gamepad2.right_stick_x > 0.01 && wristRev.getPosition() >= 0)
+        {
+            double dist = Math.abs(gamepad2.right_stick_x) * 0.01;
+
+            wristRev.setPosition(Range.clip(wristRev.getPosition() - dist, 0, 1)) ;
+        }
+        else if(gamepad2.right_stick_x < 0.01 && wristRev.getPosition() <= 1)
+        {
+            double dist = Math.abs(gamepad2.right_stick_x) * 0.01;
+
+            wristRev.setPosition(Range.clip(wristRev.getPosition() + dist, 0, 1));
+        }
+
+        if(gamepad2.left_stick_y < -0.01)
+        {
+            int dist = (int)Math.abs(gamepad2.left_stick_y*25);
+
+            armRev.setTargetPosition(armRev.getCurrentPosition() + dist);
+
+            armRev.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+
+            armRev.setPower(0.7);
+
+        }
+        else if(gamepad2.left_stick_y > 0.01)
+        {
+            armRev.setTargetPosition(armRev.getCurrentPosition() - (int)(gamepad2.left_stick_y*25));
+            armRev.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+
+            armRev.setPower(-1);
+        }
 
         CommandScheduler.getInstance().run();
         telemetry.update();
-
 
         }
 

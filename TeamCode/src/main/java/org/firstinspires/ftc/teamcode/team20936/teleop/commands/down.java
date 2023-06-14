@@ -4,19 +4,17 @@ import com.arcrobotics.ftclib.command.CommandBase;
 
 import org.firstinspires.ftc.teamcode.team20936.teleop.subsystems.revSubsystem;
 
-public class setArmRevPos extends CommandBase {
+public class down extends CommandBase {
 
     revSubsystem m_revSubsystem;
-    int target;
 
-    public setArmRevPos (revSubsystem subsystem, int target) {
+    public down (revSubsystem subsystem) {
         m_revSubsystem = subsystem;
-        this.target = target;
         addRequirements(m_revSubsystem);
     }
 
     @Override
-    public void initialize() { m_revSubsystem.setArmRevPos(target); }
+    public void initialize() { m_revSubsystem.down(); }
 
     @Override
     public boolean isFinished() { return true; }
