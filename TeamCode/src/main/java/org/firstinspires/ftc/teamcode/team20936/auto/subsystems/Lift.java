@@ -57,16 +57,16 @@ public class Lift {
 
     public void setLiftPosition(int height) {
         target = height;
-        double currentPos = left.getCurrentPosition();
+        double currentPos = -left.getCurrentPosition();
 
         if (currentPos < target) {
             // Going up
-            leftPower = 1;
-            rightPower = -1;
-        } else if (currentPos > target) {
-            // Going down
             leftPower = -1;
             rightPower = 1;
+        } else if (currentPos > target) {
+            // Going down
+            leftPower = 1;
+            rightPower = -1;
         }
 
         // se schimba aici cu + sau - in functie de directie
@@ -75,8 +75,8 @@ public class Lift {
 
         // nou: stanga = stanga sus
         // drapta = drapta sus
-        left.setTargetPosition((int) target);
-        right.setTargetPosition((int) -target);
+        left.setTargetPosition((int) -target);
+        right.setTargetPosition((int) target);
 
         left.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         right.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);

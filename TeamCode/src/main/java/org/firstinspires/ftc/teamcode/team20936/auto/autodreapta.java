@@ -1,11 +1,9 @@
 package org.firstinspires.ftc.teamcode.team20936.auto;
 
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -13,6 +11,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 
+import org.firstinspires.ftc.teamcode.team20936.auto.AprilTagDetectionPipeline;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -186,7 +185,6 @@ public class autodreapta extends LinearOpMode
 
                 .lineToConstantHeading(new Vector2d(5,0))
                 .lineToConstantHeading(new Vector2d(5,50))
-
 
                 .build();
         drive.followTrajectorySequence(traj1);

@@ -224,7 +224,6 @@ public class teleop extends LinearOpMode{
 
                 // --- asta e b:
                 rev_hd_brat.setTargetPosition(poz0_rev-27);
-
                 rev_hd_brat.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
                 rev_hd_brat.setPower(0.45);
 
@@ -251,8 +250,6 @@ public class teleop extends LinearOpMode{
 
                 servo_brat2.setPosition(Range.clip(servo_brat2.getPosition() + dist, 0, 1));
             }
-
-
 
 
             if(gamepad2.right_stick_x > 0.01 && servo_brat3.getPosition() >= 0)
