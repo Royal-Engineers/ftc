@@ -1,136 +1,53 @@
 package org.firstinspires.ftc.teamcode.team20936.auto;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
-import com.arcrobotics.ftclib.command.SequentialCommandGroup;
-import com.arcrobotics.ftclib.command.WaitCommand;
-import com.arcrobotics.ftclib.drivebase.MecanumDrive;
-import com.arcrobotics.ftclib.gamepad.GamepadEx;
-import com.arcrobotics.ftclib.hardware.ServoEx;
-import com.arcrobotics.ftclib.hardware.SimpleServo;
-import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
 
-import org.firstinspires.ftc.teamcode.team20936.auto.AprilTagDetectionPipeline;
-import org.firstinspires.ftc.teamcode.team20936.auto.autoCommands.preloadTrajectoryLeft;
-import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.team20936.auto.autoCommands.followTrajectory;
+import org.firstinspires.ftc.teamcode.team20936.auto.subsystems.autoDriveSubsystem;
+import org.firstinspires.ftc.teamcode.team20936.teleop.commands.teleOpCommands.clawGrab;
 import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.teamcode.team20936.auto.subsystems.Lift;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.team20936.teleop.subsystems.depositSubsystem;
 import org.firstinspires.ftc.teamcode.team20936.teleop.subsystems.intakeSubsystem;
 
-import org.firstinspires.ftc.teamcode.team20936.teleop.commands.teleOpCommands.clawGrab;
-import org.firstinspires.ftc.teamcode.team20936.teleop.commands.teleOpCommands.clawRelease;
-import org.firstinspires.ftc.teamcode.team20936.teleop.commands.teleOpCommands.latchClose;
-import org.firstinspires.ftc.teamcode.team20936.teleop.commands.teleOpCommands.lowPos;
-import org.firstinspires.ftc.teamcode.team20936.teleop.commands.teleOpCommands.latchOpen;
-import org.firstinspires.ftc.teamcode.team20936.teleop.commands.teleOpCommands.manualControl;
-import org.firstinspires.ftc.teamcode.team20936.teleop.commands.teleOpCommands.pickUp;
-import org.firstinspires.ftc.teamcode.team20936.teleop.commands.teleOpCommands.raiseHigh;
-import org.firstinspires.ftc.teamcode.team20936.teleop.commands.teleOpCommands.raiseMiddle;
-import org.firstinspires.ftc.teamcode.team20936.teleop.commands.teleOpCommands.retract;
-import org.firstinspires.ftc.teamcode.team20936.teleop.commands.teleOpCommands.setArmRevPos;
-import org.firstinspires.ftc.teamcode.team20936.teleop.commands.teleOpCommands.setClawPos;
-import org.firstinspires.ftc.teamcode.team20936.teleop.commands.teleOpCommands.setManualWristPos;
-import org.firstinspires.ftc.teamcode.team20936.teleop.commands.teleOpCommands.setManualWristRevPos;
-import org.firstinspires.ftc.teamcode.team20936.teleop.commands.teleOpCommands.setWristPos;
-import org.firstinspires.ftc.teamcode.team20936.teleop.commands.teleOpCommands.setWristRevPos;
-import org.firstinspires.ftc.teamcode.team20936.teleop.commands.teleOpCommands.transfer;
-
 
 import java.util.ArrayList;
 
-@Disabled
 @Autonomous
 public class commandBaseAutoLeft extends CommandOpMode {
-
     OpenCvCamera camera;
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
-
     static final double FEET_PER_METER = 3.28084;
-
-    // Lens intrinsics
-    // UNITS ARE PIXELS
-    // NOTE: this calibration is for the C920 webcam at 800x448.
-    // You will need to do your own calibration for other configurations!
-    double fx = 578.272;
-    double fy = 578.272;
-    double cx = 402.145;
-    double cy = 221.506;
-
-    // UNITS ARE METERS
-    double tagsize = 0.166;
-
-    // Tag ID 1,2,3 from the 36h11 family
-    int LEFT = 1;
-    int MIDDLE = 2;
-    int RIGHT = 3;
-
+    double fx = 578.272, fy = 578.272, cx = 402.145, cy = 221.506, tagsize = 0.166;
+    int LEFT = 1, MIDDLE = 2, RIGHT = 3;
     AprilTagDetection tagOfInterest = null;
 
     intakeSubsystem m_intakeSubsystem;
     depositSubsystem m_depositSubsystem;
-    private DcMotorEx leftMotor, rightMotor, armRev;
-    private ServoEx claw, wristRev, wrist, latch;
-    private DistanceSensor sensorDistanta_intake;
-    private SampleMecanumDrive drive;
-
+    autoDriveSubsystem m_autoDriveSubsystem;
 
     @Override
     public void initialize() {
-        ElapsedTime timer = new ElapsedTime();
 
         CommandScheduler.getInstance().reset();
 
-        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
-
-        claw = new SimpleServo(hardwareMap, "servo_gheara", 0, 1);
-        claw.setPosition(Range.clip(0.22, 0, 1));
-        wristRev = new SimpleServo(hardwareMap, "servo_brat3", 0, 1);
-        wristRev.setPosition(Range.clip(0.4, 0, 1));
-        wrist = new SimpleServo(hardwareMap, "servo_brat2", 0, 1);
-        wrist.setPosition(Range.clip(0.37, 0, 1));
-
-        armRev = hardwareMap.get(DcMotorEx.class, "rev_hd_brat"); armRev.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        armRev.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        m_intakeSubsystem = new intakeSubsystem(claw, wristRev, wrist, armRev, telemetry);
-
-        sensorDistanta_intake = hardwareMap.get(DistanceSensor.class, "senzor_gheara");
-
-        leftMotor = hardwareMap.get(DcMotorEx.class, "liftStanga");
-        leftMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        rightMotor = hardwareMap.get(DcMotorEx.class, "liftDreapta");
-        rightMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        latch= new SimpleServo(hardwareMap, "servo_deposit", 0, 1);
-        latch.setPosition(Range.clip(0.1, 0, 1));
-
-        m_depositSubsystem = new depositSubsystem(leftMotor, rightMotor, latch, telemetry);
+        m_intakeSubsystem = new intakeSubsystem(hardwareMap, telemetry);
+        m_depositSubsystem = new depositSubsystem(hardwareMap, telemetry);
+        m_autoDriveSubsystem = new autoDriveSubsystem(hardwareMap);
 
 
+
+        ElapsedTime timer = new ElapsedTime();
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
@@ -152,20 +69,6 @@ public class commandBaseAutoLeft extends CommandOpMode {
         telemetry.setMsTransmissionInterval(100);
 
 
-
-
-
-        /*
-         * The INIT-loop:
-         * This REPLACES waitForStart!
-         */
-        while (!isStarted() && !isStopRequested()) {
-
-            wrist.setPosition(Range.clip(0.133, 0, 1));
-            wristRev.setPosition(Range.clip(0.41, 0, 1));
-            claw.setPosition(Range.clip(0.22, 0, 1));
-
-            latch.setPosition(Range.clip(0.23, 0, 1));
 
 
             ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
@@ -210,21 +113,18 @@ public class commandBaseAutoLeft extends CommandOpMode {
             telemetry.update();
             sleep(20);
         }
-    }
-    /*
-     * The START command just came in: now work off the latest snapshot acquired
-     * during the init loop.
-     */
 
     @Override
     public void run() {
 
 
+        CommandScheduler.getInstance().schedule(
+                new followTrajectory(m_autoDriveSubsystem, new Pose2d(0,0,0), new Pose2d(1,1,34)),
+                new clawGrab(m_intakeSubsystem)
+        );
 
 
 
-
-        /* Update the telemetry */
         if (tagOfInterest != null) {
             telemetry.addLine("Tag snapshot:\n");
             tagToTelemetry(tagOfInterest);
@@ -234,13 +134,8 @@ public class commandBaseAutoLeft extends CommandOpMode {
             telemetry.update();
         }
 
-        /* Actually do something useful */
 
-        CommandScheduler.getInstance().schedule(
-                new preloadTrajectoryLeft(drive),
-                new WaitCommand(5000),
-                new lowPos(m_intakeSubsystem)
-        );
+
 
 
         if (tagOfInterest == null || tagOfInterest.id == MIDDLE) {
@@ -253,12 +148,7 @@ public class commandBaseAutoLeft extends CommandOpMode {
 
         CommandScheduler.getInstance().run();
 
-
         }
-
-
-
-
 
 
     void tagToTelemetry(AprilTagDetection detection)
