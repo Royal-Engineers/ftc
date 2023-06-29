@@ -1,19 +1,24 @@
 package org.firstinspires.ftc.teamcode.team20936.auto;
 
+import org.firstinspires.ftc.teamcode.team20936.auto.subsystems.CommandGroups;
+
+import com.arcrobotics.ftclib.command.CommandOpMode;
+import com.arcrobotics.ftclib.command.CommandScheduler;
+import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.arcrobotics.ftclib.hardware.ServoEx;
+import com.arcrobotics.ftclib.hardware.SimpleServo;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
 
-import org.firstinspires.ftc.teamcode.team20936.auto.AprilTagDetectionPipeline;
-import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.team20936.auto.autoCommands.BasicCommands.SorinMakesBetterWaitCommands;
+import org.firstinspires.ftc.teamcode.team20936.auto.autoCommands.BasicCommands.GotoConstantHeading;
+import org.firstinspires.ftc.teamcode.team20936.auto.autoCommands.BasicCommands.GotoLinearHeading;
+import org.firstinspires.ftc.teamcode.team20936.auto.subsystems.Lift;
 import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -21,21 +26,20 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
-
-import org.firstinspires.ftc.teamcode.team20936.auto.subsystems.Lift;
+import org.firstinspires.ftc.teamcode.team20936.auto.subsystems.Singleton_AutoSubsystem;
 
 
 import java.util.ArrayList;
 
 @Autonomous
-public class autostanga extends LinearOpMode
+public class autostanga extends CommandOpMode
 {
 
     OpenCvCamera camera;
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
 
     static final double FEET_PER_METER = 3.28084;
-
+    public static boolean isFinisheed = false;
     // Lens intrinsics
     // UNITS ARE PIXELS
     // NOTE: this calibration is for the C920 webcam at 800x448.
@@ -52,34 +56,47 @@ public class autostanga extends LinearOpMode
     int LEFT = 1;
     int MIDDLE = 2;
     int RIGHT = 3;
-
+    double MIN_POSITION = 0;
+    double MAX_POSITION = 1;
     AprilTagDetection tagOfInterest = null;
-
-
+    private ElapsedTime timer;
+    private Pose2d startPose;
+    private DistanceSensor sensorDistanta_intake;
+    private  ServoEx m_wrist;
+    private  ServoEx m_wristRev;
+    private  ServoEx m_claw;
+    private  ServoEx m_latch;
+    public  SampleMecanumDrive m_drive;
+    private  DcMotor m_armRev;
+    private  Lift m_lift;
+    Singleton_AutoSubsystem m_subsystem;
 
     @Override
-    public void runOpMode() throws InterruptedException
+    public void initialize()
     {
-        ElapsedTime timer = new ElapsedTime();
 
-        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
-        Pose2d startPose = new Pose2d(0, 0, 0);
+        CommandScheduler.getInstance().reset();
+        m_drive = new SampleMecanumDrive(hardwareMap);
+        Lift lift = new Lift();
+        lift.init(hardwareMap);
 
-        Lift lift = new Lift(); lift.init(hardwareMap);
-
-        Servo wrist = hardwareMap.servo.get("servo_brat2");
-        Servo wristRev = hardwareMap.servo.get("servo_brat3");
-        Servo claw= hardwareMap.servo.get("servo_gheara");
-
-        Servo latch = hardwareMap.servo.get("servo_deposit");
-
-        DcMotor armRev = hardwareMap.dcMotor.get("rev_hd_brat"); armRev.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        DistanceSensor sensorDistanta_intake = hardwareMap.get(DistanceSensor.class, "senzor_gheara");
+        m_wrist = new SimpleServo( hardwareMap,"servo_brat2", MIN_POSITION, MAX_POSITION);
+        m_wristRev = new SimpleServo(hardwareMap, "servo_brat3", MIN_POSITION, MAX_POSITION);
+        m_claw= new SimpleServo(hardwareMap, "servo_gheara", MIN_POSITION, MAX_POSITION);
+        m_latch = new SimpleServo(hardwareMap,"servo_deposit", MIN_POSITION, MAX_POSITION);
 
 
-        double MIN_POSITION = 0;
-        double MAX_POSITION = 1;
+
+
+        m_armRev = hardwareMap.dcMotor.get("rev_hd_brat");
+        m_armRev.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        m_subsystem = Singleton_AutoSubsystem.createInstance(m_wrist, m_wristRev, m_claw,
+                m_latch, m_drive, m_armRev, lift);
+        timer = new ElapsedTime();
+        startPose = new Pose2d(0, 0, 0);
+        sensorDistanta_intake = hardwareMap.get(DistanceSensor.class, "senzor_gheara");
+
+
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
@@ -102,24 +119,18 @@ public class autostanga extends LinearOpMode
         });
 
         telemetry.setMsTransmissionInterval(100);
+        int cnt = 0 ;
+        m_subsystem.setWristPos(Range.clip(0.133, 0, 1));
+        m_subsystem.setWristRevPos(Range.clip(0.41, 0, 1));
+        m_subsystem.setClawPos(Range.clip(0.22, 0, 1));
 
-        final int poz0_rev = armRev.getCurrentPosition();
+        m_subsystem.setLatchPos(Range.clip(0.23, 0, 1));
 
-
-        /*
-         * The INIT-loop:
-         * This REPLACES waitForStart!
-         */
-        while (!isStarted() && !isStopRequested())
+        CommandScheduler.getInstance().schedule(new SequentialCommandGroup(
+                new GotoConstantHeading(2, 0)));
+        CommandScheduler.getInstance().run();
+        while (!isStarted() && !isStopRequested() )
         {
-
-            wrist.setPosition(Range.clip(0.133, 0, 1));
-            wristRev.setPosition(Range.clip(0.41, 0, 1));
-            claw.setPosition(Range.clip(0.22, 0, 1));
-
-            latch.setPosition(Range.clip(0.23, 0, 1));
-
-
 
 
             ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
@@ -176,122 +187,86 @@ public class autostanga extends LinearOpMode
             }
 
             telemetry.update();
+            cnt++;
             sleep(20);
         }
 
-        /*
-         * The START command just came in: now work off the latest snapshot acquired
-         * during the init loop.
-         */
 
-
-
-        TrajectorySequence preload = drive.trajectorySequenceBuilder(new Pose2d(0,0,Math.toRadians(0)))
-                .lineToConstantHeading(new Vector2d(2,0))
-                .lineToLinearHeading(new Pose2d(2,52, Math.toRadians(-45)))
-                .UNSTABLE_addTemporalMarkerOffset(0,() -> {
-                    lift.setLiftPosition(1010);
-
-                    armRev.setTargetPosition(poz0_rev-80);
-                    armRev.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-                    armRev.setPower(0.45);
-                })
-                .lineToConstantHeading(new Vector2d(7 , 48)) // poz mediu
-                .UNSTABLE_addTemporalMarkerOffset(0.1,() -> {
-                    latch.setPosition(0.1);
-                    lift.setLiftPosition(0);
-                })
-                .waitSeconds(0.6)
-                .lineToLinearHeading(new Pose2d(-6, 53, Math.toRadians(0)))
-                .UNSTABLE_addTemporalMarkerOffset(0, ()->{
-                    armRev.setTargetPosition(poz0_rev-354);
-                    armRev.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-                    armRev.setPower(0.25);
-                    wrist.setPosition(0.32);
-                    wristRev.setPosition(0.41);
-                })
-                .waitSeconds(0.5 )
-                .UNSTABLE_addTemporalMarkerOffset(0, ()->{
-                    claw.setPosition(0);
-                })
-                .waitSeconds(0.2)
-                .UNSTABLE_addTemporalMarkerOffset(0, ()->
-                {
-                    armRev.setTargetPosition(-45);
-                    armRev.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-                    armRev.setPower(1);
-                })
-                .waitSeconds(0.1)
-                .UNSTABLE_addTemporalMarkerOffset(0, ()->
-                {
-                    wristRev.setPosition(0.958);
-
-                })
-                .waitSeconds(0.5)
-                .UNSTABLE_addTemporalMarkerOffset(0, ()->
-                {
-                    wrist.setPosition(0.617);
-                })
-                .waitSeconds(0.4)
-                .UNSTABLE_addTemporalMarkerOffset(0, ()->
-                {
-                    claw.setPosition(0.14);
-                })
-                .waitSeconds(0.2)
-                .UNSTABLE_addTemporalMarkerOffset(0, ()->{
-                    latch.setPosition(0.23);
-                })
-                .waitSeconds(0.3)
-                .UNSTABLE_addTemporalMarkerOffset(0, ()->
-                {
-
-                    armRev.setTargetPosition(poz0_rev-80);
-                    armRev.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-                    armRev.setPower(0.45);
-                })
-                .waitSeconds(0.6)
-                .UNSTABLE_addTemporalMarkerOffset(0, () ->
-                {
-                    wristRev.setPosition(0.4105);
-                    wrist.setPosition(0.3);
-                })
-
-
-                .build();
-
-        drive.followTrajectorySequence(preload);
-
-
-
-
-        /* Update the telemetry */
-        if(tagOfInterest != null)
-        {
-            telemetry.addLine("Tag snapshot:\n");
-            tagToTelemetry(tagOfInterest);
-            telemetry.update();
-        }
-        else
-        {
-            telemetry.addLine("No tag snapshot available, it was never sighted during the init loop :(");
-            telemetry.update();
-        }
-
-        /* Actually do something useful */
-        if(tagOfInterest == null || tagOfInterest.id == MIDDLE){
-
-        }else if(tagOfInterest.id == LEFT){
-
-        }else{
-
-        }
-
-
-
-
-        /* You wouldn't have this in your autonomous, this is just to prevent the sample from ending */
-        while (opModeIsActive()) {sleep(20);}
     }
+
+
+    @Override
+    public void run() {
+
+        if (!isFinisheed) {
+
+            double ParcareX, ParcareY;
+            if(tagOfInterest != null)
+            {
+                telemetry.addLine("Tag snapshot:\n");
+                tagToTelemetry(tagOfInterest);
+                telemetry.update();
+            }
+            else
+            {
+                telemetry.addLine("No tag snapshot available, it was never sighted during the init loop :(");
+                telemetry.update();
+            }
+
+            if(tagOfInterest == null || tagOfInterest.id == MIDDLE){
+                ParcareX = 4;
+                ParcareY = 55;
+            }else if(tagOfInterest.id == LEFT){
+                ParcareX = -20;
+                ParcareY = 55;
+            }else{
+                ParcareX = 33;
+                ParcareY = 55;
+            }
+            CommandScheduler.getInstance().schedule(new SequentialCommandGroup(
+                    new GotoLinearHeading(2, 51, -45),
+                   CommandGroups.TransferConeGroup(8.5, 48.5, -45, 1010),
+
+                    new GotoLinearHeading(-6.2, 52.9, 0),
+                    CommandGroups.CatchConeGroup(-354),
+                    new SorinMakesBetterWaitCommands(400),
+                    CommandGroups.DepositGroup(),
+                    new GotoLinearHeading(8, 51, -45),
+                    CommandGroups.TransferConeGroup(9.5, 49),
+
+                    new GotoLinearHeading(-5.1, 52.9, 0),
+                    CommandGroups.CatchConeGroup(-385),
+                    new SorinMakesBetterWaitCommands(400),
+                    CommandGroups.DepositGroup(),
+                    new GotoLinearHeading(8, 51, -45),
+                    CommandGroups.TransferConeGroup(9.5, 49),
+
+                    new GotoLinearHeading(-3.7, 53.1,0),
+                    CommandGroups.CatchConeGroup(-400),
+                    new SorinMakesBetterWaitCommands(400),
+                    CommandGroups.DepositGroup(),
+                    new SorinMakesBetterWaitCommands(200),
+                    new GotoLinearHeading(8, 50.5, -45),
+
+                    CommandGroups.TransferConeGroup(9.5, 49),
+
+                    new GotoLinearHeading(9.5, 55, 90),
+                    new GotoConstantHeading(ParcareX, ParcareY)
+                    ));
+        isFinisheed = true;
+
+
+
+
+        }
+        CommandScheduler.getInstance().run();
+
+
+
+
+    }
+
+
 
     void tagToTelemetry(AprilTagDetection detection)
     {
