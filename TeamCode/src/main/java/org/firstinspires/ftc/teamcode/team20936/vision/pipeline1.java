@@ -10,7 +10,7 @@ import org.openftc.easyopencv.OpenCvPipeline;
 
 public class pipeline1 extends OpenCvPipeline {
 
-     Mat m_mat = new Mat();
+     Mat m_mat = new Mat();//
     static final Rect m_ROI = new Rect(new Point(1, 500), new Point(1,500));
 
 
