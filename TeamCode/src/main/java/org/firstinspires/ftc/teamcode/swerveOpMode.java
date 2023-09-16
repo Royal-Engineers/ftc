@@ -89,6 +89,10 @@ public class swerveOpMode extends LinearOpMode {
             if(ws2 > max) max = ws2; if(ws3 > max) max = ws3; if(ws4 > max) max = ws4;
             if(max > 1) { ws1/=max; ws2/=max; ws3/=max; ws4/=max; }
 
+            telemetry.addData("OX1:", gamepad1.left_stick_x);
+            telemetry.addData("OY1:", gamepad1.left_stick_y);
+            telemetry.addData("OX2:", gamepad1.right_stick_x);
+            telemetry.addData("OY2:",gamepad1.right_stick_y);
             telemetry.addData("ws1: ", ws1);
             telemetry.addData("wa1: ", wa1);
 
@@ -101,7 +105,7 @@ public class swerveOpMode extends LinearOpMode {
             telemetry.addData("ws4: ", ws4);
             telemetry.addData("wa4: ", wa4);*/
 
-            telemetry.addData("\n", " ");
+            //telemetry.addData("\n", " ");
 
             //telemetry.addData("Actual angle frontRight ", encoderFrontRight.getVoltage() / 3.3 * 360);
             //telemetry.addData("Actual angle backRight ", encoderBackRight.getVoltage() / 3.3 * 360);
