@@ -11,8 +11,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.SubModules.Drive.absoluteAnalogEncoder;
-import org.firstinspires.ftc.teamcode.SubModules.Drive.swerveModule;
+import org.firstinspires.ftc.teamcode.SubModules.SKN.absoluteAnalogEncoder;
+import org.firstinspires.ftc.teamcode.SubModules.SKN.swerveModule;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
