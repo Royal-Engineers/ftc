@@ -8,18 +8,19 @@ import org.firstinspires.ftc.teamcode.facade.RobotHardware;
 
 abstract public class i_gamepad {
 
-    private RobotHardware robot;
+    protected RobotHardware m_Robot;
     private Gamepad gamepad;
-    private GamepadEx controller;
+    protected GamepadEx controller;
     private CommandScheduler m_CommandScheduler;
 
     public i_gamepad(Gamepad gamepad, RobotHardware robot){
         this.gamepad = gamepad;
-        this.robot = robot;
+        this.m_Robot = robot;
         controller = new GamepadEx(gamepad);
         m_CommandScheduler = CommandScheduler.getInstance();
 
     }
 
     abstract public void update();
+    abstract public void initialize();
 }

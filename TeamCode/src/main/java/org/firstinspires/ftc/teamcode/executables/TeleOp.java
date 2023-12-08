@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.executables;
 
 import com.arcrobotics.ftclib.command.CommandOpMode;
+import com.arcrobotics.ftclib.command.CommandScheduler;
 
 import org.firstinspires.ftc.teamcode.facade.RobotHardware;
 import org.firstinspires.ftc.teamcode.facade.interfaces.i_gamepad;
@@ -18,6 +19,7 @@ public class TeleOp extends CommandOpMode {
 
     private DriveSubsystem m_DriveSubsystem;
 
+
     private OdometryComponent m_odometry;
 
     private OpenCvPipeline pipeline;
@@ -28,11 +30,13 @@ public class TeleOp extends CommandOpMode {
         super.reset();
 
 
+
+        
         Robot = RobotHardware.getInstance();
         Robot.init(gamepad1, gamepad2, telemetry, hardwareMap);
 
-        pipeline = new Pipeline(telemetry);
-        Robot.camera.setPipeline(pipeline);
+        //pipeline = new Pipeline(telemetry);
+       // Robot.camera.setPipeline(pipeline);
 
         m_DriveSubsystem = new DriveSubsystem(Robot);
 
@@ -40,13 +44,15 @@ public class TeleOp extends CommandOpMode {
 
         m_controller1 = new controller1(gamepad1, Robot);
         m_controller2 = new controller2(gamepad2, Robot);
+
+        m_controller1.initialize();
         waitForStart();
     }
 
     @Override
     public void run(){
-        m_DriveSubsystem.UpdateGamepad();
-        m_odometry.update();
+        //m_DriveSubsystem.UpdateGamepad();
+        //m_odometry.update();
         m_controller1.update();
         m_controller2.update();
         telemetry.update();

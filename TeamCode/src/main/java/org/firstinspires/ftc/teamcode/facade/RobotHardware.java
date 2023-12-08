@@ -51,7 +51,7 @@ public class RobotHardware {
         this.m_HardwareMap = hardwaremap;
         this.m_telemetry = telemetry;
 
-        motorFrontRight = m_HardwareMap.get(DcMotorEx.class, "motorFrontRight");
+       /* motorFrontRight = m_HardwareMap.get(DcMotorEx.class, "motorFrontRight");
         motorFrontLeft = m_HardwareMap.get(DcMotorEx.class, "motorFrontLeft");
         motorBackRight = m_HardwareMap.get(DcMotorEx.class, "motorBackRight");
         motorBackLeft = m_HardwareMap.get(DcMotorEx.class, "motorBackLeft");
@@ -75,7 +75,7 @@ public class RobotHardware {
         moduleFrontLeft = new swerveModule(motorFrontLeft, servoFrontLeft, encoderFrontLeft, m_telemetry);
         moduleBackLeft = new swerveModule(motorBackLeft, servoBackLeft, encoderBackLeft, m_telemetry);
         moduleBackRight = new swerveModule(motorBackRight, servoBackRight, encoderBackRight, m_telemetry);
-
+*/
         m_gamepad1 = gamepad1;
         m_gamepad2 = gamepad2;
 
@@ -86,10 +86,10 @@ public class RobotHardware {
         EncoderRight = motorBackRight;
         EncoderFront = motorFrontLeft;
 
-        int cameraMonitorViewId = m_HardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", m_HardwareMap.appContext.getPackageName());
-        camera = OpenCvCameraFactory.getInstance().createWebcam(m_HardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
+       // int cameraMonitorViewId = m_HardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", m_HardwareMap.appContext.getPackageName());
+       // camera = OpenCvCameraFactory.getInstance().createWebcam(m_HardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
 
-        camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
+/*        camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
             @Override
             public void onOpened()
@@ -102,7 +102,7 @@ public class RobotHardware {
             {
 
             }
-        });
+        });*/
     }
 
     public static RobotHardware getInstance(){

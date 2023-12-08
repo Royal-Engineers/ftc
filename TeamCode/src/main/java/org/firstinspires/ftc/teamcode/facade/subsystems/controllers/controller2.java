@@ -14,6 +14,12 @@ public class controller2 extends i_gamepad {
     public void update() {
 
     }
+
+    @Override
+    public void initialize()
+    {
+
+    }
 }
 
 
