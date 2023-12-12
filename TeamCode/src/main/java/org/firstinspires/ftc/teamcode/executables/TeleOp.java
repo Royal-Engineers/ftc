@@ -31,7 +31,7 @@ public class TeleOp extends CommandOpMode {
 
 
 
-        
+
         Robot = RobotHardware.getInstance();
         Robot.init(gamepad1, gamepad2, telemetry, hardwareMap);
 
