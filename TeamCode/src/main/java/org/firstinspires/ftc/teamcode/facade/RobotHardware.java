@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.facade;
 
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
-import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -13,12 +12,9 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.SubModules.SKN.absoluteAnalogEncoder;
-import org.firstinspires.ftc.teamcode.SubModules.SKN.swerveModule;
+import org.firstinspires.ftc.teamcode.pipelines.SKN.absoluteAnalogEncoder;
+import org.firstinspires.ftc.teamcode.pipelines.SKN.swerveModule;
 import org.openftc.easyopencv.OpenCvCamera;
-import org.openftc.easyopencv.OpenCvCameraFactory;
-import org.openftc.easyopencv.OpenCvCameraRotation;
 
 public class RobotHardware {
 
