@@ -16,10 +16,9 @@ public class OdometryComponent {
     public double X = 0.0d, Y = 0.0d, Theta = 0.0d;
     private RobotHardware robot;
 
-    private double L = 31.5d;//left to right
-    private double B = 23.0d;//centre to front
+    private double L = 32.0d;//left to right
+    private double B = 17.5d;//centre to front
 
-    private double x = 0.0d, y = 0.0d, theta = 0.0d;
     private double delta_x = 0.0d, delta_y = 0.0d, delta_theta = 0.0d;
 
     private final double TPR = 8192.0d;
@@ -60,7 +59,7 @@ public class OdometryComponent {
 
       X += delta_x * Math.cos(th) - delta_y * Math.sin(th);
       Y += delta_x * Math.sin(th) + delta_y * Math.cos(th);
-      theta += delta_theta;
+      Theta += delta_theta;
 
       AddTelemetry();
     }
