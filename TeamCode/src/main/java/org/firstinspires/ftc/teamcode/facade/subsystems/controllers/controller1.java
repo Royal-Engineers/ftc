@@ -18,6 +18,15 @@ public class controller1 extends i_gamepad {
     {
         controller.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).toggleWhenPressed(new GetJPos(m_Robot),
                 new InstantCommand(()->{GetJPos.Enabled = false;}) );
+
+        controller.getGamepadButton(GamepadKeys.Button.RIGHT_STICK_BUTTON).toggleWhenPressed(
+                new InstantCommand(()->{m_Robot.motorIntake.setPower(0.8f);}),
+                new InstantCommand(()->{m_Robot.motorIntake.setPower(0.0f);})
+        );
+
+        controller.getGamepadButton(GamepadKeys.Button.LEFT_STICK_BUTTON).whenPressed(
+                new InstantCommand(()->{m_Robot.m_imu.resetYaw();})
+        );
     }
 
     @Override

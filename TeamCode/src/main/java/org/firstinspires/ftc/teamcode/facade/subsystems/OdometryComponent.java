@@ -16,8 +16,8 @@ public class OdometryComponent {
     public double X = 0.0d, Y = 0.0d, Theta = 0.0d;
     private RobotHardware robot;
 
-    private double L = 0.0d;//left to right
-    private double B = 0.0d;//centre to front
+    private double L = 31.5d;//left to right
+    private double B = 23.0d;//centre to front
 
     private double x = 0.0d, y = 0.0d, theta = 0.0d;
     private double delta_x = 0.0d, delta_y = 0.0d, delta_theta = 0.0d;
@@ -74,6 +74,11 @@ public class OdometryComponent {
         robot.m_telemetry.addData("x: ", X);
         robot.m_telemetry.addData("y: ", Y);
         robot.m_telemetry.addData("theta: ", Theta);
+
+        robot.m_telemetry.addData("left", new_nLeft);
+        robot.m_telemetry.addData("right", new_nRight);
+
+        robot.m_telemetry.addData("front", new_nFront);
 
 
         robot.m_telemetry.addData("Odometry end", "\n");

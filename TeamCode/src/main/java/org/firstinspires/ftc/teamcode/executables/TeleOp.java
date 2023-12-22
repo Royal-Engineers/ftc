@@ -51,8 +51,8 @@ public class TeleOp extends CommandOpMode {
 
     @Override
     public void run(){
-        //m_DriveSubsystem.UpdateGamepad();
-        //m_odometry.update();
+        m_DriveSubsystem.UpdateGamepad();
+        m_odometry.update();
         m_controller1.update();
         m_controller2.update();
         telemetry.update();

@@ -2,12 +2,15 @@ package org.firstinspires.ftc.teamcode.facade;
 
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.hardware.motors.Motor;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -25,8 +28,12 @@ public class RobotHardware {
     public  OpenCvCamera camera;
 
 
+    public IMU m_imu;
+
+    public IMU.Parameters imu_parameters;
     //swerve
     public DcMotorEx motorFrontRight, motorFrontLeft, motorBackRight, motorBackLeft;
+    public DcMotorEx motorIntake;
     private CRServo servoFrontRight, servoFrontLeft, servoBackRight, servoBackLeft;
     public absoluteAnalogEncoder encoderFrontRight, encoderFrontLeft, encoderBackLeft, encoderBackRight;
     public AnalogInput aencoderFrontRight, aencoderFrontLeft, aencoderBackRight, aencoderBackLeft;
@@ -51,10 +58,12 @@ public class RobotHardware {
         this.m_HardwareMap = hardwaremap;
         this.m_telemetry = telemetry;
 
-       /* motorFrontRight = m_HardwareMap.get(DcMotorEx.class, "motorFrontRight");
+        motorFrontRight = m_HardwareMap.get(DcMotorEx.class, "motorFrontRight");
         motorFrontLeft = m_HardwareMap.get(DcMotorEx.class, "motorFrontLeft");
         motorBackRight = m_HardwareMap.get(DcMotorEx.class, "motorBackRight");
         motorBackLeft = m_HardwareMap.get(DcMotorEx.class, "motorBackLeft");
+
+        motorIntake = m_HardwareMap.get(DcMotorEx.class, "motorIntake");
         InitializeMotors();
 
         servoFrontRight = m_HardwareMap.get(CRServo.class, "servoFrontRight");
@@ -66,27 +75,30 @@ public class RobotHardware {
         aencoderFrontLeft = m_HardwareMap.get(AnalogInput.class, "encoderFrontLeft");
         aencoderBackRight = m_HardwareMap.get(AnalogInput.class, "encoderBackRight");
         aencoderBackLeft = m_HardwareMap.get(AnalogInput.class, "encoderBackLeft");
-        encoderFrontRight = new absoluteAnalogEncoder(aencoderFrontRight, 233, true);
-        encoderFrontLeft = new absoluteAnalogEncoder(aencoderFrontLeft, 340, true);
-        encoderBackLeft = new absoluteAnalogEncoder(aencoderBackLeft, 37, true);
-        encoderBackRight = new absoluteAnalogEncoder(aencoderBackRight, 135, true);
+        encoderFrontRight = new absoluteAnalogEncoder(aencoderFrontRight, 53, true);
+        encoderFrontLeft = new absoluteAnalogEncoder(aencoderFrontLeft, 205, true);
+        encoderBackLeft = new absoluteAnalogEncoder(aencoderBackLeft, 207, true);
+        encoderBackRight = new absoluteAnalogEncoder(aencoderBackRight, 225, true);
 
         moduleFrontRight = new swerveModule(motorFrontRight, servoFrontRight, encoderFrontRight, m_telemetry);
         moduleFrontLeft = new swerveModule(motorFrontLeft, servoFrontLeft, encoderFrontLeft, m_telemetry);
         moduleBackLeft = new swerveModule(motorBackLeft, servoBackLeft, encoderBackLeft, m_telemetry);
         moduleBackRight = new swerveModule(motorBackRight, servoBackRight, encoderBackRight, m_telemetry);
-*/
         m_gamepad1 = gamepad1;
         m_gamepad2 = gamepad2;
 
         controller1 = new GamepadEx(m_gamepad1);
         controller2 = new GamepadEx(m_gamepad2);
 
-        EncoderLeft =  motorBackLeft;
-        EncoderRight = motorBackRight;
-        EncoderFront = motorFrontLeft;
+        EncoderLeft =  motorFrontLeft;
+        EncoderRight = motorFrontRight;
+        EncoderFront = motorBackRight;
 
-       // int cameraMonitorViewId = m_HardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", m_HardwareMap.appContext.getPackageName());
+        m_imu = m_HardwareMap.get(IMU.class, "imu");
+        imu_parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
+                RevHubOrientationOnRobot.LogoFacingDirection.UP,
+                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
+        // int cameraMonitorViewId = m_HardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", m_HardwareMap.appContext.getPackageName());
        // camera = OpenCvCameraFactory.getInstance().createWebcam(m_HardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
 
 /*        camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
@@ -132,5 +144,8 @@ public class RobotHardware {
         motorBackLeft.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorBackLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        motorIntake.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+
     }
 }
