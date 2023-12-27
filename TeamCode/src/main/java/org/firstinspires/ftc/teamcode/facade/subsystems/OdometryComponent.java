@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.facade.RobotHardware;
 public class OdometryComponent {
 
     private boolean TelemeteryEnabled = true;
-    public double X = 0.0d, Y = 0.0d, Theta = 0.0d;
+    public static double X = 0.0d, Y = 0.0d, Theta = 0.0d;
     private RobotHardware robot;
 
     private double L = 32.0d;//left to right

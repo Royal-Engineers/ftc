@@ -68,6 +68,39 @@ public class DriveSubsystem {
 
     }
 
+    public void UpdateAuto(double fwd, double str, double rcw){
+
+        //chinematici
+        double FWD = fwd;
+        double STR = str;
+        double RCW = rcw;
+
+        double botHeading = -imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+        double temp = FWD*Math.cos(botHeading) + STR*Math.sin(botHeading);
+        STR = -FWD*Math.sin(botHeading) + STR*Math.cos(botHeading);
+        FWD = temp;
+
+        // ***UNCOMMENT FOR SUSSY BAKA FIELD CENTRIC*****
+
+        double A = STR - RCW*(L/R);
+        double B = STR + RCW*(L/R);
+        double C = FWD - RCW*(W/R);
+        double D = FWD + RCW*(W/R);
+
+        ws1 = Math.hypot(B, C);  wa1 = Math.atan2(B, C)*180/Math.PI;
+        ws2 = Math.hypot(B, D);  wa2 = Math.atan2(B, D)*180/Math.PI;
+        ws3 = Math.hypot(A, D);  wa3 = Math.atan2(A, D)*180/Math.PI;
+        ws4 = Math.hypot(A, C);  wa4 = Math.atan2(A, C)*180/Math.PI;
+
+
+        //normalizare
+        double max = ws1;
+        if(ws2 > max) max = ws2; if(ws3 > max) max = ws3; if(ws4 > max) max = ws4;
+        if(max > 1) { ws1/=max; ws2/=max; ws3/=max; ws4/=max; }
+
+        update();
+
+    }
     private void update(){
         drive();
         AddTelemetry();
