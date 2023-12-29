@@ -4,8 +4,8 @@ import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.controller.PIDController;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.facade.subsystems.OdometryComponent;
-import org.firstinspires.ftc.teamcode.pipelines.SKN.DriveSubsystem;
+import org.firstinspires.ftc.teamcode.facade.drive.OdometryComponent;
+import org.firstinspires.ftc.teamcode.facade.drive.DriveSubsystem;
 
 public class GotoX extends CommandBase {
 

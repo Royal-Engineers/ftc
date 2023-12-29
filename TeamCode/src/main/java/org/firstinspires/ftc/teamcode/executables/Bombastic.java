@@ -6,10 +6,8 @@ import com.arcrobotics.ftclib.command.CommandScheduler;
 import org.firstinspires.ftc.teamcode.commands.GotoX;
 import org.firstinspires.ftc.teamcode.facade.RobotHardware;
 import org.firstinspires.ftc.teamcode.facade.interfaces.i_gamepad;
-import org.firstinspires.ftc.teamcode.pipelines.SKN.DriveSubsystem;
-import org.firstinspires.ftc.teamcode.facade.subsystems.OdometryComponent;
-import org.firstinspires.ftc.teamcode.facade.subsystems.controllers.controller1;
-import org.firstinspires.ftc.teamcode.facade.subsystems.controllers.controller2;
+import org.firstinspires.ftc.teamcode.facade.drive.DriveSubsystem;
+import org.firstinspires.ftc.teamcode.facade.drive.OdometryComponent;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp

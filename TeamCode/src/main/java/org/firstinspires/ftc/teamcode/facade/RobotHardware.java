@@ -12,8 +12,9 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.pipelines.SKN.absoluteAnalogEncoder;
-import org.firstinspires.ftc.teamcode.pipelines.SKN.swerveModule;
+import org.firstinspires.ftc.teamcode.facade.drive.absoluteAnalogEncoder;
+import org.firstinspires.ftc.teamcode.facade.drive.swerveModule;
+import org.firstinspires.ftc.teamcode.facade.intake.BombasticLift;
 import org.openftc.easyopencv.OpenCvCamera;
 
 public class RobotHardware {
@@ -30,6 +31,8 @@ public class RobotHardware {
     //swerve
     public DcMotorEx motorFrontRight, motorFrontLeft, motorBackRight, motorBackLeft;
     public DcMotorEx motorIntake;
+
+    public DcMotorEx m_LiftMainMotor, m_LiftInvMotor;
     private CRServo servoFrontRight, servoFrontLeft, servoBackRight, servoBackLeft;
     public absoluteAnalogEncoder encoderFrontRight, encoderFrontLeft, encoderBackLeft, encoderBackRight;
     public AnalogInput aencoderFrontRight, aencoderFrontLeft, aencoderBackRight, aencoderBackLeft;
@@ -47,6 +50,7 @@ public class RobotHardware {
     //odometers
     public DcMotor EncoderLeft, EncoderRight, EncoderFront;
 
+    public BombasticLift m_Lift;
     private RobotHardware(){
     }
 
@@ -60,7 +64,13 @@ public class RobotHardware {
         motorBackLeft = m_HardwareMap.get(DcMotorEx.class, "motorBackLeft");
 
         motorIntake = m_HardwareMap.get(DcMotorEx.class, "motorIntake");
+
+        m_LiftMainMotor = m_HardwareMap.get(DcMotorEx.class, "LiftMainMotor");
+        m_LiftInvMotor = m_HardwareMap.get(DcMotorEx.class, "LiftInvertedMotor");
+
         InitializeMotors();
+
+        m_Lift = new BombasticLift(this, m_telemetry, m_LiftMainMotor, m_LiftInvMotor, 0, 840);
 
         servoFrontRight = m_HardwareMap.get(CRServo.class, "servoFrontRight");
         servoFrontLeft = m_HardwareMap.get(CRServo.class, "servoFrontLeft");
@@ -125,6 +135,15 @@ public class RobotHardware {
     }
 
     private void InitializeMotors(){
+
+        m_LiftInvMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        m_LiftInvMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        m_LiftInvMotor.setTargetPositionTolerance(10);
+
+        m_LiftMainMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        m_LiftMainMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        m_LiftMainMotor.setTargetPositionTolerance(10);
+
         motorFrontRight.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorFrontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -143,5 +162,10 @@ public class RobotHardware {
 
         motorIntake.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
 
+    }
+
+    public void Update()
+    {
+        m_Lift.UpdateTelemetry();
     }
 }

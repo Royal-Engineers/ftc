@@ -4,14 +4,14 @@ import com.arcrobotics.ftclib.command.CommandOpMode;
 
 import org.firstinspires.ftc.teamcode.facade.RobotHardware;
 import org.firstinspires.ftc.teamcode.facade.interfaces.i_gamepad;
-import org.firstinspires.ftc.teamcode.pipelines.SKN.DriveSubsystem;
-import org.firstinspires.ftc.teamcode.facade.subsystems.OdometryComponent;
-import org.firstinspires.ftc.teamcode.facade.subsystems.controllers.controller1;
-import org.firstinspires.ftc.teamcode.facade.subsystems.controllers.controller2;
+import org.firstinspires.ftc.teamcode.facade.drive.DriveSubsystem;
+import org.firstinspires.ftc.teamcode.facade.drive.OdometryComponent;
+import org.firstinspires.ftc.teamcode.facade.controllers.controller1;
+import org.firstinspires.ftc.teamcode.facade.controllers.controller2;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp
-public class TeleOp extends CommandOpMode {
+public class BombasticSideEye extends CommandOpMode {
 
     private RobotHardware Robot;
 
@@ -53,6 +53,7 @@ public class TeleOp extends CommandOpMode {
         m_odometry.update();
         m_controller1.update();
         m_controller2.update();
+        Robot.Update();
         telemetry.update();
 
         super.run();
