@@ -59,6 +59,8 @@ public class RobotHardware {
     public BombaSexy m_BombaSexy;
 
     private ServoEx m_BombasticServo1, m_SexyServo2;
+
+    private ServoEx m_Gyara;
     private RobotHardware(){
     }
 
@@ -120,6 +122,11 @@ public class RobotHardware {
         imu_parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
                 RevHubOrientationOnRobot.LogoFacingDirection.UP,
                 RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
+
+        m_Gyara = new SimpleServo(m_HardwareMap, "Ghiara_Servo", 0, 1);
+
+        m_Gyara.setPosition(0.00d);
+
         // int cameraMonitorViewId = m_HardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", m_HardwareMap.appContext.getPackageName());
        // camera = OpenCvCameraFactory.getInstance().createWebcam(m_HardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
 
