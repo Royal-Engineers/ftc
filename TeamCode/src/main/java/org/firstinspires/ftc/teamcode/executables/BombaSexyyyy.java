@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.facade.drive.OdometryComponent;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp
-public class Bombastic extends CommandOpMode {
+public class BombaSexyyyy extends CommandOpMode {
 
     private RobotHardware Robot;
 

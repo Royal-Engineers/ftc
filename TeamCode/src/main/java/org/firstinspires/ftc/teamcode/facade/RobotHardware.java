@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.facade;
 
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.hardware.ServoEx;
+import com.arcrobotics.ftclib.hardware.SimpleServo;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -10,10 +12,12 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.facade.drive.absoluteAnalogEncoder;
 import org.firstinspires.ftc.teamcode.facade.drive.swerveModule;
+import org.firstinspires.ftc.teamcode.facade.intake.BombaSexy;
 import org.firstinspires.ftc.teamcode.facade.intake.BombasticLift;
 import org.openftc.easyopencv.OpenCvCamera;
 
@@ -51,6 +55,10 @@ public class RobotHardware {
     public DcMotor EncoderLeft, EncoderRight, EncoderFront;
 
     public BombasticLift m_Lift;
+
+    public BombaSexy m_BombaSexy;
+
+    private ServoEx m_BombasticServo1, m_SexyServo2;
     private RobotHardware(){
     }
 
@@ -99,6 +107,14 @@ public class RobotHardware {
         EncoderLeft =  motorFrontLeft;
         EncoderRight = motorFrontRight;
         EncoderFront = motorBackRight;
+
+        m_BombasticServo1 = new SimpleServo(m_HardwareMap, "BombasticServo1", 0, 1);
+        m_SexyServo2 = new SimpleServo(m_HardwareMap, "BombasticServo2", 0, 1);
+
+        m_BombasticServo1.setPosition(0.2);
+        m_SexyServo2.setPosition(0.13);
+
+        m_BombaSexy = new BombaSexy(this, m_BombasticServo1, m_SexyServo2, 0.2, 0.13);
 
         m_imu = m_HardwareMap.get(IMU.class, "imu");
         imu_parameters = new IMU.Parameters(new RevHubOrientationOnRobot(

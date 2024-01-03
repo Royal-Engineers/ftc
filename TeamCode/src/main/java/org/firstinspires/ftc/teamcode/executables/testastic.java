@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 @TeleOp
-public class test extends LinearOpMode {
+public class testastic extends LinearOpMode {
 
     AnalogInput encoder;
     CRServo servo;

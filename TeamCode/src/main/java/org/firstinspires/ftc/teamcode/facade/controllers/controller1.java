@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.facade.controllers;
 
 import com.arcrobotics.ftclib.command.InstantCommand;
+import com.arcrobotics.ftclib.command.ParallelCommandGroup;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
@@ -30,7 +31,10 @@ public class controller1 extends i_gamepad {
         );
 
         controller.getGamepadButton(GamepadKeys.Button.LEFT_STICK_BUTTON).whenPressed(
-                new InstantCommand(()->{m_Robot.m_Lift.SetStatePosition(BombasticLift.e_LiftPosition.MidPos);})
+                new ParallelCommandGroup(
+                        new InstantCommand(()->{m_Robot.m_Lift.SetStatePosition(BombasticLift.e_LiftPosition.MidPos);}),
+                        new InstantCommand(()->{m_Robot.m_BombaSexy.SetPosition(0.5);})
+                )
         );
 
         controller.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenPressed(
