@@ -4,6 +4,8 @@ package org.firstinspires.ftc.teamcode.facade;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.hardware.ServoEx;
 import com.arcrobotics.ftclib.hardware.SimpleServo;
+import com.arcrobotics.ftclib.hardware.motors.Motor;
+import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -52,14 +54,22 @@ public class RobotHardware {
     public Gamepad m_gamepad1, m_gamepad2;
 
     //odometers
-    public DcMotor EncoderLeft, EncoderRight, EncoderFront;
+    public DcMotorEx EncoderLeft, EncoderRight, EncoderFront;
 
     public BombasticLift m_Lift;
 
     public BombaSexy m_BombaSexy;
 
     private ServoEx m_BombasticServo1, m_SexyServo2;
-    private RobotHardware(){
+
+    public ServoEx m_Gyara;
+    public ServoExEx m_GyaraBomba;
+
+    public static double s_ClawOpenPos =  0.01d;
+    public static double s_ClawlClosedPos = 0.09d;
+    public static double s_IdleClawAngle = 0.75d;
+    public static double s_ScoringClawAngle = 0.1d;
+    public RobotHardware(){
     }
 
     public void init(Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry, HardwareMap hardwaremap){
@@ -78,7 +88,7 @@ public class RobotHardware {
 
         InitializeMotors();
 
-        m_Lift = new BombasticLift(this, m_telemetry, m_LiftMainMotor, m_LiftInvMotor, 0, 840);
+        m_Lift = new BombasticLift(this, m_telemetry, m_LiftMainMotor, m_LiftInvMotor, 0, 800);
 
         servoFrontRight = m_HardwareMap.get(CRServo.class, "servoFrontRight");
         servoFrontLeft = m_HardwareMap.get(CRServo.class, "servoFrontLeft");
@@ -120,6 +130,11 @@ public class RobotHardware {
         imu_parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
                 RevHubOrientationOnRobot.LogoFacingDirection.UP,
                 RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
+
+        m_Gyara = new SimpleServo(m_HardwareMap, "claw", 0, 1);
+        m_GyaraBomba = new ServoExEx(m_HardwareMap, "clawAngle", 0, 1, s_IdleClawAngle);
+        m_Gyara.setPosition(s_ClawOpenPos);
+
         // int cameraMonitorViewId = m_HardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", m_HardwareMap.appContext.getPackageName());
        // camera = OpenCvCameraFactory.getInstance().createWebcam(m_HardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
 
@@ -139,16 +154,6 @@ public class RobotHardware {
         });*/
     }
 
-    public static RobotHardware getInstance(){
-        RobotHardware result = instance;
-        if ( result != null )
-            return result;
-        synchronized (RobotHardware.class) {
-            if (instance == null)
-                instance = new RobotHardware();
-        }
-        return instance;
-    }
 
     private void InitializeMotors(){
 
@@ -182,6 +187,7 @@ public class RobotHardware {
 
     public void Update()
     {
-        m_Lift.UpdateTelemetry();
+        m_Lift.UpdateTelemetry();m_BombaSexy.UpdateTelemetry();
+        m_telemetry.addData("BAAAAA:", m_GyaraBomba.getPosition());
     }
 }

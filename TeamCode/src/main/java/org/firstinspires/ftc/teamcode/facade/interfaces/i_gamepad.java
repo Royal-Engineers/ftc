@@ -18,6 +18,9 @@ abstract public class i_gamepad {
     protected Telemetry m_telemetry;
     private CommandScheduler m_CommandScheduler;
 
+    protected static double MinPush = 0.01d;
+
+
     public i_gamepad(Gamepad gamepad, RobotHardware robot){
         this.gamepad = gamepad;
         this.m_Robot = robot;

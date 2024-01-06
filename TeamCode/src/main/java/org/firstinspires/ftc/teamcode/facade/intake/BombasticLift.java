@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.facade.RobotHardware;
 
 public class BombasticLift {
 
-    private static final int s_DefaultTolerance = 10;
+    private static final int s_DefaultTolerance = 5;
 
     private static final double s_MinPower = 0.1d;
 

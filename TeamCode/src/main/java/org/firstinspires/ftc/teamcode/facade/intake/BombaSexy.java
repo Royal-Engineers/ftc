@@ -27,13 +27,18 @@ public class BombaSexy {
     private double f_Position = 0.0d;
     public void SetPosition(double pos)
     {
-
+        if (  m_MainPositon + pos < 0.0d || m_InvPosition + pos < 0.0d || m_MainPositon + pos > 1.0d || m_InvPosition + pos > 1.0d)
+            return;
         f_Position = pos;
 
         m_MainServo.setPosition(m_MainPositon + pos);
         m_SecServo.setPosition(m_InvPosition + pos);
     }
 
+    public double GetPosition()
+    {
+        return f_Position;
+    }
     public void UpdateTelemetry()
     {
         m_Telemetry.addData("BOMBA SECY DEBUG INFO", "->START");

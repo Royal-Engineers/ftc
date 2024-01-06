@@ -30,7 +30,7 @@ public class BombasticSideEye extends CommandOpMode {
 
 
 
-        Robot = RobotHardware.getInstance();
+        Robot = new RobotHardware();
         Robot.init(gamepad1, gamepad2, telemetry, hardwareMap);
 
         //pipeline = new Pipeline(telemetry);
@@ -44,6 +44,7 @@ public class BombasticSideEye extends CommandOpMode {
         m_controller2 = new controller2(gamepad2, Robot);
 
         m_controller1.initialize();
+        m_controller2.initialize();
         waitForStart();
     }
 

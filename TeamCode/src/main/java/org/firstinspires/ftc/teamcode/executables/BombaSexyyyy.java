@@ -2,8 +2,12 @@ package org.firstinspires.ftc.teamcode.executables;
 
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
+import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.arcrobotics.ftclib.command.WaitCommand;
 
+import org.firstinspires.ftc.teamcode.commands.GotoTheta;
 import org.firstinspires.ftc.teamcode.commands.GotoX;
+import org.firstinspires.ftc.teamcode.commands.GotoY;
 import org.firstinspires.ftc.teamcode.facade.RobotHardware;
 import org.firstinspires.ftc.teamcode.facade.interfaces.i_gamepad;
 import org.firstinspires.ftc.teamcode.facade.drive.DriveSubsystem;
@@ -30,7 +34,7 @@ public class BombaSexyyyy extends CommandOpMode {
 
 
 
-        Robot = RobotHardware.getInstance();
+        Robot = new RobotHardware();
         Robot.init(gamepad1, gamepad2, telemetry, hardwareMap);
 
         //pipeline = new Pipeline(telemetry);
@@ -40,7 +44,8 @@ public class BombaSexyyyy extends CommandOpMode {
 
         m_odometry = new OdometryComponent(Robot);
 
-        m_controller1.initialize();
+        //m_controller1.initialize();
+
         waitForStart();
     }
 
@@ -51,8 +56,17 @@ public class BombaSexyyyy extends CommandOpMode {
         m_odometry.update();
         if (!ok)
         {
-            CommandScheduler.getInstance().schedule(new GotoX(10.0d, telemetry, m_DriveSubsystem));
-        ok = true;
+
+            CommandScheduler.getInstance().schedule(new SequentialCommandGroup(
+                    new GotoX(100.0d, telemetry, m_DriveSubsystem, Robot),
+                    new WaitCommand(1000),
+                    new GotoX(0.0d, telemetry, m_DriveSubsystem, Robot)
+
+
+                    )
+        );
+
+            ok = true;
         }
         telemetry.update();
 

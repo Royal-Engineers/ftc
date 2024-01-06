@@ -8,10 +8,10 @@ import org.firstinspires.ftc.teamcode.facade.RobotHardware;
 import org.firstinspires.ftc.teamcode.facade.drive.OdometryComponent;
 import org.firstinspires.ftc.teamcode.facade.drive.DriveSubsystem;
 
-public class GotoX extends CommandBase {
+public class GotoY extends CommandBase {
 
     Telemetry m_telemetry;
-    double P = 0.01d, I = 0.005d, D = 0.0d;
+    double P = 0.03d, I = 0.015d, D = 0.0d;
 
     DriveSubsystem m_DriveSubsystem;
     PIDController pid;
@@ -19,13 +19,13 @@ public class GotoX extends CommandBase {
     private double m_Target = 0.0d;
 
     RobotHardware m_Robot;
-    public GotoX(double x, Telemetry telemetry, DriveSubsystem driveSubsystem, RobotHardware robot)
+    public GotoY(double y, Telemetry telemetry, DriveSubsystem driveSubsystem, RobotHardware robot)
     {
         pid = new PIDController(P, I, D);
-        pid.setSetPoint(x);
+        pid.setSetPoint(y);
         m_telemetry = telemetry;
         m_DriveSubsystem = driveSubsystem;
-        m_Target = x;
+        m_Target = y;
         m_Robot = robot;
     }
 
@@ -38,8 +38,8 @@ public class GotoX extends CommandBase {
     @Override
     public void execute()
     {
-        double CurrentPos = OdometryComponent.X;
-        m_DriveSubsystem.UpdateAuto(pid.calculate(CurrentPos), 0.0d, 0.0d);
+        double CurrentPos = OdometryComponent.Y;
+        m_DriveSubsystem.UpdateAuto(0.0d, -pid.calculate(CurrentPos), 0.0d);
         m_Robot.m_telemetry.addData("Target:", m_Target);
 
     }
@@ -48,7 +48,7 @@ public class GotoX extends CommandBase {
     public boolean isFinished()
     {
 
-        if( Math.abs(OdometryComponent.X - m_Target) < 10.0d)
+        if( Math.abs(OdometryComponent.Y - m_Target) < 10.0d)
         {
             m_DriveSubsystem.UpdateAuto(0, 0, 0);
             return true;
