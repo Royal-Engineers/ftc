@@ -33,7 +33,7 @@ public class GotoX extends CommandBase {
     public void execute()
     {
         double CurrentPos = OdometryComponent.X;
-        m_DriveSubsystem.UpdateAuto(pid.calculate(CurrentPos), 0.0d, 0.0d);
+        //m_DriveSubsystem.UpdateAuto(pid.calculate(CurrentPos), 0.0d, 0.0d);
     }
 
     @Override
