@@ -65,10 +65,12 @@ public class RobotHardware {
     public ServoEx m_Gyara;
     public ServoExEx m_GyaraBomba;
 
-    public static double s_ClawOpenPos =  0.01d;
-    public static double s_ClawlClosedPos = 0.09d;
+    public static double s_ClawOpenPos =  0.03d;
+    public static double s_ClawlClosedPos = 0.18d;
+
+    public static double s_ClawTransfer = 0.11d;
     public static double s_IdleClawAngle = 0.75d;
-    public static double s_ScoringClawAngle = 0.1d;
+    public static double s_ScoringClawAngle = 0.01d;
     public RobotHardware(){
     }
 

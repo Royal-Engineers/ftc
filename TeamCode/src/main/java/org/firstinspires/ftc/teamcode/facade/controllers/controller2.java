@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.facade.controllers;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.ParallelCommandGroup;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
@@ -10,7 +11,9 @@ import org.firstinspires.ftc.teamcode.facade.RobotHardware;
 import org.firstinspires.ftc.teamcode.facade.intake.BombasticLift;
 import org.firstinspires.ftc.teamcode.facade.interfaces.i_gamepad;
 
+@Config
 public class controller2 extends i_gamepad {
+    public static double ba = 0.0d;
     public controller2(Gamepad gamepad, RobotHardware robot){
         super(gamepad, robot);
     }
@@ -19,10 +22,10 @@ int GyatLevel = 0;
     public void initialize()
     {
 
-        controller.getGamepadButton(GamepadKeys.Button.A).toggleWhenPressed(
-                new InstantCommand(()->{m_Robot.m_Gyara.setPosition(RobotHardware.s_ClawlClosedPos);}),
-                new InstantCommand(()->{m_Robot.m_Gyara.setPosition(RobotHardware.s_ClawOpenPos);})
-        );
+        controller.getGamepadButton(GamepadKeys.Button.A).whenPressed(
+                new InstantCommand(()->{m_Robot.m_Gyara.setPosition(ba);}));
+
+
 
     }
 

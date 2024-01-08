@@ -20,7 +20,7 @@ public class controller1 extends i_gamepad {
     private static int LiftIncrement = 30;
 
     public static double clawAngle1 = 0.81;
-    public static double bar1 = -0.06;
+    public static double bar1 = -0.066;
     public static double clawAngle2 = 0.82;
     public static double bar2 = -0.07;
     public static double clawAngle3 = 0.81;
@@ -33,8 +33,7 @@ public class controller1 extends i_gamepad {
     public static double bar5 = -0.099;
 
     public static double clawAngle6 = 0.87;
-    public static double bar6 = -0.115;
-
+    public static double bar6 = -0.14;
     public controller1(Gamepad gamepad, RobotHardware robot){
         super(gamepad, robot);
     }
@@ -50,15 +49,20 @@ public class controller1 extends i_gamepad {
                 new InstantCommand(()->{m_Robot.motorIntake.setPower(0.0f);})
         );
 
-        controller.getGamepadButton(GamepadKeys.Button.A).toggleWhenPressed(
-                new InstantCommand(()->{m_Robot.m_Gyara.setPosition(RobotHardware.s_ClawlClosedPos);}),
-                new InstantCommand(()->{m_Robot.m_Gyara.setPosition(RobotHardware.s_ClawOpenPos);})
+        controller.getGamepadButton(GamepadKeys.Button.A).whenPressed(
+                new InstantCommand(()->{
+                    if ( Math.abs(m_Robot.m_Gyara.getPosition() - RobotHardware.s_ClawlClosedPos) < 0.01)
+                        m_Robot.m_Gyara.setPosition(RobotHardware.s_ClawOpenPos);
+                    else
+                        m_Robot.m_Gyara.setPosition(RobotHardware.s_ClawlClosedPos);
+
+                })
         );
 
         controller.getGamepadButton(GamepadKeys.Button.B).whenPressed(
                 new SequentialCommandGroup(
                         new BombasticLiftPos(m_Robot, m_Robot.m_Lift, BombasticLift.e_LiftPosition.LowPos),
-                        new InstantCommand(()->{m_Robot.m_Gyara.setPosition(RobotHardware.s_ClawOpenPos);}),
+                        new InstantCommand(()->{m_Robot.m_Gyara.setPosition(RobotHardware.s_ClawTransfer);}),
                         new InstantCommand(()->{m_Robot.m_GyaraBomba.setPosition(clawAngle1);}),
                         new InstantCommand(()->{m_Robot.m_BombaSexy.SetPosition(bar1);}),
                         new WaitCommand(20),
@@ -89,7 +93,7 @@ public class controller1 extends i_gamepad {
         controller.getGamepadButton(GamepadKeys.Button.LEFT_STICK_BUTTON).whenPressed(
                 new ParallelCommandGroup(
                         new InstantCommand(()->{m_Robot.m_Lift.SetStatePosition(BombasticLift.e_LiftPosition.MidPos);}),
-                        new InstantCommand(()->{m_Robot.m_BombaSexy.SetPosition(0.5);}),
+                        new InstantCommand(()->{m_Robot.m_BombaSexy.SetPosition(0.57);}),
                         new InstantCommand(()->{m_Robot.m_GyaraBomba.setPosition(RobotHardware.s_ScoringClawAngle);})
                 )
         );
@@ -97,14 +101,14 @@ public class controller1 extends i_gamepad {
         controller.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenPressed(
                 new ParallelCommandGroup(
                         new InstantCommand(()->{m_Robot.m_Lift.SetStatePosition(BombasticLift.e_LiftPosition.MaxPos);}),
-                        new InstantCommand(()->{m_Robot.m_BombaSexy.SetPosition(0.5);}),
+                        new InstantCommand(()->{m_Robot.m_BombaSexy.SetPosition(0.57);}),
                         new InstantCommand(()->{m_Robot.m_GyaraBomba.setPosition(RobotHardware.s_ScoringClawAngle);})
                 )        );
 
         controller.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenPressed(
                 new ParallelCommandGroup(
                         new InstantCommand(()->{m_Robot.m_Gyara.setPosition(RobotHardware.s_ClawOpenPos);}),
-                        new WaitCommand(400),
+                        new WaitCommand(800),
                         new InstantCommand(()->{m_Robot.m_Lift.SetStatePosition(BombasticLift.e_LiftPosition.LowPos);}),
                         new InstantCommand(()->{m_Robot.m_BombaSexy.SetPosition(0.0);}),
                         new InstantCommand(()->{m_Robot.m_GyaraBomba.setPosition(RobotHardware.s_IdleClawAngle);})
