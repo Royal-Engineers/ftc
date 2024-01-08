@@ -58,9 +58,9 @@ public class BombaSexyyyy extends CommandOpMode {
         {
 
             CommandScheduler.getInstance().schedule(new SequentialCommandGroup(
-                    new GotoX(100.0d, telemetry, m_DriveSubsystem, Robot),
+                    new GotoTheta(170.0d, telemetry, m_DriveSubsystem, Robot),
                     new WaitCommand(1000),
-                    new GotoX(0.0d, telemetry, m_DriveSubsystem, Robot)
+                    new GotoTheta(0.0d, telemetry, m_DriveSubsystem, Robot)
 
 
                     )

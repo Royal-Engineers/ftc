@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.facade.drive.DriveSubsystem;
 public class GotoTheta extends CommandBase {
 
     Telemetry m_telemetry;
-    double P = 0.007d, I = 0.01d, D = 0.0d;
+    double P = 0.003d, I = 0.0d, D = 0.0d;
 
     DriveSubsystem m_DriveSubsystem;
     PIDController pid;
@@ -39,7 +39,7 @@ public class GotoTheta extends CommandBase {
     public void execute()
     {
         double CurrentPos = OdometryComponent.Theta;
-        m_DriveSubsystem.UpdateAuto(0.0d, 0.0d, -pid.calculate(CurrentPos));
+        m_DriveSubsystem.UpdateAuto(0.0d, 0.0d, pid.calculate(CurrentPos));
         m_Robot.m_telemetry.addData("Target:", m_Target);
 
     }
