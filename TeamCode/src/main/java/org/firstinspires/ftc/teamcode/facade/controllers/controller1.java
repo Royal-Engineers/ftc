@@ -19,21 +19,7 @@ public class controller1 extends i_gamepad {
 
     private static int LiftIncrement = 30;
 
-    public static double clawAngle1 = 0.81;
-    public static double bar1 = -0.066;
-    public static double clawAngle2 = 0.82;
-    public static double bar2 = -0.07;
-    public static double clawAngle3 = 0.81;
-    public static double bar3 = -0.07;
 
-    public static double clawAngle4 = 0.82;
-    public static double bar4 = -0.08;
-
-    public static double clawAngle5 = 0.84;
-    public static double bar5 = -0.099;
-
-    public static double clawAngle6 = 0.87;
-    public static double bar6 = -0.14;
     public controller1(Gamepad gamepad, RobotHardware robot){
         super(gamepad, robot);
     }

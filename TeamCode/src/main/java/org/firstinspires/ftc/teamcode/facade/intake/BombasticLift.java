@@ -12,9 +12,9 @@ public class BombasticLift {
 
     private static final double s_MinPower = 0.1d;
 
-    private static final double s_DefaultPower = -1.0d;
+    public static final double s_DefaultPower = -1.0d;
 
-    private static final double s_SafetyPower = -0.5d;
+    public static final double s_SafetyPower = -0.5d;
     public double m_MinPosition = 0.0d, m_MaxPosition = 0.0d ;
 
     private double m_TargetPosition = 0.0d;
