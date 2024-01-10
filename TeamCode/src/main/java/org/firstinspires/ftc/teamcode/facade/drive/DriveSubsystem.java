@@ -80,7 +80,8 @@ public class DriveSubsystem {
         if(thetam[cnt]<0) thetam[cnt]=thetam[cnt]+2*Math.PI;
 
         vm[cnt]=vm[cnt]+am[cnt]*dt.time();
-        thetam[cnt]=thetam[cnt]+wm[cnt]*dt.time();
+        if(w!=0)
+            thetam[cnt]=thetam[cnt]+wm[cnt]*dt.time();
         if(thetam[cnt]<0) thetam[cnt]+=2*Math.PI;
 
         thetam[cnt]=Math.toDegrees(thetam[cnt]);
@@ -132,7 +133,10 @@ public class DriveSubsystem {
         moduleFrontLeft.drive(vm[1],thetam[1]);
         moduleBackLeft.drive(vm[2],thetam[2]);
         moduleBackRight.drive(vm[3],thetam[3]);
-
+        moduleFrontRight.showba("Front Right");
+        moduleBackRight.showba("Back Right");
+        moduleFrontLeft.showba("Front Left");
+        moduleBackLeft.showba("Back Left");
         lastvx=vx; lastvy=vy; lastw=w;
         lastbotHeading=botHeading;
         dt.reset();
@@ -176,6 +180,10 @@ public class DriveSubsystem {
         moduleBackLeft.drive(vm[2],thetam[2]);
         moduleBackRight.drive(vm[3],thetam[3]);
 
+        moduleFrontRight.showba("Front Right");
+        moduleBackRight.showba("Back Right");
+        moduleFrontLeft.showba("Front Left");
+        moduleBackLeft.showba("Back Left");
         lastvx=vx; lastvy=vy; lastw=w;
         lastbotHeading=botHeading;
         dt.reset();

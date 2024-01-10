@@ -11,14 +11,17 @@ import org.firstinspires.ftc.teamcode.facade.drive.DriveSubsystem;
 public class GotoY extends CommandBase {
 
     Telemetry m_telemetry;
-    double P = 0.03d, I = 0.015d, D = 0.0d;
+    double P = 0.035d, I = 0.015d, D = 0.003d;
 
     DriveSubsystem m_DriveSubsystem;
     PIDController pid;
 
     private double m_Target = 0.0d;
 
+    public double Power = 0.0d;
     RobotHardware m_Robot;
+
+    boolean active = true;
     public GotoY(double y, Telemetry telemetry, DriveSubsystem driveSubsystem, RobotHardware robot)
     {
         pid = new PIDController(P, I, D);
@@ -27,6 +30,7 @@ public class GotoY extends CommandBase {
         m_DriveSubsystem = driveSubsystem;
         m_Target = y;
         m_Robot = robot;
+        active = true;
     }
 
     @Override
@@ -38,21 +42,34 @@ public class GotoY extends CommandBase {
     @Override
     public void execute()
     {
+        if ( !active ) {
+            Power = 0.0d;
+            return;
+        }
+        if( Math.abs(OdometryComponent.Y - m_Target) < 5.0d) {
+            active = false;
+            Power = 0.0d;
+            return;
+        }
         double CurrentPos = OdometryComponent.Y;
-        m_DriveSubsystem.UpdateAuto(0.0d, -pid.calculate(CurrentPos), 0.0d);
-        m_Robot.m_telemetry.addData("Target:", m_Target);
+        Power = -pid.calculate(CurrentPos);
+        m_Robot.m_telemetry.addData("TargetY:", m_Target);
+        m_Robot.m_telemetry.addData("CurrentY:", CurrentPos);
+
+
+        m_Robot.m_telemetry.addData("PowerY:", Power);
 
     }
-
+    public void set(double pos)
+    {
+        m_Target = pos;
+        pid.setSetPoint(pos);
+        active = true;
+    }
     @Override
     public boolean isFinished()
     {
 
-        if( Math.abs(OdometryComponent.Y - m_Target) < 10.0d)
-        {
-            m_DriveSubsystem.UpdateAuto(0, 0, 0);
-            return true;
-        }
         return false;
     }
 }

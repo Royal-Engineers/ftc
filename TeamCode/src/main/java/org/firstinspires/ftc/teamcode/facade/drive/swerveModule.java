@@ -21,7 +21,7 @@ public class swerveModule {
     boolean motorDirection = true;
     public static double P = 0.01, I = 0, D = 0.00017, F = 0;
 
-    public static double tolerance = 2;
+    public static double tolerance = 1;
     PIDFController angleController = new PIDFController(P, I, D, F);
     Telemetry telemetrieba;
     public swerveModule(DcMotorEx motor, CRServo servo, absoluteAnalogEncoder encoder, Telemetry telemetry) {
@@ -118,5 +118,10 @@ telemetrieba.addData("putereba", power);
             return errorneg1;
         }
 return output;
+    }
+
+    public void showba(String name)
+    {
+        telemetrieba.addData(name, encoder.getCurrentPosition());
     }
 }

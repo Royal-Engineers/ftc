@@ -13,8 +13,8 @@ public class OdometryComponent {
     public static double X = 0.0d, Y = 0.0d, ThetaTemp = 0.0d, Theta = 0.0d;
     private RobotHardware robot;
 
-    private double L = 32.0d;//left to right
-    private double B = 17.5d;//centre to front
+    private double L = 31.5d;//left to right
+    private double B = 16.3d;//centre to front
 
     private double delta_x = 0.0d, delta_y = 0.0d, delta_theta = 0.0d;
 
@@ -23,7 +23,7 @@ public class OdometryComponent {
 
     private final double CM_perTick = 2 * PI * R/TPR;
 
-    private final double baba = 8.3;
+    private final double baba = 8.55;
 
     private double n_left = 0.0d, n_right = 0.0d, n_front = 0.0d;
     private double new_nLeft = 0.0d, new_nRight = 0.0d, new_nFront = 0.0d;
@@ -67,6 +67,8 @@ public class OdometryComponent {
       Y += delta_x * Math.sin(th) + delta_y * Math.cos(th);
       ThetaTemp += delta_theta;
       Theta = ((ThetaTemp * 360 /baba) + 360) % 360;
+      Theta+=360;
+      Theta%=360;
       AddTelemetry();
     }
 
@@ -78,8 +80,8 @@ public class OdometryComponent {
 
         robot.m_telemetry.addData("x: ", X);
         robot.m_telemetry.addData("y: ", Y);
-        robot.m_telemetry.addData("theta: ", Theta);
-        robot.m_telemetry.addData("thetaBA: ", ThetaTemp * 360 /baba);
+        robot.m_telemetry.addData("theta: ", ThetaTemp);
+        robot.m_telemetry.addData("thetaBA: ", Theta);
 
         robot.m_telemetry.addData("left", new_nLeft);
         robot.m_telemetry.addData("right", new_nRight);

@@ -101,10 +101,10 @@ public class RobotHardware {
         aencoderFrontLeft = m_HardwareMap.get(AnalogInput.class, "encoderFrontLeft");
         aencoderBackRight = m_HardwareMap.get(AnalogInput.class, "encoderBackRight");
         aencoderBackLeft = m_HardwareMap.get(AnalogInput.class, "encoderBackLeft");
-        encoderFrontRight = new absoluteAnalogEncoder(aencoderFrontRight, 53, true);
+        encoderFrontRight = new absoluteAnalogEncoder(aencoderFrontRight, 50, true);
         encoderFrontLeft = new absoluteAnalogEncoder(aencoderFrontLeft, 205, true);
-        encoderBackLeft = new absoluteAnalogEncoder(aencoderBackLeft, 207, true);
-        encoderBackRight = new absoluteAnalogEncoder(aencoderBackRight, 225, true);
+        encoderBackLeft = new absoluteAnalogEncoder(aencoderBackLeft, 200, true);
+        encoderBackRight = new absoluteAnalogEncoder(aencoderBackRight, 230, true);
 
         moduleFrontRight = new swerveModule(motorFrontRight, servoFrontRight, encoderFrontRight, m_telemetry);
         moduleFrontLeft = new swerveModule(motorFrontLeft, servoFrontLeft, encoderFrontLeft, m_telemetry);
