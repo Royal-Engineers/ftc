@@ -10,6 +10,7 @@ import com.arcrobotics.ftclib.hardware.ServoEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.commands.BombasticLiftPos;
+import org.firstinspires.ftc.teamcode.commands.Transfer;
 import org.firstinspires.ftc.teamcode.facade.RobotHardware;
 import org.firstinspires.ftc.teamcode.facade.intake.BombasticLift;
 import org.firstinspires.ftc.teamcode.facade.interfaces.i_gamepad;
@@ -44,34 +45,7 @@ int GyatLevel = 0;
         );
 
         controller.getGamepadButton(GamepadKeys.Button.B).whenPressed(
-                new SequentialCommandGroup(
-                        new BombasticLiftPos(m_Robot, m_Robot.m_Lift, BombasticLift.e_LiftPosition.LowPos),
-                        new InstantCommand(()->{m_Robot.m_Gyara.setPosition(RobotHardware.s_ClawTransfer);}),
-                        new InstantCommand(()->{m_Robot.m_GyaraBomba.setPosition(clawAngle1);}),
-                        new InstantCommand(()->{m_Robot.m_BombaSexy.SetPosition(bar1);}),
-                        new WaitCommand(20),
-                        new InstantCommand(()->{m_Robot.m_GyaraBomba.setPosition(clawAngle2);}),
-                        new InstantCommand(()->{m_Robot.m_BombaSexy.SetPosition(bar2);}),
-                        new WaitCommand(5),
-                        new InstantCommand(()->{m_Robot.m_GyaraBomba.setPosition(clawAngle3);}),
-                        new InstantCommand(()->{m_Robot.m_BombaSexy.SetPosition(bar3);}),
-                        new WaitCommand(5),
-                        new InstantCommand(()->{m_Robot.m_GyaraBomba.setPosition(clawAngle4);}),
-                        new InstantCommand(()->{m_Robot.m_BombaSexy.SetPosition(bar4);}),
-                        new WaitCommand(5),
-                        new InstantCommand(()->{m_Robot.m_GyaraBomba.setPosition(clawAngle5);}),
-                        new InstantCommand(()->{m_Robot.m_BombaSexy.SetPosition(bar5);}),
-                        new WaitCommand(5),
-                        new InstantCommand(()->{m_Robot.m_GyaraBomba.setPosition(clawAngle6);}),
-                        new InstantCommand(()->{m_Robot.m_BombaSexy.SetPosition(bar6);}),
-                        new WaitCommand(70),
-                        new InstantCommand(()->{m_Robot.m_Gyara.setPosition(RobotHardware.s_ClawlClosedPos);}),
-                        new WaitCommand(50),
-                        new InstantCommand(()->{m_Robot.m_BombaSexy.SetPosition(0.0);}),
-                        new InstantCommand(()->{m_Robot.m_GyaraBomba.setPosition(RobotHardware.s_IdleClawAngle);})
-
-
-                )
+                        new Transfer(m_Robot)
         );
 
         controller.getGamepadButton(GamepadKeys.Button.DPAD_DOWN).whenPressed(

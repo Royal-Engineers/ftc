@@ -33,13 +33,14 @@ public class Pipeline extends OpenCvPipeline {
     private team culoare;
 
 
-    public Pipeline(Telemetry telemetry)
+    public Pipeline(Telemetry telemetry, team culoare)
     {
-        this.telemetry = telemetry;
+        this.telemetry = telemetry;        this.culoare = culoare;
+
     }
 
-    public void init(team culoare){
-        this.culoare = culoare;
+
+    public void init(){
 
 
        if ( culoare == team.rosu )
@@ -65,7 +66,7 @@ public class Pipeline extends OpenCvPipeline {
         Imgproc.cvtColor(input, m_mat, Imgproc.COLOR_RGB2HSV);
         width = m_mat.cols();
         height = m_mat.rows();
-        init(team.albastru);
+        init();
 
         Mat mask1 = new Mat(), mask2 = new Mat();
         Core.inRange(m_mat, lowHSV, highHSV, mask1);
@@ -100,7 +101,7 @@ public class Pipeline extends OpenCvPipeline {
 
         telemetry.addData("ROI: ", region_of_interest);
         telemetry.update();
-        return m_mat;
+        return input;
 
     }
 }

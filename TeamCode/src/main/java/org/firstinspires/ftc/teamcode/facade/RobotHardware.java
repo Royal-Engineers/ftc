@@ -17,11 +17,14 @@ import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.facade.drive.absoluteAnalogEncoder;
 import org.firstinspires.ftc.teamcode.facade.drive.swerveModule;
 import org.firstinspires.ftc.teamcode.facade.intake.BombaSexy;
 import org.firstinspires.ftc.teamcode.facade.intake.BombasticLift;
 import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
 
 public class RobotHardware {
 
@@ -137,15 +140,15 @@ public class RobotHardware {
         m_GyaraBomba = new ServoExEx(m_HardwareMap, "clawAngle", 0, 1, s_IdleClawAngle);
         m_Gyara.setPosition(s_ClawOpenPos);
 
-        // int cameraMonitorViewId = m_HardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", m_HardwareMap.appContext.getPackageName());
-       // camera = OpenCvCameraFactory.getInstance().createWebcam(m_HardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
+        int cameraMonitorViewId = m_HardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", m_HardwareMap.appContext.getPackageName());
+       camera = OpenCvCameraFactory.getInstance().createWebcam(m_HardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
 
-/*        camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
+       camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
             @Override
             public void onOpened()
             {
-                camera.startStreaming(320,240, OpenCvCameraRotation.UPRIGHT);
+                camera.startStreaming(1280,960, OpenCvCameraRotation.UPRIGHT);
             }
 
             @Override
@@ -153,7 +156,7 @@ public class RobotHardware {
             {
 
             }
-        });*/
+        });
     }
 
 

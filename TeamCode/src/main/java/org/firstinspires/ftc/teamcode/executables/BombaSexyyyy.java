@@ -16,6 +16,7 @@ import org.firstinspires.ftc.teamcode.facade.RobotHardware;
 import org.firstinspires.ftc.teamcode.facade.interfaces.i_gamepad;
 import org.firstinspires.ftc.teamcode.facade.drive.DriveSubsystem;
 import org.firstinspires.ftc.teamcode.facade.drive.OdometryComponent;
+import org.firstinspires.ftc.teamcode.pipelines.Pipeline;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 import java.util.function.BooleanSupplier;
@@ -43,8 +44,8 @@ public class BombaSexyyyy extends CommandOpMode {
         Robot = new RobotHardware();
         Robot.init(gamepad1, gamepad2, telemetry, hardwareMap);
 
-        //pipeline = new Pipeline(telemetry);
-        // Robot.camera.setPipeline(pipeline);
+        pipeline = new Pipeline(telemetry,  Pipeline.team.albastru);
+        Robot.camera.setPipeline(pipeline);
 
         m_DriveSubsystem = new DriveSubsystem(Robot);
 
@@ -78,7 +79,8 @@ public class BombaSexyyyy extends CommandOpMode {
 
                     CommandScheduler.getInstance().schedule(new SequentialCommandGroup(
                             new MergiBa(100 ,0 ,0, PositionCommand),
-                            new MergiBa(0, 0 ,90, PositionCommand)
+                            new MergiBa(0, 0 ,0, PositionCommand),
+                            new MergiBa(0, 0, 90, PositionCommand)
 
 
 

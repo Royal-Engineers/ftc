@@ -49,9 +49,9 @@ public class OdometryComponent {
       n_right = new_nRight;
       n_front = new_nFront;
 
-      new_nLeft = -EncoderLeft.getCurrentPosition();
-      new_nRight = -EncoderRight.getCurrentPosition();
-      new_nFront = EncoderFront.getCurrentPosition();
+      new_nLeft = EncoderLeft.getCurrentPosition();
+      new_nRight = EncoderRight.getCurrentPosition();
+      new_nFront = -EncoderFront.getCurrentPosition();
 
       double dn1 = new_nLeft - n_left;
       double dn2 = new_nRight - n_right;
@@ -63,8 +63,8 @@ public class OdometryComponent {
 
       double th = ThetaTemp + (delta_theta / 2.0d);
 
-      X += delta_x * Math.cos(th) - delta_y * Math.sin(th);
-      Y += delta_x * Math.sin(th) + delta_y * Math.cos(th);
+      X += delta_x * Math.cos(th) + delta_y * Math.sin(th);
+      Y += delta_x * Math.sin(th) - delta_y * Math.cos(th);
       ThetaTemp += delta_theta;
       Theta = ((ThetaTemp * 360 /baba) + 360) % 360;
       Theta+=360;

@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.pipelines.Pipeline;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp
-public class BombasticSideEye extends CommandOpMode {
+public class CriminalOffensiveSideEye extends CommandOpMode {
 
     private RobotHardware Robot;
 
@@ -34,8 +34,8 @@ public class BombasticSideEye extends CommandOpMode {
         Robot = new RobotHardware();
         Robot.init(gamepad1, gamepad2, telemetry, hardwareMap);
 
-        pipeline = new Pipeline(telemetry, Pipeline.team.albastru);
-       Robot.camera.setPipeline(pipeline);
+        pipeline = new Pipeline(telemetry, Pipeline.team.rosu);
+        Robot.camera.setPipeline(pipeline);
 
         m_DriveSubsystem = new DriveSubsystem(Robot);
 
@@ -51,6 +51,7 @@ public class BombasticSideEye extends CommandOpMode {
 
     @Override
     public void run(){
+        Robot.camera.setPipeline(null);
         m_DriveSubsystem.UpdateGamepad();
         m_odometry.update();
         m_controller1.update();
