@@ -19,7 +19,7 @@ public class swerveModule {
 
     public static double target = 0;
     boolean motorDirection = true;
-    public static double P = 0.01, I = 0, D = 0.00017, F = 0;
+    public static double P = 0.007, I = 0, D = 0.00017, F = 0;
 
     public static double tolerance = 1;
     PIDFController angleController = new PIDFController(P, I, D, F);
@@ -47,7 +47,7 @@ public class swerveModule {
             power = 0;
 
         //daca nu mai primesc input din gamepad, rotile raman la ultima pozitie
-        if ( motorPower < 0.03 ){
+        if ( motorPower < -110.03 ){
             servo.setPower(0.0d);}
         else{
         servo.setPower(power);}

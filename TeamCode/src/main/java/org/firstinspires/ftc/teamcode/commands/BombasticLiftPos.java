@@ -2,15 +2,15 @@ package org.firstinspires.ftc.teamcode.commands;
 
 import com.arcrobotics.ftclib.command.CommandBase;
 
-import org.firstinspires.ftc.teamcode.facade.intake.BombasticLift;
+import org.firstinspires.ftc.teamcode.facade.intake.Lift;
 import org.firstinspires.ftc.teamcode.facade.RobotHardware;
 
 public class BombasticLiftPos extends CommandBase {
     private RobotHardware m_Robot;
-    private BombasticLift m_Lift;
+    private Lift m_Lift;
 
-    private BombasticLift.e_LiftPosition m_StatePosition;
-    public BombasticLiftPos(RobotHardware robot, BombasticLift lift, BombasticLift.e_LiftPosition StatePosition)
+    private Lift.e_LiftPosition m_StatePosition;
+    public BombasticLiftPos(RobotHardware robot, Lift lift, Lift.e_LiftPosition StatePosition)
     {
         m_Robot = robot;
         m_Lift = lift;

@@ -5,7 +5,7 @@ import com.arcrobotics.ftclib.hardware.ServoEx;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.facade.RobotHardware;
 
-public class BombaSexy {
+public class Bar {
 
     private RobotHardware m_Robot;
     private Telemetry m_Telemetry;
@@ -13,7 +13,7 @@ public class BombaSexy {
 
     private double m_MainPositon = 0.0d, m_InvPosition = 0.0d;
 
-    public BombaSexy(RobotHardware robot, ServoEx MainServo, ServoEx SecServo, double MainPosition, double InvPosition)
+    public Bar(RobotHardware robot, ServoEx MainServo, ServoEx SecServo, double MainPosition, double InvPosition)
     {
         m_Robot = robot;
         m_MainServo = MainServo;

@@ -6,7 +6,7 @@ import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 
 import org.firstinspires.ftc.teamcode.facade.RobotHardware;
-import org.firstinspires.ftc.teamcode.facade.intake.BombasticLift;
+import org.firstinspires.ftc.teamcode.facade.intake.Lift;
 
 @Config
 public class Transfer extends SequentialCommandGroup {
@@ -33,33 +33,33 @@ public class Transfer extends SequentialCommandGroup {
     public Transfer(RobotHardware m_Robot)
     {
         super(
-                new BombasticLiftPos(m_Robot, m_Robot.m_Lift, BombasticLift.e_LiftPosition.LowPos),
-                new InstantCommand(()->{m_Robot.m_Gyara.setPosition(RobotHardware.s_ClawTransfer);}),
-                new InstantCommand(()->{m_Robot.m_GyaraBomba.setPosition(clawAngle1);}),
-                new InstantCommand(()->{m_Robot.m_BombaSexy.SetPosition(bar1);}),
+                new BombasticLiftPos(m_Robot, m_Robot.m_Lift, Lift.e_LiftPosition.LowPos),
+                new InstantCommand(()->{m_Robot.m_Claw.setPosition(RobotHardware.s_ClawTransfer);}),
+                new InstantCommand(()->{m_Robot.m_ClawAngleServo.setPosition(clawAngle1);}),
+                new InstantCommand(()->{m_Robot.m_Bar.SetPosition(bar1);}),
                 new WaitCommand(20),
-                new InstantCommand(()->{m_Robot.m_GyaraBomba.setPosition(clawAngle2);}),
-                new InstantCommand(()->{m_Robot.m_BombaSexy.SetPosition(bar2);}),
+                new InstantCommand(()->{m_Robot.m_ClawAngleServo.setPosition(clawAngle2);}),
+                new InstantCommand(()->{m_Robot.m_Bar.SetPosition(bar2);}),
+                //new WaitCommand(5),
+                //new InstantCommand(()->{m_Robot.m_GyaraBomba.setPosition(clawAngle3);}),
+                //new InstantCommand(()->{m_Robot.m_BombaSexy.SetPosition(bar3);}),
                 new WaitCommand(5),
-                new InstantCommand(()->{m_Robot.m_GyaraBomba.setPosition(clawAngle3);}),
-                new InstantCommand(()->{m_Robot.m_BombaSexy.SetPosition(bar3);}),
+                new InstantCommand(()->{m_Robot.m_ClawAngleServo.setPosition(clawAngle4);}),
+                new InstantCommand(()->{m_Robot.m_Bar.SetPosition(bar4);}),
                 new WaitCommand(5),
-                new InstantCommand(()->{m_Robot.m_GyaraBomba.setPosition(clawAngle4);}),
-                new InstantCommand(()->{m_Robot.m_BombaSexy.SetPosition(bar4);}),
+                new InstantCommand(()->{m_Robot.m_ClawAngleServo.setPosition(clawAngle5);}),
+                new InstantCommand(()->{m_Robot.m_Bar.SetPosition(bar5);}),
                 new WaitCommand(5),
-                new InstantCommand(()->{m_Robot.m_GyaraBomba.setPosition(clawAngle5);}),
-                new InstantCommand(()->{m_Robot.m_BombaSexy.SetPosition(bar5);}),
+                //new InstantCommand(()->{m_Robot.m_GyaraBomba.setPosition(clawAngle6);}),
+                //new InstantCommand(()->{m_Robot.m_BombaSexy.SetPosition(bar6);}),
+                //new WaitCommand(5),
+                new InstantCommand(()->{m_Robot.m_ClawAngleServo.setPosition(clawAngle7);}),
+                new InstantCommand(()->{m_Robot.m_Bar.SetPosition(bar7);}),
                 new WaitCommand(5),
-                new InstantCommand(()->{m_Robot.m_GyaraBomba.setPosition(clawAngle6);}),
-                new InstantCommand(()->{m_Robot.m_BombaSexy.SetPosition(bar6);}),
-                new WaitCommand(5),
-                new InstantCommand(()->{m_Robot.m_GyaraBomba.setPosition(clawAngle7);}),
-                new InstantCommand(()->{m_Robot.m_BombaSexy.SetPosition(bar7);}),
-                new WaitCommand(5),
-                new InstantCommand(()->{m_Robot.m_Gyara.setPosition(RobotHardware.s_ClawlClosedPos);}),
+                new InstantCommand(()->{m_Robot.m_Claw.setPosition(RobotHardware.s_ClawlClosedPos);}),
                 new WaitCommand(25),
-                new InstantCommand(()->{m_Robot.m_BombaSexy.SetPosition(0.0);}),
-                new InstantCommand(()->{m_Robot.m_GyaraBomba.setPosition(RobotHardware.s_IdleClawAngle);})
+                new InstantCommand(()->{m_Robot.m_Bar.SetPosition(0.0);}),
+                new InstantCommand(()->{m_Robot.m_ClawAngleServo.setPosition(RobotHardware.s_IdleClawAngle);})
 
         );
     }

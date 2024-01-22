@@ -4,8 +4,6 @@ package org.firstinspires.ftc.teamcode.facade;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.hardware.ServoEx;
 import com.arcrobotics.ftclib.hardware.SimpleServo;
-import com.arcrobotics.ftclib.hardware.motors.Motor;
-import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -14,14 +12,13 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.facade.drive.absoluteAnalogEncoder;
 import org.firstinspires.ftc.teamcode.facade.drive.swerveModule;
-import org.firstinspires.ftc.teamcode.facade.intake.BombaSexy;
-import org.firstinspires.ftc.teamcode.facade.intake.BombasticLift;
+import org.firstinspires.ftc.teamcode.facade.intake.Bar;
+import org.firstinspires.ftc.teamcode.facade.intake.Lift;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -59,14 +56,18 @@ public class RobotHardware {
     //odometers
     public DcMotorEx EncoderLeft, EncoderRight, EncoderFront;
 
-    public BombasticLift m_Lift;
+    public Lift m_Lift;
 
-    public BombaSexy m_BombaSexy;
+    public Bar m_Bar;
 
     private ServoEx m_BombasticServo1, m_SexyServo2;
 
-    public ServoEx m_Gyara;
-    public ServoExEx m_GyaraBomba;
+    public ServoEx m_Claw;
+    public ServoExEx m_ClawAngleServo;
+
+    public ServoEx m_ServoAvion;
+
+    public ServoEx m_ServoIntake;
 
     public static double s_ClawOpenPos =  0.03d;
     public static double s_ClawlClosedPos = 0.18d;
@@ -93,7 +94,7 @@ public class RobotHardware {
 
         InitializeMotors();
 
-        m_Lift = new BombasticLift(this, m_telemetry, m_LiftMainMotor, m_LiftInvMotor, 0, 800);
+        m_Lift = new Lift(this, m_telemetry, m_LiftMainMotor, m_LiftInvMotor, 0, 2000);
 
         servoFrontRight = m_HardwareMap.get(CRServo.class, "servoFrontRight");
         servoFrontLeft = m_HardwareMap.get(CRServo.class, "servoFrontLeft");
@@ -104,10 +105,10 @@ public class RobotHardware {
         aencoderFrontLeft = m_HardwareMap.get(AnalogInput.class, "encoderFrontLeft");
         aencoderBackRight = m_HardwareMap.get(AnalogInput.class, "encoderBackRight");
         aencoderBackLeft = m_HardwareMap.get(AnalogInput.class, "encoderBackLeft");
-        encoderFrontRight = new absoluteAnalogEncoder(aencoderFrontRight, 50, true);
-        encoderFrontLeft = new absoluteAnalogEncoder(aencoderFrontLeft, 205, true);
-        encoderBackLeft = new absoluteAnalogEncoder(aencoderBackLeft, 200, true);
-        encoderBackRight = new absoluteAnalogEncoder(aencoderBackRight, 230, true);
+        encoderFrontRight = new absoluteAnalogEncoder(aencoderFrontRight, 35, true);
+        encoderFrontLeft = new absoluteAnalogEncoder(aencoderFrontLeft, 200, true);
+        encoderBackLeft = new absoluteAnalogEncoder(aencoderBackLeft, 195, true);
+        encoderBackRight = new absoluteAnalogEncoder(aencoderBackRight, 215, true);
 
         moduleFrontRight = new swerveModule(motorFrontRight, servoFrontRight, encoderFrontRight, m_telemetry);
         moduleFrontLeft = new swerveModule(motorFrontLeft, servoFrontLeft, encoderFrontLeft, m_telemetry);
@@ -126,19 +127,26 @@ public class RobotHardware {
         m_BombasticServo1 = new SimpleServo(m_HardwareMap, "BombasticServo1", 0, 1);
         m_SexyServo2 = new SimpleServo(m_HardwareMap, "BombasticServo2", 0, 1);
 
+        m_ServoAvion = new SimpleServo(m_HardwareMap, "ABCDE", 0, 1);
+        m_ServoIntake = new SimpleServo(m_HardwareMap, "ServoIntake", 0, 1);
+
+        m_ServoIntake.setPosition(0.86d);
+
         m_BombasticServo1.setPosition(0.2);
         m_SexyServo2.setPosition(0.13);
 
-        m_BombaSexy = new BombaSexy(this, m_BombasticServo1, m_SexyServo2, 0.2, 0.13);
+        m_ServoAvion.setPosition(0.7);
+
+        m_Bar = new Bar(this, m_BombasticServo1, m_SexyServo2, 0.2, 0.13);
 
         m_imu = m_HardwareMap.get(IMU.class, "imu");
         imu_parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
                 RevHubOrientationOnRobot.LogoFacingDirection.UP,
                 RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
 
-        m_Gyara = new SimpleServo(m_HardwareMap, "claw", 0, 1);
-        m_GyaraBomba = new ServoExEx(m_HardwareMap, "clawAngle", 0, 1, s_IdleClawAngle);
-        m_Gyara.setPosition(s_ClawOpenPos);
+        m_Claw = new SimpleServo(m_HardwareMap, "claw", 0, 1);
+        m_ClawAngleServo = new ServoExEx(m_HardwareMap, "clawAngle", 0, 1, s_IdleClawAngle);
+        m_Claw.setPosition(s_ClawTransfer);
 
         int cameraMonitorViewId = m_HardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", m_HardwareMap.appContext.getPackageName());
        camera = OpenCvCameraFactory.getInstance().createWebcam(m_HardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
@@ -192,7 +200,9 @@ public class RobotHardware {
 
     public void Update()
     {
-        m_Lift.UpdateTelemetry();m_BombaSexy.UpdateTelemetry();
-        m_telemetry.addData("BAAAAA:", m_GyaraBomba.getPosition());
+        m_Lift.UpdateTelemetry();
+        m_Bar.UpdateTelemetry();
+        m_telemetry.addData("Poz Ghiara:", m_ClawAngleServo.getPosition());
+        m_telemetry.addData("pozintake", m_ServoIntake.getPosition());
     }
 }

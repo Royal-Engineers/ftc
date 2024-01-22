@@ -1,28 +1,31 @@
 package org.firstinspires.ftc.teamcode.executables;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
-import com.arcrobotics.ftclib.command.WaitUntilCommand;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.commands.GotoTheta;
 import org.firstinspires.ftc.teamcode.commands.GotoX;
 import org.firstinspires.ftc.teamcode.commands.GotoY;
 import org.firstinspires.ftc.teamcode.commands.KeepPosition;
+import org.firstinspires.ftc.teamcode.commands.LiftCommands.LiftMiddle;
+import org.firstinspires.ftc.teamcode.commands.LiftCommands.Retract;
 import org.firstinspires.ftc.teamcode.commands.MergiBa;
+import org.firstinspires.ftc.teamcode.commands.Transfer;
 import org.firstinspires.ftc.teamcode.facade.RobotHardware;
 import org.firstinspires.ftc.teamcode.facade.interfaces.i_gamepad;
 import org.firstinspires.ftc.teamcode.facade.drive.DriveSubsystem;
 import org.firstinspires.ftc.teamcode.facade.drive.OdometryComponent;
-import org.firstinspires.ftc.teamcode.pipelines.Pipeline;
+import org.firstinspires.ftc.teamcode.pipelines.PipelineStanga;
 import org.openftc.easyopencv.OpenCvPipeline;
 
-import java.util.function.BooleanSupplier;
-
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp
-public class BombaSexyyyy extends CommandOpMode {
+@Config
+@Autonomous
+public class AutoAlbastruPanel extends CommandOpMode {
 
     private RobotHardware Robot;
 
@@ -44,7 +47,7 @@ public class BombaSexyyyy extends CommandOpMode {
         Robot = new RobotHardware();
         Robot.init(gamepad1, gamepad2, telemetry, hardwareMap);
 
-        pipeline = new Pipeline(telemetry,  Pipeline.team.albastru);
+        pipeline = new PipelineStanga(telemetry,  PipelineStanga.team.albastru);
         Robot.camera.setPipeline(pipeline);
 
         m_DriveSubsystem = new DriveSubsystem(Robot);
@@ -54,6 +57,9 @@ public class BombaSexyyyy extends CommandOpMode {
         //m_controller1.initialize();
 
         waitForStart();
+        Robot.camera.setPipeline(null);
+
+
     }
 
     boolean ok = false;
@@ -63,10 +69,22 @@ public class BombaSexyyyy extends CommandOpMode {
     GotoTheta TCommand;
 
     KeepPosition PositionCommand;
+
+    public static double IncrementLeft = -9.5d;
+    public static double IncrementRight = 16.0d;
+    public static PipelineStanga.regions zone = PipelineStanga.regions.middle;
+
     @Override
     public void run() {
-
         m_odometry.update();
+         zone = PipelineStanga.region_of_interest;
+
+        double increment = 3;
+        if ( zone == PipelineStanga.regions.left)
+            increment  = IncrementLeft;
+        else if ( zone == PipelineStanga.regions.right )
+            increment = IncrementRight;
+
         if (!ok)
         {
             XCommand = new GotoX(0.0d, telemetry, m_DriveSubsystem, Robot);
@@ -78,11 +96,17 @@ public class BombaSexyyyy extends CommandOpMode {
             CommandScheduler.getInstance().schedule(PositionCommand);
 
                     CommandScheduler.getInstance().schedule(new SequentialCommandGroup(
-                            new MergiBa(100 ,0 ,0, PositionCommand),
-                            new MergiBa(0, 0 ,0, PositionCommand),
-                            new MergiBa(0, 0, 90, PositionCommand)
-
-
+                            new Transfer(Robot).alongWith(
+                            new MergiBa(52+ increment, 60, 90, PositionCommand)),
+                            new LiftMiddle(Robot).alongWith(
+                            new MergiBa(52+ increment, 83., 90, PositionCommand, 0.9, 0.9, 0.9)),
+                            new WaitCommand(900),
+                            new Retract(Robot),
+                            new MergiBa(5, 75.5, 90, PositionCommand,0.9, 0.9, 0.9),
+                            new InstantCommand(()->
+                            {
+                                Robot.m_Lift.SetTargetPosition(0, 0.9);
+                            })
 
 
                             // new InstantCommand(()->{PositionCommand.SetTheta(   180.0d);})
@@ -93,7 +117,7 @@ public class BombaSexyyyy extends CommandOpMode {
             ok = true;
         }
         telemetry.update();
-
+        Robot.Update();
         super.run();
 
     }

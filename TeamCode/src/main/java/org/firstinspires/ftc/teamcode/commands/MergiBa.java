@@ -11,10 +11,21 @@ public class MergiBa extends SequentialCommandGroup {
         super(
                 new InstantCommand(()->{PositionCommand.SetAll(x, y, t);}),
                 new WaitUntilCommand(()-> {
-                    return PositionCommand.XCommand.active == false && PositionCommand.YCommand.active == false
-                            && PositionCommand.TCommand.active == false;
-                }),
-                new InstantCommand(()->{PositionCommand.SetAll(x, y, t);}));
+                    return PositionCommand.XCommand.isWithinTolerance()  && PositionCommand.YCommand.isWithinTolerance()
+                            && PositionCommand.TCommand.isWithinTolerance();
+                }));
+
+
+    }
+
+    public MergiBa(double x, double y, double t, KeepPosition PositionCommand, double px, double py, double pt)
+    {
+        super(
+                new InstantCommand(()->{PositionCommand.SetAll(x, y, t, px, py, pt);}),
+                new WaitUntilCommand(()-> {
+                    return PositionCommand.XCommand.isWithinTolerance()  && PositionCommand.YCommand.isWithinTolerance()
+                            && PositionCommand.TCommand.isWithinTolerance();
+                }));
 
 
     }

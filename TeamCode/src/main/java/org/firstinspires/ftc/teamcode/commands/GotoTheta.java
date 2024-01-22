@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.commands;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.controller.PIDController;
 
@@ -9,13 +10,29 @@ import org.firstinspires.ftc.teamcode.facade.drive.OdometryComponent;
 import org.firstinspires.ftc.teamcode.facade.drive.DriveSubsystem;
 import org.opencv.core.Mat;
 
+import java.lang.annotation.Target;
+import java.sql.ParameterMetaData;
+
+@Config
 public class GotoTheta extends CommandBase {
 
     Telemetry m_telemetry;
-    double P = 0.035d, I= 0.00d, D = 0.001d;
+    public static double P = 0.048d, I= 0.1d, D = 0.0029d;
+
+    public double pmax = 1.0d;
+    public static double Tolerance = 2.5;
+
+    double CurrentPos = 0.0d;
     DriveSubsystem m_DriveSubsystem;
     PIDController pid;
 
+    public boolean isWithinTolerance()
+    {
+        double dist = Math.abs(m_Target - CurrentPos);
+        if ( dist < Tolerance || 360 - dist < Tolerance)
+            return true;
+        return false;
+    }
     private double m_Target = 0.0d;
 
     public double Power = 0.0d;
@@ -42,18 +59,33 @@ public class GotoTheta extends CommandBase {
     @Override
     public void execute()
     {
-        if ( !active ) {
-            Power = 0.0d;
-            return;
+        CurrentPos = OdometryComponent.Theta;
+        double p2;
+        double p1;
+        if ( CurrentPos < m_Target) {
+            p1 = Math.abs(CurrentPos - m_Target);
+            p2 = 360 - p1;
         }
-        if( Math.abs(OdometryComponent.Theta - m_Target) < 5.0d) {
+        else {
+            p2 = Math.abs(CurrentPos - m_Target);
+            p1 = 360 - p2;
+        }
+
+        if( isWithinTolerance()) {
             Power = 0.0d;
-            active = false;
             return;
         }
 
-            double CurrentPos = OdometryComponent.Theta;
-        Power = Math.abs(pid.calculate(Math.min(Math.abs(CurrentPos), Math.abs(360 -CurrentPos))));
+
+
+        Power = Math.abs(pid.calculate(m_Target + Math.min(p1, p2)));
+        if ( p1 < p2 )
+            Power = -Power;
+
+        if ( Power < -pmax )
+            Power = -pmax;
+        if ( Power > pmax)
+            Power = pmax;
         m_Robot.m_telemetry.addData("TargetT:", m_Target);
         m_Robot.m_telemetry.addData("CurrentT:", CurrentPos);
 
@@ -62,9 +94,9 @@ public class GotoTheta extends CommandBase {
     }
     public void set(double pos)
     {
+        pos =(pos + 360) % 360;
         m_Target = pos;
         pid.setSetPoint(pos);
-        active = true;
     }
     @Override
     public boolean isFinished()

@@ -10,8 +10,9 @@ import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 
-public class Pipeline extends OpenCvPipeline {
+public class PipelineDreapta extends OpenCvPipeline {
 
+    static public int Zone = 2;
     public enum team{
         rosu, albastru
     }
@@ -20,7 +21,7 @@ public class Pipeline extends OpenCvPipeline {
         none, left, middle, right
     }
 
-    public static regions region_of_interest = regions.none;
+    public static regions region_of_interest = regions.right;
     private int width, height;
     private Telemetry telemetry;
 
@@ -33,7 +34,7 @@ public class Pipeline extends OpenCvPipeline {
     private team culoare;
 
 
-    public Pipeline(Telemetry telemetry, team culoare)
+    public PipelineDreapta(Telemetry telemetry, team culoare)
     {
         this.telemetry = telemetry;        this.culoare = culoare;
 
@@ -41,23 +42,13 @@ public class Pipeline extends OpenCvPipeline {
 
 
     public void init(){
+        Zone = 2;
 
+        lowHSV = new Scalar(175, 110, 100);
+        highHSV = new Scalar(180, 255, 255);
 
-       if ( culoare == team.rosu )
-       {
-           lowHSV = new Scalar(175, 110, 100);
-           highHSV = new Scalar(180, 255, 255);
-
-           lowHSV1 = new Scalar(0, 110, 100);
-           highHSV1 = new Scalar(7, 255, 255);
-           return;
-       }
-
-        lowHSV = new Scalar(100, 100, 50);
-        highHSV = new Scalar(130, 255, 255);
-
-        lowHSV1 = new Scalar(0, 0, 0);
-        highHSV1 = new Scalar(0, 0, 0);
+        lowHSV1 = new Scalar(0, 110, 100);
+        highHSV1 = new Scalar(7, 255, 255);
 
     }
 
@@ -91,13 +82,14 @@ public class Pipeline extends OpenCvPipeline {
         telemetry.addData("valLeft: ", valLeft);
         telemetry.addData("valMiddle: ", valMiddle);
         telemetry.addData("valRight: ", valRight);
-        int vmax = 0;
-        if ( valLeft > vmax ){
-            region_of_interest = regions.left; vmax = valLeft;}
+        int vmax = 10000;
+
          if ( valMiddle > vmax ){
-            region_of_interest = regions.middle; vmax = valMiddle;}
-        if ( valRight > vmax){
-            region_of_interest = regions.right;vmax = valRight;}
+            region_of_interest = regions.middle; }
+        else if ( valRight > vmax){
+            region_of_interest = regions.right;}
+        else
+            region_of_interest = regions.left;
 
         telemetry.addData("ROI: ", region_of_interest);
         telemetry.update();

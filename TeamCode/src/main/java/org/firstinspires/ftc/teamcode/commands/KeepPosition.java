@@ -51,6 +51,16 @@ public class KeepPosition extends CommandBase {
         YCommand.set(y);
     }
 
+    public void SetAll(double x, double y, double theta, double px, double py, double pt)
+    {
+        TCommand.set(theta);
+        XCommand.set(x);
+        YCommand.set(y);
+        TCommand.pmax = pt;
+        YCommand.pmax = py;
+        XCommand.pmax = px;
+    }
+
     @Override public void execute()
     {
         XCommand.execute();

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.commands;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.controller.PIDController;
 
@@ -7,12 +8,23 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.facade.RobotHardware;
 import org.firstinspires.ftc.teamcode.facade.drive.OdometryComponent;
 import org.firstinspires.ftc.teamcode.facade.drive.DriveSubsystem;
+@Config
 
 public class GotoX extends CommandBase {
 
     Telemetry m_telemetry;
-    double P = 0.035d, I = 0.016d, D = 0.001d;
+        public static double P = 0.055d, I = 0.1d, D = 0.0011d;
+    double CurrentPos = 0.0d;
+    public double pmax = 1.0d;
 
+    public static double Tolerance = 3.5;
+    public boolean isWithinTolerance()
+    {
+        double dist = Math.abs(m_Target - CurrentPos);
+        if ( dist < Tolerance )
+            return true;
+        return false;
+    }
     DriveSubsystem m_DriveSubsystem;
     PIDController pid;
 
@@ -42,23 +54,23 @@ public class GotoX extends CommandBase {
     {
         m_Target = pos;
         pid.setSetPoint(pos);
-        active = true;
 
     }
     @Override
     public void execute()
     {
-        if ( !active ) {
+        CurrentPos = OdometryComponent.X;
+
+        if( isWithinTolerance()) {
             Power = 0.0d;
             return;
         }
-        if( Math.abs(OdometryComponent.X - m_Target) < 5.0d) {
-            active = false;
-            Power = 0.0d;
-            return;
-        }
-        double CurrentPos = OdometryComponent.X;
         Power = pid.calculate(CurrentPos);
+
+        if ( Power < -pmax )
+            Power = -pmax;
+        if ( Power > pmax)
+            Power = pmax;
         m_Robot.m_telemetry.addData("TargetX:", m_Target);
         m_Robot.m_telemetry.addData("CurrentX:", CurrentPos);
 

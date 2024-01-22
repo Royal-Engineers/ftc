@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.commands;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.controller.PIDController;
 
@@ -7,12 +8,25 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.facade.RobotHardware;
 import org.firstinspires.ftc.teamcode.facade.drive.OdometryComponent;
 import org.firstinspires.ftc.teamcode.facade.drive.DriveSubsystem;
+@Config
 
 public class GotoY extends CommandBase {
 
     Telemetry m_telemetry;
-    double P = 0.035d, I = 0.015d, D = 0.003d;
+    public static double P = 0.055d, I = 0.1d, D = 0.0011d;
+    double CurrentPos = 0.0d;
+    public static double Tolerance = 3.5;
 
+    public double pmax = 1.0d;
+
+
+    public boolean isWithinTolerance()
+    {
+        double dist = Math.abs(m_Target - CurrentPos);
+        if ( dist < Tolerance )
+            return true;
+        return false;
+    }
     DriveSubsystem m_DriveSubsystem;
     PIDController pid;
 
@@ -21,7 +35,6 @@ public class GotoY extends CommandBase {
     public double Power = 0.0d;
     RobotHardware m_Robot;
 
-    boolean active = true;
     public GotoY(double y, Telemetry telemetry, DriveSubsystem driveSubsystem, RobotHardware robot)
     {
         pid = new PIDController(P, I, D);
@@ -30,7 +43,6 @@ public class GotoY extends CommandBase {
         m_DriveSubsystem = driveSubsystem;
         m_Target = y;
         m_Robot = robot;
-        active = true;
     }
 
     @Override
@@ -42,17 +54,18 @@ public class GotoY extends CommandBase {
     @Override
     public void execute()
     {
-        if ( !active ) {
+        CurrentPos = OdometryComponent.Y;
+
+        if( isWithinTolerance()) {
             Power = 0.0d;
             return;
         }
-        if( Math.abs(OdometryComponent.Y - m_Target) < 5.0d) {
-            active = false;
-            Power = 0.0d;
-            return;
-        }
-        double CurrentPos = OdometryComponent.Y;
         Power = -pid.calculate(CurrentPos);
+
+        if ( Power < -pmax )
+            Power = -pmax;
+        if ( Power > pmax)
+            Power = pmax;
         m_Robot.m_telemetry.addData("TargetY:", m_Target);
         m_Robot.m_telemetry.addData("CurrentY:", CurrentPos);
 
@@ -64,7 +77,6 @@ public class GotoY extends CommandBase {
     {
         m_Target = pos;
         pid.setSetPoint(pos);
-        active = true;
     }
     @Override
     public boolean isFinished()

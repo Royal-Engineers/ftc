@@ -2,17 +2,12 @@ package org.firstinspires.ftc.teamcode.facade.controllers;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.InstantCommand;
-import com.arcrobotics.ftclib.command.ParallelCommandGroup;
-import com.arcrobotics.ftclib.command.SequentialCommandGroup;
-import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
-import com.arcrobotics.ftclib.hardware.ServoEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
-import org.firstinspires.ftc.teamcode.commands.BombasticLiftPos;
 import org.firstinspires.ftc.teamcode.commands.Transfer;
 import org.firstinspires.ftc.teamcode.facade.RobotHardware;
-import org.firstinspires.ftc.teamcode.facade.intake.BombasticLift;
+import org.firstinspires.ftc.teamcode.facade.intake.Lift;
 import org.firstinspires.ftc.teamcode.facade.interfaces.i_gamepad;
 
 @Config
@@ -49,19 +44,19 @@ int GyatLevel = 0;
         );
 
         controller.getGamepadButton(GamepadKeys.Button.DPAD_DOWN).whenPressed(
-                new InstantCommand(()->{m_Robot.m_Lift.SetTargetPosition(200.0d, BombasticLift.s_SafetyPower);})
+                new InstantCommand(()->{m_Robot.m_Lift.SetTargetPosition(200.0d, Lift.s_SafetyPower);})
         );
 
         controller.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT).whenPressed(
-                new InstantCommand(()->{m_Robot.m_Lift.SetTargetPosition(400.0d, BombasticLift.s_SafetyPower);})
+                new InstantCommand(()->{m_Robot.m_Lift.SetTargetPosition(400.0d, Lift.s_SafetyPower);})
         );
 
         controller.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenPressed(
-                new InstantCommand(()->{m_Robot.m_Lift.SetTargetPosition(600.0d, BombasticLift.s_SafetyPower);})
+                new InstantCommand(()->{m_Robot.m_Lift.SetTargetPosition(600.0d, Lift.s_SafetyPower);})
         );
 
         controller.getGamepadButton(GamepadKeys.Button.DPAD_LEFT).whenPressed(
-                new InstantCommand(()->{m_Robot.m_Lift.SetTargetPosition(799.0d, BombasticLift.s_SafetyPower);})
+                new InstantCommand(()->{m_Robot.m_Lift.SetTargetPosition(799.0d, Lift.s_SafetyPower);})
         );
 
 
@@ -72,25 +67,24 @@ int GyatLevel = 0;
         if (gamepad.left_stick_y < -MinPush )
             sg_CommandScheduler.schedule(
                     new InstantCommand(()->{
-                            m_Robot.m_BombaSexy.SetPosition(m_Robot.m_BombaSexy.GetPosition() - 0.01);}
+                            m_Robot.m_Bar.SetPosition(m_Robot.m_Bar.GetPosition() - 0.01);}
             ));
         else if ( gamepad.left_stick_y > MinPush )
             sg_CommandScheduler.schedule(
                     new InstantCommand(()->{
-                        m_Robot.m_BombaSexy.SetPosition(m_Robot.m_BombaSexy.GetPosition() + 0.01);}
+                        m_Robot.m_Bar.SetPosition(m_Robot.m_Bar.GetPosition() + 0.01);}
                     ));
 
         if (gamepad.left_trigger > MinPush )
             sg_CommandScheduler.schedule(
                     new InstantCommand(()->{
-                        m_Robot.m_GyaraBomba.setPosition(m_Robot.m_GyaraBomba.getPosition() - 0.01);}
+                        m_Robot.m_ServoIntake.setPosition(m_Robot.m_ServoIntake.getPosition() - 0.01);}
                     ));
         else if ( gamepad.right_trigger > MinPush )
             sg_CommandScheduler.schedule(
                     new InstantCommand(()->{
-                        m_Robot.m_GyaraBomba.setPosition(m_Robot.m_GyaraBomba.getPosition() + 0.01);}
+                        m_Robot.m_ServoIntake.setPosition(m_Robot.m_ServoIntake.getPosition() + 0.01);}
                     ));
-        m_telemetry.addData("GYAT LEVEL", GyatLevel);
     }
 
 

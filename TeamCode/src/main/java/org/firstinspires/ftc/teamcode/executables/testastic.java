@@ -1,35 +1,77 @@
 package org.firstinspires.ftc.teamcode.executables;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.AnalogInput;
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.DcMotor;
+import com.arcrobotics.ftclib.command.CommandOpMode;
 
-@TeleOp
-public class testastic extends LinearOpMode {
+import org.firstinspires.ftc.teamcode.facade.RobotHardware;
+import org.firstinspires.ftc.teamcode.facade.interfaces.i_gamepad;
+import org.firstinspires.ftc.teamcode.facade.drive.DriveSubsystem;
+import org.firstinspires.ftc.teamcode.facade.drive.OdometryComponent;
+import org.firstinspires.ftc.teamcode.facade.controllers.controller1;
+import org.firstinspires.ftc.teamcode.facade.controllers.controller2;
+import org.firstinspires.ftc.teamcode.pipelines.PipelineDreapta;
+import org.openftc.easyopencv.OpenCvPipeline;
 
-    AnalogInput encoder;
-    CRServo servo;
-    DcMotor motor;
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp
+public class testastic extends CommandOpMode {
 
+    private RobotHardware Robot;
+
+    private DriveSubsystem m_DriveSubsystem;
+
+
+    private OdometryComponent m_odometry;
+
+    private OpenCvPipeline pipeline;
+
+    private i_gamepad m_controller1, m_controller2;
     @Override
-    public void runOpMode() {
-        motor = hardwareMap.get(DcMotor.class,"motorFrontRight");
-        servo = hardwareMap.get(CRServo.class, "servoFrontRight");
-        encoder = hardwareMap.get(AnalogInput.class, "encoderFrontRight");
+    public void initialize() {
+        super.reset();
 
 
+
+
+        Robot = new RobotHardware();
+        Robot.init(gamepad1, gamepad2, telemetry, hardwareMap);
+
+        pipeline = new PipelineDreapta(telemetry, PipelineDreapta.team.rosu);
+        Robot.camera.setPipeline(pipeline);
+
+        m_DriveSubsystem = new DriveSubsystem(Robot);
+
+        m_odometry = new OdometryComponent(Robot);
+
+        m_controller1 = new controller1(gamepad1, Robot);
+        m_controller2 = new controller2(gamepad2, Robot);
+
+        m_controller1.initialize();
+        m_controller2.initialize();
         waitForStart();
-        while(opModeIsActive()) {
-            servo.setPower(gamepad1.left_stick_x);
-            telemetry.addData("OX1:", gamepad1.left_stick_x);
-            telemetry.addData("OY1:", gamepad1.left_stick_y);
-            telemetry.addData("OX2:", gamepad1.right_stick_x);
-            telemetry.addData("OY2:",gamepad1.right_stick_y);
-            telemetry.update();
-        }
+        Robot.camera.setPipeline(null);
+
 
     }
+
+    @Override
+    public void run(){
+        Robot.camera.setPipeline(null);
+        m_DriveSubsystem.UpdateGamepad();
+        m_odometry.update();
+        //m_controller1.update();
+        //m_controller2.update();
+        Robot.Update();
+        Robot.moduleBackLeft.drive(0, 0);
+        Robot.moduleBackRight.drive(0, 0);
+        Robot.moduleFrontLeft.drive(0, 0);
+        Robot.moduleFrontRight.drive(0, 0);
+
+
+
+        telemetry.update();
+
+        super.run();
+
+    }
+
 
 }
