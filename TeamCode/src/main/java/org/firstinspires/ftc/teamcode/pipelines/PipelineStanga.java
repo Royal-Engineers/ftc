@@ -75,9 +75,15 @@ public class PipelineStanga extends OpenCvPipeline {
 
         Core.bitwise_xor(mask1, mask2, m_mat);
 
-        final Rect rect_left = new Rect(new Point(0, height/2 - 100), new Point(width/2,height - 100));
-        final Rect rect_right = new Rect(new Point(width/2+1, height/2 - 100), new Point(width,height - 100));
+        Point P1L =  new Point(0, height/2 - 100), P1R = new Point(width/2 - 50,height - 100);
+        Point P2L =  new Point(width/2+1, height/2 - 100), P2R = new Point(width - 50,height - 100);
 
+        final Rect rect_left = new Rect(P1L, P1R);
+        final Rect rect_right = new Rect(P2L, P2R);
+
+
+        Imgproc.rectangle(input, P1L, P1R, new Scalar(0, 255, 0, 255), 5);
+        Imgproc.rectangle(input, P2L, P2R, new Scalar(0, 255, 0, 255), 5);
 
 
         Mat MatLeft = m_mat.submat(rect_left);
@@ -88,18 +94,17 @@ public class PipelineStanga extends OpenCvPipeline {
 
         telemetry.addData("valLeft: ", valLeft);
         telemetry.addData("valRight: ", valRight);
-        int vmax = 10000;
 
-        if ( valLeft > 14000 ){
+        if ( valLeft > 2000 ){
             region_of_interest = regions.left; }
-        else if ( valRight > 6500){
+        else if ( valRight > 1500){
             region_of_interest = regions.middle;}
         else
             region_of_interest = regions.right;
 
         telemetry.addData("ROI: ", region_of_interest);
         telemetry.update();
-        return input.submat(rect_left);
+        return input;
 
     }
 }

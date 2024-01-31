@@ -19,7 +19,8 @@ public class swerveModule {
 
     public static double target = 0;
     boolean motorDirection = true;
-    public static double P = 0.007, I = 0, D = 0.00017, F = 0;
+    public static double P = 0.007, I = 0.0, D = 0.00015, F = 0;
+    // P=0.007 I=0 D=0.00015
 
     public static double tolerance = 1;
     PIDFController angleController = new PIDFController(P, I, D, F);

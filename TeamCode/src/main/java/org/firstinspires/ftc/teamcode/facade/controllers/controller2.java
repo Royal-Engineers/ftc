@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.facade.controllers;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.InstantCommand;
+import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
@@ -43,25 +45,39 @@ int GyatLevel = 0;
                         new Transfer(m_Robot)
         );
 
-        controller.getGamepadButton(GamepadKeys.Button.DPAD_DOWN).whenPressed(
-                new InstantCommand(()->{m_Robot.m_Lift.SetTargetPosition(200.0d, Lift.s_SafetyPower);})
-        );
+        controller.getGamepadButton(GamepadKeys.Button.DPAD_LEFT).toggleWhenPressed(
+                new InstantCommand(()->
+                {
+                    m_Robot.m_Lift.SetTargetPosition(1400, 1.0);
+                    m_Robot.m_Bar.SetPosition(0.3);
+                }),
+                new InstantCommand(()->
+                {
 
-        controller.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT).whenPressed(
-                new InstantCommand(()->{m_Robot.m_Lift.SetTargetPosition(400.0d, Lift.s_SafetyPower);})
+                    m_Robot.m_Lift.SetTargetPosition(750, 1.0);
+                })
         );
 
         controller.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenPressed(
-                new InstantCommand(()->{m_Robot.m_Lift.SetTargetPosition(600.0d, Lift.s_SafetyPower);})
+                new InstantCommand(()->{
+                    m_Robot.m_ServoAvion.setPosition(0.1);
+                })
         );
-
-        controller.getGamepadButton(GamepadKeys.Button.DPAD_LEFT).whenPressed(
-                new InstantCommand(()->{m_Robot.m_Lift.SetTargetPosition(799.0d, Lift.s_SafetyPower);})
-        );
+        controller.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT).whenPressed(
+                new SequentialCommandGroup(
+                        new InstantCommand(()->{m_Robot.m_ClawAngleServo.setPosition(0.81);}),
+                        new InstantCommand(()->{m_Robot.m_Bar.SetPosition(-0.076);}),
+                        new WaitCommand(100),
+                        new InstantCommand(()->{
+                            m_Robot.m_ClawAngleServo.setPosition(RobotHardware.s_IdleClawAngle);
+                            m_Robot.m_Bar.SetPosition(0.0d);
+                        })
+                ));
 
 
     }
 
+    static double PosIntake = 0.86;
     @Override
     public void update() {
         if (gamepad.left_stick_y < -MinPush )
@@ -74,17 +90,23 @@ int GyatLevel = 0;
                     new InstantCommand(()->{
                         m_Robot.m_Bar.SetPosition(m_Robot.m_Bar.GetPosition() + 0.01);}
                     ));
-
+/*
         if (gamepad.left_trigger > MinPush )
             sg_CommandScheduler.schedule(
                     new InstantCommand(()->{
-                        m_Robot.m_ServoIntake.setPosition(m_Robot.m_ServoIntake.getPosition() - 0.01);}
+                        PosIntake-=0.01d;
+                        if ( PosIntake < 0)
+                            PosIntake = 0;
+                        m_Robot.m_ServoIntake.setPosition(PosIntake);}
                     ));
         else if ( gamepad.right_trigger > MinPush )
             sg_CommandScheduler.schedule(
                     new InstantCommand(()->{
-                        m_Robot.m_ServoIntake.setPosition(m_Robot.m_ServoIntake.getPosition() + 0.01);}
-                    ));
+                        PosIntake+=0.01d;
+                        if ( PosIntake > 1)
+                            PosIntake = 1;
+                        m_Robot.m_ServoIntake.setPosition(PosIntake);}
+                    ));*/
     }
 
 

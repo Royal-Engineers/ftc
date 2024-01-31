@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.facade;
 
 
+import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.hardware.ServoEx;
 import com.arcrobotics.ftclib.hardware.SimpleServo;
@@ -23,6 +24,7 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
+@Config
 public class RobotHardware {
 
     public final static boolean DebugMode = true;
@@ -69,14 +71,15 @@ public class RobotHardware {
 
     public ServoEx m_ServoIntake;
 
-    public static double s_ClawOpenPos =  0.03d;
-    public static double s_ClawlClosedPos = 0.18d;
+    public static double s_ClawOpenPos =  0.148d;
+    public static double s_ClawlClosedPos = 0.33d;
 
-    public static double s_ClawTransfer = 0.11d;
+    public static double s_ClawTransfer = 0.25d;
     public static double s_IdleClawAngle = 0.75d;
-    public static double s_ScoringClawAngle = 0.01d;
+
     public RobotHardware(){
     }
+    public static double IntakePos = 0.9;
 
     public void init(Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry, HardwareMap hardwaremap){
         this.m_HardwareMap = hardwaremap;
@@ -121,8 +124,8 @@ public class RobotHardware {
         controller2 = new GamepadEx(m_gamepad2);
 
         EncoderLeft =  motorFrontLeft;
-        EncoderRight = motorFrontRight;
-        EncoderFront = motorBackRight;
+        EncoderRight = motorIntake;
+        EncoderFront = motorFrontRight;
 
         m_BombasticServo1 = new SimpleServo(m_HardwareMap, "BombasticServo1", 0, 1);
         m_SexyServo2 = new SimpleServo(m_HardwareMap, "BombasticServo2", 0, 1);
@@ -130,7 +133,7 @@ public class RobotHardware {
         m_ServoAvion = new SimpleServo(m_HardwareMap, "ABCDE", 0, 1);
         m_ServoIntake = new SimpleServo(m_HardwareMap, "ServoIntake", 0, 1);
 
-        m_ServoIntake.setPosition(0.86d);
+        m_ServoIntake.setPosition(IntakePos);
 
         m_BombasticServo1.setPosition(0.2);
         m_SexyServo2.setPosition(0.13);
@@ -156,7 +159,7 @@ public class RobotHardware {
             @Override
             public void onOpened()
             {
-                camera.startStreaming(1280,960, OpenCvCameraRotation.UPRIGHT);
+                camera.startStreaming(320,240, OpenCvCameraRotation.UPRIGHT);
             }
 
             @Override

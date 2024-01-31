@@ -33,8 +33,8 @@ public class OdometryComponent {
         this.robot = robot;
 
         EncoderLeft = new Motor(robot.m_HardwareMap, "motorFrontLeft");
-        EncoderRight = new Motor(robot.m_HardwareMap, "motorFrontRight");
-        EncoderFront  = new Motor(robot.m_HardwareMap, "motorBackRight");
+        EncoderRight = new Motor(robot.m_HardwareMap, "motorIntake");
+        EncoderFront  = new Motor(robot.m_HardwareMap, "motorFrontRight");
 
 
         EncoderLeft.resetEncoder();

@@ -65,11 +65,18 @@ public class PipelineDreapta extends OpenCvPipeline {
 
         Core.bitwise_xor(mask1, mask2, m_mat);
 
-        final Rect rect_left = new Rect(new Point(0, 0), new Point(width/3,height));
-        final Rect rect_middle = new Rect(new Point(width/3+1, 0), new Point(width/3 * 2,height));
-        final Rect rect_right = new Rect(new Point(width/3*2, 0), new Point(width,height));
+        Point P1L =  new Point(0, 0), P1R = new Point(width/3,height);
+        Point P2L =  new Point(width/3+1, 0), P2R = new Point(width/3 * 2,height);
+        Point P3L = new Point(width/3*2, 0), P3R = new Point(width,height);
+
+        final Rect rect_left = new Rect(P1L, P1R);
+        final Rect rect_middle = new Rect(P2L, P2R);
+        final Rect rect_right = new Rect(P3L, P3R);
 
 
+        Imgproc.rectangle(input, P1L, P1R, new Scalar(0, 255, 0, 255), 5);
+        Imgproc.rectangle(input, P2L, P2R, new Scalar(0, 255, 0, 255), 5);
+        Imgproc.rectangle(input, P3L, P3R, new Scalar(0, 255, 0, 255), 5);
 
         Mat MatLeft = m_mat.submat(rect_left);
         Mat MatMiddle = m_mat.submat(rect_middle);
@@ -82,7 +89,7 @@ public class PipelineDreapta extends OpenCvPipeline {
         telemetry.addData("valLeft: ", valLeft);
         telemetry.addData("valMiddle: ", valMiddle);
         telemetry.addData("valRight: ", valRight);
-        int vmax = 10000;
+        int vmax = 1000;
 
          if ( valMiddle > vmax ){
             region_of_interest = regions.middle; }

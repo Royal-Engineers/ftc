@@ -2,11 +2,13 @@ package org.firstinspires.ftc.teamcode.facade.drive;
 
 import static java.lang.Math.atan2;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.facade.RobotHardware;
@@ -17,12 +19,14 @@ public class DriveSubsystem {
 
     public boolean TelemeteryEnabled = true;
     private RobotHardware robot;
+    public static double P=0.95,I=0,D=0.05,alpha=0.8;
+    private double error,lasterror,derror,lastderror,reference,lastreference,integralsum,ok;
     private double L = 1.6, W=1.2;
     private double R = Math.hypot(L/2, W/2);
     private swerveModule moduleFrontRight, moduleFrontLeft, moduleBackLeft, moduleBackRight;
     private Gamepad gamepad1;
     public static boolean robotcentric=false;
-    private double vx,vy,w,lastvx,lastvy,lastw,lastbotHeading,ax,ay,e,botHeading,dbotHeading,headingteoretic;
+    private double vx,vy,w,lastvx,lastvy,lastw,lastinputw,lastbotHeading,ax,ay,e,botHeading,dbotHeading,headingteoretic,inputw,rez;
     private double[] vm=new double[5];
     private double[] am=new double[5];
     private double[] wm=new double[5];
@@ -32,6 +36,8 @@ public class DriveSubsystem {
     private double[] beta=new double[5];
     private static ElapsedTime dt=new ElapsedTime();
     IMU imu;
+    FtcDashboard dashboard= FtcDashboard.getInstance();
+    Telemetry dashboardTelemetry=dashboard.getTelemetry();
 
     public DriveSubsystem(RobotHardware robot){
         this.robot = robot;
@@ -54,7 +60,20 @@ public class DriveSubsystem {
         lastvx=0; lastvy=0;
         lastw=0; lastbotHeading=0;
         headingteoretic=0;
+        lastinputw=0; reference=0;
+        lastreference=0; ok=0;
+        headingteoretic=0; error=0;
+        lasterror=0; lastderror=0;
+        integralsum=0;
         dt.reset();
+        dt.reset();
+    }
+    boolean targetreached(double theta1,double theta2)
+    {
+        if(theta1>Math.PI) theta1=theta1-2*Math.PI;
+        if(theta2>Math.PI) theta2=theta2-2*Math.PI;
+        if(theta2-0.07<=theta1 && theta1<=theta2+0.07) return true;
+        else return false;
     }
     public void setKinematics(int cnt)
     {
@@ -80,7 +99,7 @@ public class DriveSubsystem {
         if(thetam[cnt]<0) thetam[cnt]=thetam[cnt]+2*Math.PI;
 
         vm[cnt]=vm[cnt]+am[cnt]*dt.time();
-        thetam[cnt]=thetam[cnt]-wm[cnt]*dt.time();
+        thetam[cnt]=thetam[cnt]+wm[cnt]*dt.time();
         if(thetam[cnt]>2*Math.PI) thetam[cnt]=thetam[cnt]-2*Math.PI;
         if(thetam[cnt]<0) thetam[cnt]+=2*Math.PI;
 
@@ -103,6 +122,7 @@ public class DriveSubsystem {
         vx=gamepad1.left_stick_x;
         vy=-gamepad1.left_stick_y;
         w=-gamepad1.right_stick_x;
+        inputw=w;
 
         botHeading =-imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
         if(0<=botHeading && botHeading<=Math.PI/2)
@@ -121,16 +141,50 @@ public class DriveSubsystem {
             else dbotHeading=dbotHeading-2*Math.PI;
         }
 
-        if(w==0 && lastw!=0) headingteoretic=botHeading;
-        if(headingteoretic>Math.PI) headingteoretic=2*Math.PI-headingteoretic;
-        if(botHeading<Math.PI) w=w-(botHeading-headingteoretic);
-        else w=w-(2*Math.PI-botHeading-headingteoretic);
+        if(inputw==0 && lastinputw!=0) ok=1;
+        if(inputw!=0 && lastinputw==0) lastw=0;
+        if(inputw==0 && lastinputw==0 && ok==1) {reference=botHeading; ok=0;}
+
+        if(reference!=lastreference)
+        {
+            integralsum=0;
+            lasterror=0;
+            lastderror=0;
+            lastreference=reference;
+        }
+        if(targetreached(reference,botHeading)==false && inputw==0 && lastinputw==0)
+        {
+            error=reference-botHeading;
+            if(error>Math.PI) error=error-2*Math.PI;
+            if(error<-Math.PI) error=2*Math.PI+error;
+
+            derror=error-lasterror;
+            derror=alpha*lastderror+(1-alpha)*derror;
+            lastderror=derror;
+
+            double d=derror/dt.time();
+            integralsum=integralsum+error*dt.time();
+
+            if(integralsum>1) integralsum=1;
+            if(integralsum<-1) integralsum=-1;
+
+            rez=P*error+I*integralsum+D*d;
+
+            lasterror=error;
+            lastreference=reference;
+            w=w+rez; if(w>1) w=1; if(w<-1) w=-1;
+        }
+
+        if(botHeading<Math.PI) dashboardTelemetry.addData("unghi",botHeading);
+        else dashboardTelemetry.addData("unghi", 2*Math.PI-botHeading);
+        if(reference<Math.PI) dashboardTelemetry.addData("reference", reference);
+        else dashboardTelemetry.addData("reference", 2*Math.PI-reference);
+        dashboardTelemetry.addData("output", rez);
+        dashboardTelemetry.update();
 
         ax=(vx-lastvx)/dt.time();
         ay=(vy-lastvy)/dt.time();
         e=(w-lastw)/dt.time();
-
-
 
         setKinematics(0); setKinematics(1);
         setKinematics(2); setKinematics(3);
@@ -153,6 +207,7 @@ public class DriveSubsystem {
         moduleBackLeft.showba("Back Left");
         lastvx=vx; lastvy=vy; lastw=w;
         lastbotHeading=botHeading;
+        lastinputw=inputw;
         dt.reset();
 
         AddTelemetry();
@@ -163,10 +218,7 @@ public class DriveSubsystem {
         vx=str;
         vy=fwd;
         w=-rcw;
-
-        ax=(vx-lastvx)/dt.time();
-        ay=(vy-lastvy)/dt.time();
-        e=(w-lastw)/dt.time();
+        inputw=w;
 
         botHeading =-imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
         if(0<=botHeading && botHeading<=Math.PI/2)
@@ -185,6 +237,51 @@ public class DriveSubsystem {
             else dbotHeading=dbotHeading-2*Math.PI;
         }
 
+        if(inputw==0 && lastinputw!=0) ok=1;
+        if(inputw!=0 && lastinputw==0) lastw=0;
+        if(inputw==0 && lastinputw==0 && ok==1) {reference=botHeading; ok=0;}
+
+        if(reference!=lastreference)
+        {
+            integralsum=0;
+            lasterror=0;
+            lastderror=0;
+            lastreference=reference;
+        }
+        if(targetreached(reference,botHeading)==false && inputw==0 && lastinputw==0)
+        {
+            error=reference-botHeading;
+            if(error>Math.PI) error=error-2*Math.PI;
+            if(error<-Math.PI) error=2*Math.PI+error;
+
+            derror=error-lasterror;
+            derror=alpha*lastderror+(1-alpha)*derror;
+            lastderror=derror;
+
+            double d=derror/dt.time();
+            integralsum=integralsum+error*dt.time();
+
+            if(integralsum>1) integralsum=1;
+            if(integralsum<-1) integralsum=-1;
+
+            double rez=P*error+I*integralsum+D*d;
+
+            lasterror=error;
+            lastreference=reference;
+            w=w+rez; if(w>1) w=1; if(w<-1) w=-1;
+
+            if(botHeading<Math.PI) dashboardTelemetry.addData("unghi",botHeading);
+            else dashboardTelemetry.addData("unghi", 2*Math.PI-botHeading);
+            if(reference<Math.PI) dashboardTelemetry.addData("reference", reference);
+            else dashboardTelemetry.addData("reference", 2*Math.PI-reference);
+            dashboardTelemetry.addData("output", rez);
+            dashboardTelemetry.update();
+        }
+
+        ax=(vx-lastvx)/dt.time();
+        ay=(vy-lastvy)/dt.time();
+        e=(w-lastw)/dt.time();
+
         setKinematics(0); setKinematics(1);
         setKinematics(2); setKinematics(3);
 
@@ -200,18 +297,16 @@ public class DriveSubsystem {
         moduleFrontLeft.drive(vm[1],thetam[1]);
         moduleBackLeft.drive(vm[2],thetam[2]);
         moduleBackRight.drive(vm[3],thetam[3]);
-
         moduleFrontRight.showba("Front Right");
         moduleBackRight.showba("Back Right");
         moduleFrontLeft.showba("Front Left");
         moduleBackLeft.showba("Back Left");
         lastvx=vx; lastvy=vy; lastw=w;
         lastbotHeading=botHeading;
+        lastinputw=inputw;
         dt.reset();
 
         AddTelemetry();
-
-
     }
     private void AddTelemetry(){
         if ( !TelemeteryEnabled )
