@@ -19,7 +19,7 @@ public class DriveSubsystem {
 
     public boolean TelemeteryEnabled = true;
     private RobotHardware robot;
-    public static double P=0.95,I=0,D=0.05,alpha=0.8;
+    public static double P=1.2,I=0.04,D=0.055,alpha=0.8;
     private double error,lasterror,derror,lastderror,reference,lastreference,integralsum,ok;
     private double L = 1.6, W=1.2;
     private double R = Math.hypot(L/2, W/2);
