@@ -19,7 +19,7 @@ public class DriveSubsystem {
 
     public boolean TelemeteryEnabled = true;
     private RobotHardware robot;
-    public static double P=1.2,I=0.04,D=0.055,alpha=0.8;
+    public static double P=1.17,I=0.09,D=0.012,alpha=0.8;
     private double error,lasterror,derror,lastderror,reference,lastreference,integralsum,ok;
     private double L = 1.6, W=1.2;
     private double R = Math.hypot(L/2, W/2);
@@ -213,11 +213,11 @@ public class DriveSubsystem {
         AddTelemetry();
     }
 
-    public void UpdateAuto(double fwd, double str, double rcw){
+    public void UpdateAuto(double fwd, double str, double autoheading){
 
         vx=str;
         vy=fwd;
-        w=-rcw;
+        w=0;
         inputw=w;
 
         botHeading =-imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
@@ -237,9 +237,7 @@ public class DriveSubsystem {
             else dbotHeading=dbotHeading-2*Math.PI;
         }
 
-        if(inputw==0 && lastinputw!=0) ok=1;
-        if(inputw!=0 && lastinputw==0) lastw=0;
-        if(inputw==0 && lastinputw==0 && ok==1) {reference=botHeading; ok=0;}
+        reference=autoheading;
 
         if(reference!=lastreference)
         {
@@ -248,7 +246,7 @@ public class DriveSubsystem {
             lastderror=0;
             lastreference=reference;
         }
-        if(targetreached(reference,botHeading)==false && inputw==0 && lastinputw==0)
+        if(targetreached(reference,botHeading)==false)
         {
             error=reference-botHeading;
             if(error>Math.PI) error=error-2*Math.PI;

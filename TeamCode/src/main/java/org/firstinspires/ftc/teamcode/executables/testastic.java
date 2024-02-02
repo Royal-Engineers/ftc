@@ -1,17 +1,32 @@
 package org.firstinspires.ftc.teamcode.executables;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.CommandOpMode;
+import com.arcrobotics.ftclib.command.CommandScheduler;
+import com.arcrobotics.ftclib.command.InstantCommand;
+import com.arcrobotics.ftclib.command.ParallelCommandGroup;
+import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.arcrobotics.ftclib.command.WaitCommand;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.teamcode.commands.GotoTheta;
+import org.firstinspires.ftc.teamcode.commands.GotoX;
+import org.firstinspires.ftc.teamcode.commands.GotoY;
+import org.firstinspires.ftc.teamcode.commands.KeepPosition;
+import org.firstinspires.ftc.teamcode.commands.LiftCommands.LiftMiddle;
+import org.firstinspires.ftc.teamcode.commands.LiftCommands.Retract;
+import org.firstinspires.ftc.teamcode.commands.MergiBa;
+import org.firstinspires.ftc.teamcode.commands.Transfer;
 import org.firstinspires.ftc.teamcode.facade.RobotHardware;
 import org.firstinspires.ftc.teamcode.facade.interfaces.i_gamepad;
 import org.firstinspires.ftc.teamcode.facade.drive.DriveSubsystem;
 import org.firstinspires.ftc.teamcode.facade.drive.OdometryComponent;
-import org.firstinspires.ftc.teamcode.facade.controllers.controller1;
-import org.firstinspires.ftc.teamcode.facade.controllers.controller2;
 import org.firstinspires.ftc.teamcode.pipelines.PipelineDreapta;
+import org.firstinspires.ftc.teamcode.pipelines.PipelineStanga;
 import org.openftc.easyopencv.OpenCvPipeline;
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp
+@Config
+@Autonomous
 public class testastic extends CommandOpMode {
 
     private RobotHardware Robot;
@@ -34,41 +49,72 @@ public class testastic extends CommandOpMode {
         Robot = new RobotHardware();
         Robot.init(gamepad1, gamepad2, telemetry, hardwareMap);
 
-        pipeline = new PipelineDreapta(telemetry, PipelineDreapta.team.rosu);
+        pipeline = new PipelineStanga(telemetry,  PipelineStanga.team.albastru);
         Robot.camera.setPipeline(pipeline);
 
         m_DriveSubsystem = new DriveSubsystem(Robot);
 
         m_odometry = new OdometryComponent(Robot);
 
-        m_controller1 = new controller1(gamepad1, Robot);
-        m_controller2 = new controller2(gamepad2, Robot);
+        //m_controller1.initialize();
 
-        m_controller1.initialize();
-        m_controller2.initialize();
         waitForStart();
         Robot.camera.setPipeline(null);
 
 
     }
 
+    boolean ok = false;
+
+    GotoX XCommand;
+    GotoY YCommand;
+    GotoTheta TCommand;
+
+    KeepPosition PositionCommand;
+    public static double IncrementLeft = 12.5d;
+    public static double IncrementRight = -13.0d;
+    public static double zone = 2;
+
+    public static double x1 =0.0d, y1 =0.0d, t1 =0.0d;
+    public static double x2 =0.0d, y2 =0.0d, t2 =0.0d;
+
+    public static double x3 =0.0d, y3 =0.0d, t3 =0.0d;
+
     @Override
-    public void run(){
-        Robot.camera.setPipeline(null);
-        m_DriveSubsystem.UpdateGamepad();
+    public void run() {
         m_odometry.update();
-        //m_controller1.update();
-        //m_controller2.update();
-        Robot.Update();
-        Robot.moduleBackLeft.drive(0, 0);
-        Robot.moduleBackRight.drive(0, 0);
-        Robot.moduleFrontLeft.drive(0, 0);
-        Robot.moduleFrontRight.drive(0, 0);
+        PipelineStanga.regions Zone = PipelineStanga.region_of_interest;
+
+        m_odometry.update();
+
+        if (!ok)
+        {
+
+            XCommand = new GotoX(0.0d, telemetry, m_DriveSubsystem, Robot);
+            YCommand = new GotoY(0.0d, telemetry, m_DriveSubsystem, Robot);
+            TCommand = new GotoTheta(0.0d, telemetry, m_DriveSubsystem, Robot);
+
+            PositionCommand = new KeepPosition(XCommand, YCommand, TCommand, m_DriveSubsystem);
+
+            CommandScheduler.getInstance().schedule(PositionCommand);
+
+                CommandScheduler.getInstance().schedule(new SequentialCommandGroup(
+                        new MergiBa(x1, y1, t1, PositionCommand),
+                        new MergiBa(x2, y2, t2, PositionCommand),
+                        new MergiBa(x3, y3, t3, PositionCommand)
 
 
+                        ));
+
+
+
+
+            ok = true;
+        }
+        telemetry.addData("ZONAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", Zone);
 
         telemetry.update();
-
+        Robot.Update();
         super.run();
 
     }

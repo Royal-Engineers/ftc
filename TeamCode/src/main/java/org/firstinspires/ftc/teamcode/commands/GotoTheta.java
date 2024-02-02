@@ -20,7 +20,7 @@ public class GotoTheta extends CommandBase {
     public static double P = 0.049d, I= 0.1d, D = 0.00285d;
 
     public double pmax = 1.0d;
-    public static double Tolerance = 3.5;
+    public static double Tolerance = 6;
 
     double CurrentPos = 0.0d;
     DriveSubsystem m_DriveSubsystem;
@@ -59,38 +59,7 @@ public class GotoTheta extends CommandBase {
     @Override
     public void execute()
     {
-        CurrentPos = OdometryComponent.Theta;
-        double p2;
-        double p1;
-        if ( CurrentPos < m_Target) {
-            p1 = Math.abs(CurrentPos - m_Target);
-            p2 = 360 - p1;
-        }
-        else {
-            p2 = Math.abs(CurrentPos - m_Target);
-            p1 = 360 - p2;
-        }
-
-        if( isWithinTolerance()) {
-            Power = 0.0d;
-            return;
-        }
-
-
-
-        Power = Math.abs(pid.calculate(m_Target + Math.min(p1, p2)));
-        if ( p1 < p2 )
-            Power = -Power;
-
-        if ( Power < -pmax )
-            Power = -pmax;
-        if ( Power > pmax)
-            Power = pmax;
-        m_Robot.m_telemetry.addData("TargetT:", m_Target);
-        m_Robot.m_telemetry.addData("CurrentT:", CurrentPos);
-
-
-        m_Robot.m_telemetry.addData("PowerT:", Power);
+        Power = m_Target;
     }
     public void set(double pos)
     {
