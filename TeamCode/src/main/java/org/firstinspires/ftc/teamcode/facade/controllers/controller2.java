@@ -83,12 +83,12 @@ int GyatLevel = 0;
         if (gamepad.left_stick_y < -MinPush )
             sg_CommandScheduler.schedule(
                     new InstantCommand(()->{
-                            m_Robot.m_Bar.SetPosition(m_Robot.m_Bar.GetPosition() - 0.01);}
+                            m_Robot.m_ClawAngleServo.setPosition(m_Robot.m_ClawAngleServo.getPosition() - 0.01);}
             ));
         else if ( gamepad.left_stick_y > MinPush )
             sg_CommandScheduler.schedule(
                     new InstantCommand(()->{
-                        m_Robot.m_Bar.SetPosition(m_Robot.m_Bar.GetPosition() + 0.01);}
+                        m_Robot.m_ClawAngleServo.setPosition(m_Robot.m_ClawAngleServo.getPosition() + 0.01);}
                     ));
 /*
         if (gamepad.left_trigger > MinPush )

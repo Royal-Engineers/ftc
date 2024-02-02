@@ -74,7 +74,7 @@ public class RobotHardware {
     public static double s_ClawOpenPos =  0.148d;
     public static double s_ClawlClosedPos = 0.33d;
 
-    public static double s_ScoringClawAngle = 0.148d;
+    public static double s_ScoringClawAngle = 0.0d;
     public static double s_ClawTransfer = 0.25d;
     public static double s_IdleClawAngle = 0.75d;
 
