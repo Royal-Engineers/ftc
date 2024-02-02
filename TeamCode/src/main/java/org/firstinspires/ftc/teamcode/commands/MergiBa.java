@@ -5,6 +5,8 @@ import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.command.WaitUntilCommand;
 
+import org.firstinspires.ftc.teamcode.facade.drive.DriveSubsystem;
+
 public class MergiBa extends SequentialCommandGroup {
     public MergiBa(double x, double y, double t, KeepPosition PositionCommand)
     {
@@ -12,7 +14,7 @@ public class MergiBa extends SequentialCommandGroup {
                 new InstantCommand(()->{PositionCommand.SetAll(x, y, t);}),
                 new WaitUntilCommand(()-> {
                     return PositionCommand.XCommand.isWithinTolerance()  && PositionCommand.YCommand.isWithinTolerance()
-                            && PositionCommand.TCommand.isWithinTolerance();
+                            && PositionCommand.m_DriveSubsystem.InTolerance;
                 }));
 
 

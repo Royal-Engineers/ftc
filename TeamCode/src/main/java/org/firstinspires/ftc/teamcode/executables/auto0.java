@@ -31,17 +31,17 @@ public class auto0 extends CommandOpMode {
 
 
 
-    public static double zone1_1t = 90, zone1_1x = 41, zone1_1y = 85,
-            zone1_2t = 90, zone1_2x = 68, zone1_2y = 38,
+    public static double zone1_1t = 90, zone1_1x = 41, zone1_1y = 86,
+            zone1_2t = 90, zone1_2x = 68, zone1_2y = 37,
             zone1_3t = 90, zone1_3x = 2, zone1_3y = 65,
 
 
-    zone2_1t = 90, zone2_1x = 56, zone2_1y = 85,
+    zone2_1t = 90, zone2_1x = 56, zone2_1y = 86,
             zone2_2t = 90, zone2_2x = 88, zone2_2y = 10,
             zone2_3t = 90, zone2_3x = 2, zone2_3y = 65,
 
 
-    zone3_1t = 90, zone3_1x = 77, zone3_1y = 85,
+    zone3_1t = 90, zone3_1x = 77, zone3_1y = 86,
             zone3_2t = 90, zone3_2x = 68, zone3_2y = -20.5,
             zone3_3t = 90, zone3_3x = 2, zone3_3y = 65;
 

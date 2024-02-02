@@ -21,7 +21,6 @@ import org.firstinspires.ftc.teamcode.facade.drive.OdometryComponent;
 import org.firstinspires.ftc.teamcode.pipelines.PipelineDreapta;
 import org.openftc.easyopencv.OpenCvPipeline;
 
-@Disabled
 @Config
 @Autonomous
 public class AutoRosuLong extends CommandOpMode {

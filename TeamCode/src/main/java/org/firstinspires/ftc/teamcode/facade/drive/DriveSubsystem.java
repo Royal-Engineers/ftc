@@ -75,6 +75,14 @@ public class DriveSubsystem {
         if(theta2-0.07<=theta1 && theta1<=theta2+0.07) return true;
         else return false;
     }
+
+    public boolean targetreachedauto(double theta1,double theta2)
+    {
+        if(theta1>Math.PI) theta1=theta1-2*Math.PI;
+        if(theta2>Math.PI) theta2=theta2-2*Math.PI;
+        if(theta2-Math.toRadians(3)<=theta1 && theta1<=theta2+Math.toRadians(3)) return true;
+        else return false;
+    }
     public void setKinematics(int cnt)
     {
         beta[cnt]=beta[cnt]+dbotHeading; if(beta[cnt]<0) beta[cnt]=beta[cnt]+2*Math.PI;
@@ -117,6 +125,7 @@ public class DriveSubsystem {
             thetam[cnt]=360-thetam[cnt]+90;
         }
     }
+    public static boolean InTolerance = false;
     public void UpdateGamepad(){
 
         vx=gamepad1.left_stick_x;
@@ -215,6 +224,8 @@ public class DriveSubsystem {
 
     public void UpdateAuto(double fwd, double str, double autoheading){
 
+        autoheading = Math.toRadians(autoheading);
+
         vx=str;
         vy=fwd;
         w=0;
@@ -246,8 +257,9 @@ public class DriveSubsystem {
             lastderror=0;
             lastreference=reference;
         }
-        if(targetreached(reference,botHeading)==false)
+        if(targetreachedauto(reference,botHeading)==false)
         {
+            InTolerance = false;
             error=reference-botHeading;
             if(error>Math.PI) error=error-2*Math.PI;
             if(error<-Math.PI) error=2*Math.PI+error;
@@ -275,6 +287,7 @@ public class DriveSubsystem {
             dashboardTelemetry.addData("output", rez);
             dashboardTelemetry.update();
         }
+        InTolerance = true;
 
         ax=(vx-lastvx)/dt.time();
         ay=(vy-lastvy)/dt.time();
