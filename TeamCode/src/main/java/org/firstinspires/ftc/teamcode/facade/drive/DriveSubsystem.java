@@ -20,6 +20,7 @@ public class DriveSubsystem {
     public boolean TelemeteryEnabled = true;
     private RobotHardware robot;
     public static double P=1.17,I=0.09,D=0.012,alpha=0.8;
+    public static double tP=0.95, tI=0, tD=0.055;
     private double error,lasterror,derror,lastderror,reference,lastreference,integralsum,ok;
     private double L = 1.6, W=1.2;
     private double R = Math.hypot(L/2, W/2);
@@ -177,7 +178,7 @@ public class DriveSubsystem {
             if(integralsum>1) integralsum=1;
             if(integralsum<-1) integralsum=-1;
 
-            rez=P*error+I*integralsum+D*d;
+            rez=tP*error+tI*integralsum+tD*d;
 
             lasterror=error;
             lastreference=reference;
