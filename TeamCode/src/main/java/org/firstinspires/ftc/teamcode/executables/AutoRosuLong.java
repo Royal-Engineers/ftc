@@ -6,13 +6,12 @@ import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.commands.GotoTheta;
 import org.firstinspires.ftc.teamcode.commands.GotoX;
 import org.firstinspires.ftc.teamcode.commands.GotoY;
 import org.firstinspires.ftc.teamcode.commands.KeepPosition;
-import org.firstinspires.ftc.teamcode.commands.MergiBa;
+import org.firstinspires.ftc.teamcode.commands.FollowPath;
 import org.firstinspires.ftc.teamcode.commands.Transfer;
 import org.firstinspires.ftc.teamcode.facade.RobotHardware;
 import org.firstinspires.ftc.teamcode.facade.interfaces.i_gamepad;
@@ -97,10 +96,10 @@ public class AutoRosuLong extends CommandOpMode {
                             new Transfer(Robot).alongWith(
                                     // new MergiBa(70 + increment ,-50 ,0, PositionCommand, 0.7, 0.7, 0.7),
                                     // new MergiBa(70 + increment, -50, -90, PositionCommand),
-                                    new MergiBa(140, 0, 0, PositionCommand, 0.99, 0.99, 0.99)),
+                                    new FollowPath(140, 0, 0, PositionCommand, 0.99, 0.99, 0.99)),
                             new WaitCommand(1000),
-                            new MergiBa(140, -210, 0, PositionCommand,0.9, 0.9, 0.9),
-                            new MergiBa(90, -210, 0, PositionCommand)
+                            new FollowPath(140, -210, 0, PositionCommand,0.9, 0.9, 0.9),
+                            new FollowPath(90, -210, 0, PositionCommand)
 
 
 

@@ -93,7 +93,7 @@ public class controller1 extends i_gamepad {
               m_Robot.m_ServoAvion.setPosition(0.1);
           })
         );
-        controller.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT).whenPressed(
+        controller.getGamepadButton(GamepadKeys.Button.X).whenPressed(
                 new SequentialCommandGroup(
                 new InstantCommand(()->{m_Robot.m_ClawAngleServo.setPosition(0.81);}),
                 new InstantCommand(()->{m_Robot.m_Bar.SetPosition(-0.076);}),

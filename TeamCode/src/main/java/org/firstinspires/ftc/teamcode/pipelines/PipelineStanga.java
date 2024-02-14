@@ -95,9 +95,9 @@ public class PipelineStanga extends OpenCvPipeline {
         telemetry.addData("valLeft: ", valLeft);
         telemetry.addData("valRight: ", valRight);
 
-        if ( valLeft > 2000 ){
+        if ( valLeft > 1500 ){
             region_of_interest = regions.left; }
-        else if ( valRight > 1500){
+        else if ( valRight > 1200){
             region_of_interest = regions.middle;}
         else
             region_of_interest = regions.right;

@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode.executables;
 
 import com.arcrobotics.ftclib.command.CommandOpMode;
+import com.arcrobotics.ftclib.command.CommandScheduler;
 
+import org.firstinspires.ftc.teamcode.commands.BreakBeamCommand;
 import org.firstinspires.ftc.teamcode.facade.RobotHardware;
 import org.firstinspires.ftc.teamcode.facade.interfaces.i_gamepad;
 import org.firstinspires.ftc.teamcode.facade.drive.DriveSubsystem;
@@ -37,7 +39,7 @@ public class TeleOp extends CommandOpMode {
         pipeline = new PipelineDreapta(telemetry, PipelineDreapta.team.rosu);
         Robot.camera.setPipeline(pipeline);
 
-        m_DriveSubsystem = new DriveSubsystem(Robot);
+        m_DriveSubsystem = new DriveSubsystem(Robot, true);
 
         m_odometry = new OdometryComponent(Robot);
 
@@ -48,6 +50,8 @@ public class TeleOp extends CommandOpMode {
         m_controller2.initialize();
         waitForStart();
         Robot.camera.setPipeline(null);
+
+        CommandScheduler.getInstance().schedule(new BreakBeamCommand(Robot));
 
 
     }

@@ -16,11 +16,10 @@ import org.firstinspires.ftc.teamcode.facade.RobotHardware;
 @Config
 
 public class DriveSubsystem {
-//ba
+
     public boolean TelemeteryEnabled = true;
     private RobotHardware robot;
-    public static double P=1.17,I=0.09,D=0.012,alpha=0.8;
-    public static double tP=0.95, tI=0, tD=0.055;
+    public static double P=0.95,I=0,D=0.05,alpha=0.8;
     private double error,lasterror,derror,lastderror,reference,lastreference,integralsum,ok;
     private double L = 1.6, W=1.2;
     private double R = Math.hypot(L/2, W/2);
@@ -69,19 +68,40 @@ public class DriveSubsystem {
         dt.reset();
         dt.reset();
     }
+
+    public DriveSubsystem(RobotHardware robot, boolean resetyaw){
+        this.robot = robot;
+        moduleBackRight = robot.moduleBackRight;
+        moduleBackLeft = robot.moduleBackLeft;
+
+        moduleFrontRight = robot.moduleFrontRight;
+        moduleFrontLeft = robot.moduleFrontLeft;
+
+        gamepad1 = robot.m_gamepad1;
+
+        imu = this.robot.m_imu;
+        imu.initialize(this.robot.imu_parameters);
+
+        rx[0]=W/2; ry[0]=L/2; beta[0]=atan2(ry[0],rx[0]); if(beta[0]<0) beta[0]=beta[0]+2*Math.PI;
+        rx[1]=-W/2; ry[1]=L/2; beta[1]=atan2(ry[1],rx[1]); if(beta[1]<0) beta[1]=beta[1]+2*Math.PI;
+        rx[2]=-W/2; ry[2]=-L/2; beta[2]=atan2(ry[2],rx[2]); if(beta[2]<0) beta[2]=beta[2]+2*Math.PI;
+        rx[3]=W/2; ry[3]=-L/2; beta[3]=atan2(ry[3],rx[3]); if(beta[3]<0) beta[3]=beta[3]+2*Math.PI;
+        lastvx=0; lastvy=0;
+        lastw=0; lastbotHeading=0;
+        headingteoretic=0;
+        lastinputw=0; reference=0;
+        lastreference=0; ok=0;
+        headingteoretic=0; error=0;
+        lasterror=0; lastderror=0;
+        integralsum=0;
+        dt.reset();
+        dt.reset();
+    }
     boolean targetreached(double theta1,double theta2)
     {
         if(theta1>Math.PI) theta1=theta1-2*Math.PI;
         if(theta2>Math.PI) theta2=theta2-2*Math.PI;
         if(theta2-0.07<=theta1 && theta1<=theta2+0.07) return true;
-        else return false;
-    }
-
-    public boolean targetreachedauto(double theta1,double theta2)
-    {
-        if(theta1>Math.PI) theta1=theta1-2*Math.PI;
-        if(theta2>Math.PI) theta2=theta2-2*Math.PI;
-        if(theta2-Math.toRadians(3)<=theta1 && theta1<=theta2+Math.toRadians(3)) return true;
         else return false;
     }
     public void setKinematics(int cnt)
@@ -126,7 +146,6 @@ public class DriveSubsystem {
             thetam[cnt]=360-thetam[cnt]+90;
         }
     }
-    public static boolean InTolerance = false;
     public void UpdateGamepad(){
 
         vx=gamepad1.left_stick_x;
@@ -178,7 +197,7 @@ public class DriveSubsystem {
             if(integralsum>1) integralsum=1;
             if(integralsum<-1) integralsum=-1;
 
-            rez=tP*error+tI*integralsum+tD*d;
+            rez=P*error+I*integralsum+D*d;
 
             lasterror=error;
             lastreference=reference;
@@ -223,13 +242,11 @@ public class DriveSubsystem {
         AddTelemetry();
     }
 
-    public void UpdateAuto(double fwd, double str, double autoheading){
-
-        autoheading = Math.toRadians(autoheading);
+    public void UpdateAuto(double fwd, double str, double rcw){
 
         vx=str;
         vy=fwd;
-        w=0;
+        w=-rcw;
         inputw=w;
 
         botHeading =-imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
@@ -249,7 +266,9 @@ public class DriveSubsystem {
             else dbotHeading=dbotHeading-2*Math.PI;
         }
 
-        reference=autoheading;
+        if(inputw==0 && lastinputw!=0) ok=1;
+        if(inputw!=0 && lastinputw==0) lastw=0;
+        if(inputw==0 && lastinputw==0 && ok==1) {reference=botHeading; ok=0;}
 
         if(reference!=lastreference)
         {
@@ -258,9 +277,8 @@ public class DriveSubsystem {
             lastderror=0;
             lastreference=reference;
         }
-        if(targetreachedauto(reference,botHeading)==false)
+        if(targetreached(reference,botHeading)==false && inputw==0 && lastinputw==0)
         {
-            InTolerance = false;
             error=reference-botHeading;
             if(error>Math.PI) error=error-2*Math.PI;
             if(error<-Math.PI) error=2*Math.PI+error;
@@ -288,7 +306,6 @@ public class DriveSubsystem {
             dashboardTelemetry.addData("output", rez);
             dashboardTelemetry.update();
         }
-        InTolerance = true;
 
         ax=(vx-lastvx)/dt.time();
         ay=(vy-lastvy)/dt.time();

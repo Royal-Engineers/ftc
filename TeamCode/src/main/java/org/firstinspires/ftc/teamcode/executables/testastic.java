@@ -3,25 +3,18 @@ package org.firstinspires.ftc.teamcode.executables;
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
-import com.arcrobotics.ftclib.command.InstantCommand;
-import com.arcrobotics.ftclib.command.ParallelCommandGroup;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
-import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.commands.GotoTheta;
 import org.firstinspires.ftc.teamcode.commands.GotoX;
 import org.firstinspires.ftc.teamcode.commands.GotoY;
 import org.firstinspires.ftc.teamcode.commands.KeepPosition;
-import org.firstinspires.ftc.teamcode.commands.LiftCommands.LiftMiddle;
-import org.firstinspires.ftc.teamcode.commands.LiftCommands.Retract;
-import org.firstinspires.ftc.teamcode.commands.MergiBa;
-import org.firstinspires.ftc.teamcode.commands.Transfer;
+import org.firstinspires.ftc.teamcode.commands.FollowPath;
 import org.firstinspires.ftc.teamcode.facade.RobotHardware;
 import org.firstinspires.ftc.teamcode.facade.interfaces.i_gamepad;
 import org.firstinspires.ftc.teamcode.facade.drive.DriveSubsystem;
 import org.firstinspires.ftc.teamcode.facade.drive.OdometryComponent;
-import org.firstinspires.ftc.teamcode.pipelines.PipelineDreapta;
 import org.firstinspires.ftc.teamcode.pipelines.PipelineStanga;
 import org.openftc.easyopencv.OpenCvPipeline;
 
@@ -99,9 +92,9 @@ public class testastic extends CommandOpMode {
             CommandScheduler.getInstance().schedule(PositionCommand);
 
                 CommandScheduler.getInstance().schedule(new SequentialCommandGroup(
-                        new MergiBa(x1, y1, t1, PositionCommand),
-                        new MergiBa(x2, y2, t2, PositionCommand),
-                        new MergiBa(x3, y3, t3, PositionCommand)
+                        new FollowPath(x1, y1, t1, PositionCommand, 10, 10, 10),
+                        new FollowPath(x2, y2, t2, PositionCommand, 10, 10, 10),
+                        new FollowPath(x3, y3, t3, PositionCommand)
 
 
                         ));

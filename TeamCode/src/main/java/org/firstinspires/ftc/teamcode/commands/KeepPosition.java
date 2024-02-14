@@ -49,6 +49,9 @@ public class KeepPosition extends CommandBase {
         TCommand.set(theta);
         XCommand.set(x);
         YCommand.set(y);
+        TCommand.Tolerance = GotoTheta.DefaultTolerance;
+        XCommand.Tolerance = GotoX.DefaultTolerance;
+        YCommand.Tolerance = GotoY.DefaultTolerance;
     }
 
     public void SetAll(double x, double y, double theta, double px, double py, double pt)
@@ -59,6 +62,9 @@ public class KeepPosition extends CommandBase {
         TCommand.pmax = pt;
         YCommand.pmax = py;
         XCommand.pmax = px;
+        TCommand.Tolerance = pt;
+        XCommand.Tolerance = px;
+        YCommand.Tolerance = py;
     }
 
     @Override public void execute()

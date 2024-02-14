@@ -13,11 +13,18 @@ import org.firstinspires.ftc.teamcode.facade.drive.DriveSubsystem;
 public class GotoX extends CommandBase {
 
     Telemetry m_telemetry;
-        public static double P = 0.05d, I = 0.1d, D = 0.0011d;
+        public static double P = 0.06d, I = 0.1d, D = 0.0011d;
     double CurrentPos = 0.0d;
     public double pmax = 1.0d;
 
-    public static double Tolerance = 3.5;
+    public double Tolerance = 3.5;
+
+    public static double DefaultTolerance = 3.5;
+
+    public GotoX()
+    {
+        Tolerance = DefaultTolerance;
+    }
     public boolean isWithinTolerance()
     {
         double dist = Math.abs(m_Target - CurrentPos);

@@ -4,7 +4,6 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.norm
 
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.controller.PIDFController;
-import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
@@ -24,11 +23,11 @@ public class swerveModule {
 
     public static double tolerance = 1;
     PIDFController angleController = new PIDFController(P, I, D, F);
-    Telemetry telemetrieba;
+    Telemetry telemetrie;
     public swerveModule(DcMotorEx motor, CRServo servo, absoluteAnalogEncoder encoder, Telemetry telemetry) {
         this.motor = motor; this.servo = servo; this.encoder = encoder;
 
-        telemetrieba = telemetry;
+        telemetrie = telemetry;
         angleController.setTolerance(tolerance);
     }
 
@@ -42,7 +41,7 @@ public class swerveModule {
         double error;
 
       //se calculeaza arcul minim si PID-ul actioneaza in functie de el
-      error = getGigaTarget(target, current);
+      error = CalculateTarget(target, current);
         double power = angleController.calculate(0, error);
         if ( Math.abs(error) < tolerance )
             power = 0;
@@ -52,7 +51,7 @@ public class swerveModule {
             servo.setPower(0.0d);}
         else{
         servo.setPower(power);}
-telemetrieba.addData("putereba", power);
+telemetrie.addData("putereba", power);
       //se da putere la motoare si servouri
         if(motorDirection == true)
              motor.setPower(motorPower);
@@ -60,7 +59,7 @@ telemetrieba.addData("putereba", power);
             motor.setPower(-motorPower);
     }
 
-    private double getGigaTarget(double target, double current){
+    private double CalculateTarget(double target, double current){
         double target1 = target, target2 = (target+180)%360;
         double errorpoz = 0.0d, errorneg = 0.0d;
         double errorpoz1 = 0.0d, errorneg1 = 0.0d;
@@ -123,6 +122,6 @@ return output;
 
     public void showba(String name)
     {
-        telemetrieba.addData(name, encoder.getCurrentPosition());
+        telemetrie.addData(name, encoder.getCurrentPosition());
     }
 }

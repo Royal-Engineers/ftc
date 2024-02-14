@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.commands.GotoY;
 import org.firstinspires.ftc.teamcode.commands.KeepPosition;
 import org.firstinspires.ftc.teamcode.commands.LiftCommands.LiftMiddle;
 import org.firstinspires.ftc.teamcode.commands.LiftCommands.Retract;
-import org.firstinspires.ftc.teamcode.commands.MergiBa;
+import org.firstinspires.ftc.teamcode.commands.FollowPath;
 import org.firstinspires.ftc.teamcode.commands.Transfer;
 import org.firstinspires.ftc.teamcode.facade.RobotHardware;
 import org.firstinspires.ftc.teamcode.facade.interfaces.i_gamepad;
@@ -23,8 +23,6 @@ import org.firstinspires.ftc.teamcode.facade.drive.DriveSubsystem;
 import org.firstinspires.ftc.teamcode.facade.drive.OdometryComponent;
 import org.firstinspires.ftc.teamcode.pipelines.PipelineDreapta;
 import org.openftc.easyopencv.OpenCvPipeline;
-
-import java.nio.channels.Pipe;
 
 @Disabled
 @Config
@@ -103,12 +101,12 @@ public class AutoRosuPanel extends CommandOpMode {
                             new Transfer(Robot).alongWith(
                            // new MergiBa(70 + increment ,-50 ,0, PositionCommand, 0.7, 0.7, 0.7),
                            // new MergiBa(70 + increment, -50, -90, PositionCommand),
-                            new MergiBa(70 + increment, -40, -90, PositionCommand, 0.99, 0.99, 0.99)),
+                            new FollowPath(70 + increment, -40, -90, PositionCommand, 0.99, 0.99, 0.99)),
                             new LiftMiddle(Robot).alongWith(
-                            new MergiBa(70 + increment, -85.5, -90, PositionCommand, 0.99, 0.99, 0.99)),
+                            new FollowPath(70 + increment, -85.5, -90, PositionCommand, 0.99, 0.99, 0.99)),
                             new WaitCommand(900),
                             new Retract(Robot),
-                            new MergiBa(2, -82, -90, PositionCommand,0.9, 0.9, 0.9),
+                            new FollowPath(2, -82, -90, PositionCommand,0.9, 0.9, 0.9),
                     new InstantCommand(()->
                     {
                         Robot.m_Lift.SetTargetPosition(0, 0.9);

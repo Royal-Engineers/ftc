@@ -24,9 +24,13 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
+import com.qualcomm.robotcore.hardware.IrSeekerSensor;
+import  com.qualcomm.robotcore.hardware.TouchSensor;
+
 @Config
 public class RobotHardware {
 
+    public TouchSensor BreakBeam;
     public final static boolean DebugMode = true;
     private static RobotHardware instance = null;
 
@@ -86,6 +90,7 @@ public class RobotHardware {
         this.m_HardwareMap = hardwaremap;
         this.m_telemetry = telemetry;
 
+        BreakBeam = hardwaremap.get(TouchSensor.class, "Break");
         motorFrontRight = m_HardwareMap.get(DcMotorEx.class, "motorFrontRight");
         motorFrontLeft = m_HardwareMap.get(DcMotorEx.class, "motorFrontLeft");
         motorBackRight = m_HardwareMap.get(DcMotorEx.class, "motorBackRight");
@@ -208,5 +213,6 @@ public class RobotHardware {
         m_Bar.UpdateTelemetry();
         m_telemetry.addData("Poz Ghiara:", m_ClawAngleServo.getPosition());
         m_telemetry.addData("pozintake", m_ServoIntake.getPosition());
+        m_telemetry.addData("BreakBeam", BreakBeam.isPressed());
     }
 }

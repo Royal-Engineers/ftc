@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.commands.GotoY;
 import org.firstinspires.ftc.teamcode.commands.KeepPosition;
 import org.firstinspires.ftc.teamcode.commands.LiftCommands.LiftMiddle;
 import org.firstinspires.ftc.teamcode.commands.LiftCommands.Retract;
-import org.firstinspires.ftc.teamcode.commands.MergiBa;
+import org.firstinspires.ftc.teamcode.commands.FollowPath;
 import org.firstinspires.ftc.teamcode.commands.Transfer;
 import org.firstinspires.ftc.teamcode.facade.RobotHardware;
 import org.firstinspires.ftc.teamcode.facade.interfaces.i_gamepad;
@@ -99,12 +99,12 @@ public class AutoAlbastruPanel extends CommandOpMode {
 
                     CommandScheduler.getInstance().schedule(new SequentialCommandGroup(
                             new Transfer(Robot).alongWith(
-                            new MergiBa(52+ increment, 60, 90, PositionCommand)),
+                            new FollowPath(52+ increment, 60, 90, PositionCommand)),
                             new LiftMiddle(Robot).alongWith(
-                            new MergiBa(52+ increment, 83., 90, PositionCommand, 0.9, 0.9, 0.9)),
+                            new FollowPath(52+ increment, 83., 90, PositionCommand, 0.9, 0.9, 0.9)),
                             new WaitCommand(900),
                             new Retract(Robot),
-                            new MergiBa(5, 75.5, 90, PositionCommand,0.9, 0.9, 0.9),
+                            new FollowPath(5, 75.5, 90, PositionCommand,0.9, 0.9, 0.9),
                             new InstantCommand(()->
                             {
                                 Robot.m_Lift.SetTargetPosition(0, 0.9);

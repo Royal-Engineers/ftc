@@ -3,27 +3,55 @@ package org.firstinspires.ftc.teamcode.executables;
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
+import com.arcrobotics.ftclib.command.InstantCommand;
+import com.arcrobotics.ftclib.command.ParallelCommandGroup;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.commands.GotoTheta;
 import org.firstinspires.ftc.teamcode.commands.GotoX;
 import org.firstinspires.ftc.teamcode.commands.GotoY;
 import org.firstinspires.ftc.teamcode.commands.KeepPosition;
-import org.firstinspires.ftc.teamcode.commands.MergiBa;
+import org.firstinspires.ftc.teamcode.commands.LiftCommands.LiftMiddle;
+import org.firstinspires.ftc.teamcode.commands.LiftCommands.Retract;
+import org.firstinspires.ftc.teamcode.commands.FollowPath;
 import org.firstinspires.ftc.teamcode.commands.Transfer;
 import org.firstinspires.ftc.teamcode.facade.RobotHardware;
 import org.firstinspires.ftc.teamcode.facade.interfaces.i_gamepad;
 import org.firstinspires.ftc.teamcode.facade.drive.DriveSubsystem;
 import org.firstinspires.ftc.teamcode.facade.drive.OdometryComponent;
-import org.firstinspires.ftc.teamcode.pipelines.PipelineDreapta;
+import org.firstinspires.ftc.teamcode.pipelines.PipelineStanga;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 @Config
 @Autonomous
 public class AutoAlbastruLong extends CommandOpMode {
+
+
+
+    public double pos1t, pos1x, pos1y;
+    public double pos2t, pos2x, pos2y;
+
+    public double pos3t, pos3x, pos3y;
+
+    public double pos4t, pos4x, pos4y;
+
+    public double pos5t, pos5x, pos5y;
+
+    public static double zone1_1t = 90, zone1_1x = 41, zone1_1y = 87,
+            zone1_2t = 90, zone1_2x = 72, zone1_2y = 34,
+            zone1_3t = 90, zone1_3x = 2, zone1_3y = 65,
+
+
+    zone2_1t = 90, zone2_1x = 56, zone2_1y = 87,
+            zone2_2t = 90, zone2_2x = 90, zone2_2y = 10,
+            zone2_3t = 90, zone2_3x = 2, zone2_3y = 65,
+
+
+    zone3_1t = 90, zone3_1x = 77, zone3_1y = 87,
+            zone3_2t = 90, zone3_2x = 68, zone3_2y = -19,
+            zone3_3t = 90, zone3_3x = 2, zone3_3y = 65;
 
     private RobotHardware Robot;
 
@@ -45,7 +73,7 @@ public class AutoAlbastruLong extends CommandOpMode {
         Robot = new RobotHardware();
         Robot.init(gamepad1, gamepad2, telemetry, hardwareMap);
 
-        pipeline = new PipelineDreapta(telemetry,  PipelineDreapta.team.rosu);
+        pipeline = new PipelineStanga(telemetry,  PipelineStanga.team.albastru);
         Robot.camera.setPipeline(pipeline);
 
         m_DriveSubsystem = new DriveSubsystem(Robot);
@@ -74,13 +102,8 @@ public class AutoAlbastruLong extends CommandOpMode {
     @Override
     public void run() {
         m_odometry.update();
-        PipelineDreapta.regions Zone = PipelineDreapta.region_of_interest;
+        PipelineStanga.regions Zone = PipelineStanga.region_of_interest;
 
-        double increment =1;
-        if ( Zone == PipelineDreapta.regions.left )
-            increment  = IncrementLeft;
-        else if ( Zone == PipelineDreapta.regions.right )
-            increment = IncrementRight;
         m_odometry.update();
 
         if (!ok)
@@ -93,22 +116,52 @@ public class AutoAlbastruLong extends CommandOpMode {
 
             CommandScheduler.getInstance().schedule(PositionCommand);
 
+            if ( PipelineStanga.region_of_interest == PipelineStanga.regions.left)
+                zone = 1;
+            else if ( PipelineStanga.region_of_interest == PipelineStanga.regions.middle)
+                zone = 2;
+            else
+                zone = 3;
+
+            if(zone == 1) {
+
+                pos1t = zone1_1t; pos1x = zone1_1x; pos1y = zone1_1y;
+                pos2t = zone1_2t; pos2x = zone1_2x; pos2y = zone1_2y;
+                pos3t = zone1_3t; pos3x = zone1_3x; pos3y = zone1_3y;
+            }
+
+            else if(zone == 2) {
+
+                pos1t = zone2_1t; pos1x = zone2_1x; pos1y = zone2_1y;
+                pos2t = zone2_2t; pos2x = zone2_2x; pos2y = zone2_2y;
+                pos3t = zone2_3t; pos3x = zone2_3x; pos3y = zone2_3y;
+
+            }
+
+            else if(zone == 3) {
+                pos1t = zone3_1t; pos1x = zone3_1x; pos1y = zone3_1y;
+                pos2t = zone3_2t; pos2x = zone3_2x; pos2y = zone3_2y;
+                pos3t = zone3_3t; pos3x = zone3_3x; pos3y = zone3_3y;
+
+
+            }
+
             CommandScheduler.getInstance().schedule(new SequentialCommandGroup(
-                            new Transfer(Robot).alongWith(
-                                    // new MergiBa(70 + increment ,-50 ,0, PositionCommand, 0.7, 0.7, 0.7),
-                                    // new MergiBa(70 + increment, -50, -90, PositionCommand),
-                                    new MergiBa(140, 0, 0, PositionCommand, 0.99, 0.99, 0.99)),
-                            new WaitCommand(1000),
-                            new MergiBa(140, 210, 0, PositionCommand,0.9, 0.9, 0.9),
-                            new MergiBa(90, 210, 0, PositionCommand)
+                    new ParallelCommandGroup(
+                            new Transfer(Robot),
+                            new FollowPath(pos1x, pos1y, pos1t, PositionCommand)),
+                    new LiftMiddle(Robot),
+                    new WaitCommand(700),
+                    new ParallelCommandGroup(
+                            new Retract(Robot),
+                            new FollowPath(pos2x, pos2y, pos2t, PositionCommand)),
+                    new InstantCommand(() -> {
+                        Robot.m_ServoIntake.setPosition(0.7);
+                    }),
+                    new WaitCommand(500),
+                    new FollowPath(pos3x, pos3y, pos3t, PositionCommand)
 
-
-
-                            // new InstantCommand(()->{PositionCommand.SetTheta(   180.0d);})
-
-                    )
-            );
-
+            ));
             ok = true;
         }
         telemetry.addData("ZONAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", Zone);

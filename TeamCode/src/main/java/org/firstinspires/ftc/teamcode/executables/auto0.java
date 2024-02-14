@@ -15,13 +15,12 @@ import org.firstinspires.ftc.teamcode.commands.GotoY;
 import org.firstinspires.ftc.teamcode.commands.KeepPosition;
 import org.firstinspires.ftc.teamcode.commands.LiftCommands.LiftMiddle;
 import org.firstinspires.ftc.teamcode.commands.LiftCommands.Retract;
-import org.firstinspires.ftc.teamcode.commands.MergiBa;
+import org.firstinspires.ftc.teamcode.commands.FollowPath;
 import org.firstinspires.ftc.teamcode.commands.Transfer;
 import org.firstinspires.ftc.teamcode.facade.RobotHardware;
 import org.firstinspires.ftc.teamcode.facade.interfaces.i_gamepad;
 import org.firstinspires.ftc.teamcode.facade.drive.DriveSubsystem;
 import org.firstinspires.ftc.teamcode.facade.drive.OdometryComponent;
-import org.firstinspires.ftc.teamcode.pipelines.PipelineDreapta;
 import org.firstinspires.ftc.teamcode.pipelines.PipelineStanga;
 import org.openftc.easyopencv.OpenCvPipeline;
 
@@ -31,18 +30,18 @@ public class auto0 extends CommandOpMode {
 
 
 
-    public static double zone1_1t = 90, zone1_1x = 41, zone1_1y = 86,
-            zone1_2t = 90, zone1_2x = 68, zone1_2y = 37,
+    public static double zone1_1t = 90, zone1_1x = 41, zone1_1y = 87,
+            zone1_2t = 90, zone1_2x = 72, zone1_2y = 34,
             zone1_3t = 90, zone1_3x = 2, zone1_3y = 65,
 
 
-    zone2_1t = 90, zone2_1x = 56, zone2_1y = 86,
-            zone2_2t = 90, zone2_2x = 88, zone2_2y = 10,
+    zone2_1t = 90, zone2_1x = 56, zone2_1y = 87,
+            zone2_2t = 90, zone2_2x = 90, zone2_2y = 10,
             zone2_3t = 90, zone2_3x = 2, zone2_3y = 65,
 
 
-    zone3_1t = 90, zone3_1x = 77, zone3_1y = 86,
-            zone3_2t = 90, zone3_2x = 68, zone3_2y = -20.5,
+    zone3_1t = 90, zone3_1x = 77, zone3_1y = 87,
+            zone3_2t = 90, zone3_2x = 68, zone3_2y = -19,
             zone3_3t = 90, zone3_3x = 2, zone3_3y = 65;
 
     private RobotHardware Robot;
@@ -121,17 +120,17 @@ public class auto0 extends CommandOpMode {
                         new ParallelCommandGroup(
 
                                 new Transfer(Robot),
-                        new MergiBa(zone1_1x, zone1_1y, zone1_1t, PositionCommand)),
+                        new FollowPath(zone1_1x, zone1_1y, zone1_1t, PositionCommand)),
                         new LiftMiddle(Robot),
                         new WaitCommand(700),
                         new ParallelCommandGroup(
                         new Retract(Robot),
-                        new MergiBa(zone1_2x, zone1_2y, zone1_2t, PositionCommand)),
+                        new FollowPath(zone1_2x, zone1_2y, zone1_2t, PositionCommand)),
                         new InstantCommand(() -> {
                             Robot.m_ServoIntake.setPosition(0.7);
                         }),
                         new WaitCommand(500),
-                        new MergiBa(zone1_3x, zone1_3y, zone1_3t, PositionCommand)
+                        new FollowPath(zone1_3x, zone1_3y, zone1_3t, PositionCommand)
 
                 ));
 
@@ -142,17 +141,17 @@ public class auto0 extends CommandOpMode {
                 CommandScheduler.getInstance().schedule(new SequentialCommandGroup(
                         new ParallelCommandGroup(
                                 new Transfer(Robot),
-                        new MergiBa(zone2_1x, zone2_1y, zone2_1t, PositionCommand)),
+                        new FollowPath(zone2_1x, zone2_1y, zone2_1t, PositionCommand)),
                         new LiftMiddle(Robot),
                         new WaitCommand(700),
                         new ParallelCommandGroup(
                                 new Retract(Robot),
-                        new MergiBa(zone2_2x, zone2_2y, zone2_2t, PositionCommand)),
+                        new FollowPath(zone2_2x, zone2_2y, zone2_2t, PositionCommand)),
                         new InstantCommand(() -> {
                             Robot.m_ServoIntake.setPosition(0.7);
                         }),
                         new WaitCommand(500),
-                        new MergiBa(zone2_3x, zone2_3y, zone2_3t, PositionCommand)
+                        new FollowPath(zone2_3x, zone2_3y, zone2_3t, PositionCommand)
 
                 ));
 
@@ -163,17 +162,17 @@ public class auto0 extends CommandOpMode {
                 CommandScheduler.getInstance().schedule(new SequentialCommandGroup(
                         new ParallelCommandGroup(
                         new Transfer(Robot),
-                        new MergiBa(zone3_1x, zone3_1y, zone3_1t, PositionCommand)),
+                        new FollowPath(zone3_1x, zone3_1y, zone3_1t, PositionCommand)),
                         new LiftMiddle(Robot),
                         new WaitCommand(700),
                         new ParallelCommandGroup(
                                 new Retract(Robot),
-                        new MergiBa(zone3_2x, zone3_2y, zone3_2t, PositionCommand)),
+                        new FollowPath(zone3_2x, zone3_2y, zone3_2t, PositionCommand)),
                         new InstantCommand(() -> {
                             Robot.m_ServoIntake.setPosition(0.7);
                         }),
                         new WaitCommand(500),
-                        new MergiBa(zone3_3x, zone3_3y, zone3_3t, PositionCommand)
+                        new FollowPath(zone3_3x, zone3_3y, zone3_3t, PositionCommand)
 
                 ));
 
