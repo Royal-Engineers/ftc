@@ -9,10 +9,13 @@ import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.teamcode.commands.DistanceSensorCommand;
+import org.firstinspires.ftc.teamcode.commands.DistanceSensorOK;
 import org.firstinspires.ftc.teamcode.commands.GotoTheta;
 import org.firstinspires.ftc.teamcode.commands.GotoX;
 import org.firstinspires.ftc.teamcode.commands.GotoY;
 import org.firstinspires.ftc.teamcode.commands.KeepPosition;
+import org.firstinspires.ftc.teamcode.commands.LiftCommands.DriveDistanceSensor;
 import org.firstinspires.ftc.teamcode.commands.LiftCommands.LiftMiddle;
 import org.firstinspires.ftc.teamcode.commands.LiftCommands.Retract;
 import org.firstinspires.ftc.teamcode.commands.FollowPath;
@@ -30,17 +33,17 @@ public class auto0 extends CommandOpMode {
 
 
 
-    public static double zone1_1t = 90, zone1_1x = 41, zone1_1y = 87,
+    public static double zone1_1t = 90, zone1_1x = 41, zone1_1y = 73,
             zone1_2t = 90, zone1_2x = 72, zone1_2y = 34,
             zone1_3t = 90, zone1_3x = 2, zone1_3y = 65,
 
 
-    zone2_1t = 90, zone2_1x = 56, zone2_1y = 87,
+    zone2_1t = 90, zone2_1x = 56, zone2_1y = 73,
             zone2_2t = 90, zone2_2x = 90, zone2_2y = 10,
             zone2_3t = 90, zone2_3x = 2, zone2_3y = 65,
 
 
-    zone3_1t = 90, zone3_1x = 77, zone3_1y = 87,
+    zone3_1t = 90, zone3_1x = 77, zone3_1y = 73,
             zone3_2t = 90, zone3_2x = 68, zone3_2y = -19,
             zone3_3t = 90, zone3_3x = 2, zone3_3y = 65;
 
@@ -75,7 +78,7 @@ public class auto0 extends CommandOpMode {
 
         waitForStart();
         Robot.camera.setPipeline(null);
-
+        CommandScheduler.getInstance().schedule(new DistanceSensorCommand(Robot));
 
     }
 
@@ -120,7 +123,10 @@ public class auto0 extends CommandOpMode {
                         new ParallelCommandGroup(
 
                                 new Transfer(Robot),
-                        new FollowPath(zone1_1x, zone1_1y, zone1_1t, PositionCommand)),
+
+                        new FollowPath(zone1_1x, zone1_1y, zone1_1t, PositionCommand)
+           ),
+                        new DriveDistanceSensor(Robot, m_DriveSubsystem),
                         new LiftMiddle(Robot),
                         new WaitCommand(700),
                         new ParallelCommandGroup(
@@ -142,6 +148,8 @@ public class auto0 extends CommandOpMode {
                         new ParallelCommandGroup(
                                 new Transfer(Robot),
                         new FollowPath(zone2_1x, zone2_1y, zone2_1t, PositionCommand)),
+                        new DriveDistanceSensor(Robot, m_DriveSubsystem),
+
                         new LiftMiddle(Robot),
                         new WaitCommand(700),
                         new ParallelCommandGroup(
@@ -163,6 +171,7 @@ public class auto0 extends CommandOpMode {
                         new ParallelCommandGroup(
                         new Transfer(Robot),
                         new FollowPath(zone3_1x, zone3_1y, zone3_1t, PositionCommand)),
+                        new DriveDistanceSensor(Robot, m_DriveSubsystem),
                         new LiftMiddle(Robot),
                         new WaitCommand(700),
                         new ParallelCommandGroup(

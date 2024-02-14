@@ -6,7 +6,7 @@ import org.firstinspires.ftc.teamcode.facade.drive.DriveSubsystem;
 
 public class KeepPosition extends CommandBase {
 
-    private static boolean isActive = true;
+    public static boolean isActive = true;
 
     GotoX XCommand;
     GotoY YCommand;
@@ -69,6 +69,8 @@ public class KeepPosition extends CommandBase {
 
     @Override public void execute()
     {
+        if ( isActive == false )
+            return;
         XCommand.execute();
         YCommand.execute();
         TCommand.execute();

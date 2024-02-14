@@ -17,7 +17,7 @@ import java.sql.ParameterMetaData;
 public class GotoTheta extends CommandBase {
 
     Telemetry m_telemetry;
-    public static double P = 0.049d, I= 0.1d, D = 0.00285d;
+    public static double P = 0.025d, I= 0.1d, D = 0.00285d;
 
     public double pmax = 1.0d;
     public double Tolerance = 3.5;

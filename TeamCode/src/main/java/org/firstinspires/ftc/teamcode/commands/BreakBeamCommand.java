@@ -12,7 +12,7 @@ public class BreakBeamCommand extends CommandBase {
 
     Telemetry m_Telemetry;
 
-    public int FramesNeeded = 150;
+    public int FramesNeeded = 60;
 
     public  int Frames = 0;
     TouchSensor m_BreakBeam;
@@ -37,7 +37,7 @@ public class BreakBeamCommand extends CommandBase {
         else Frames++;
 
         if ( Frames == FramesNeeded && Math.abs(m_RobotHardware.motorIntake.getPower()) > 0.01 )
-            m_RobotHardware.motorIntake.setPower(0);
+            m_RobotHardware.motorIntake.setPower(-0.8);
         m_Telemetry.addData("BreakBeam frames", Frames);
     }
 

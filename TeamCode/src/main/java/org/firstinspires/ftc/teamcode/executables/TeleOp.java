@@ -4,6 +4,7 @@ import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 
 import org.firstinspires.ftc.teamcode.commands.BreakBeamCommand;
+import org.firstinspires.ftc.teamcode.commands.DistanceSensorCommand;
 import org.firstinspires.ftc.teamcode.facade.RobotHardware;
 import org.firstinspires.ftc.teamcode.facade.interfaces.i_gamepad;
 import org.firstinspires.ftc.teamcode.facade.drive.DriveSubsystem;
@@ -52,6 +53,7 @@ public class TeleOp extends CommandOpMode {
         Robot.camera.setPipeline(null);
 
         CommandScheduler.getInstance().schedule(new BreakBeamCommand(Robot));
+        CommandScheduler.getInstance().schedule(new DistanceSensorCommand(Robot));
 
 
     }

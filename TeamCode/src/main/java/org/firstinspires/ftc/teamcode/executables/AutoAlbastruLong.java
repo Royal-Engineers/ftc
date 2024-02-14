@@ -39,19 +39,19 @@ public class AutoAlbastruLong extends CommandOpMode {
 
     public double pos5t, pos5x, pos5y;
 
-    public static double zone1_1t = 90, zone1_1x = 41, zone1_1y = 87,
-            zone1_2t = 90, zone1_2x = 72, zone1_2y = 34,
-            zone1_3t = 90, zone1_3x = 2, zone1_3y = 65,
+    public static double zone1_1t = 90, zone1_1x = 30, zone1_1y = -20,
+            zone1_2t = 90, zone1_2x =30, zone1_2y = -20,
+            zone1_3t = 90, zone1_3x = 30, zone1_3y = -20,
 
 
-    zone2_1t = 90, zone2_1x = 56, zone2_1y = 87,
-            zone2_2t = 90, zone2_2x = 90, zone2_2y = 10,
-            zone2_3t = 90, zone2_3x = 2, zone2_3y = 65,
+    zone2_1t = 90, zone2_1x = 30, zone2_1y = -20,
+            zone2_2t = 90, zone2_2x = 30, zone2_2y = -20,
+            zone2_3t = 90, zone2_3x = 30, zone2_3y = -20,
 
 
-    zone3_1t = 90, zone3_1x = 77, zone3_1y = 87,
-            zone3_2t = 90, zone3_2x = 68, zone3_2y = -19,
-            zone3_3t = 90, zone3_3x = 2, zone3_3y = 65;
+    zone3_1t = 90, zone3_1x = 30, zone3_1y = -20,
+            zone3_2t = 90, zone3_2x = 30, zone3_2y = -20,
+            zone3_3t = 90, zone3_3x = 30, zone3_3y = -20;
 
     private RobotHardware Robot;
 
@@ -148,13 +148,8 @@ public class AutoAlbastruLong extends CommandOpMode {
 
             CommandScheduler.getInstance().schedule(new SequentialCommandGroup(
                     new ParallelCommandGroup(
-                            new Transfer(Robot),
-                            new FollowPath(pos1x, pos1y, pos1t, PositionCommand)),
-                    new LiftMiddle(Robot),
-                    new WaitCommand(700),
-                    new ParallelCommandGroup(
-                            new Retract(Robot),
-                            new FollowPath(pos2x, pos2y, pos2t, PositionCommand)),
+                            new FollowPath(pos1x, pos1y, pos1t, PositionCommand, 10, 10, 10)),
+                            new FollowPath(pos2x, pos2y, pos2t, PositionCommand),
                     new InstantCommand(() -> {
                         Robot.m_ServoIntake.setPosition(0.7);
                     }),
