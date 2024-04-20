@@ -8,9 +8,9 @@ public class KeepPosition extends CommandBase {
 
     public static boolean isActive = true;
 
-    GotoX XCommand;
-    GotoY YCommand;
-    GotoTheta TCommand;
+    public GotoX XCommand;
+    public GotoY YCommand;
+    public GotoTheta TCommand;
 
     DriveSubsystem m_DriveSubsystem;
     public KeepPosition(GotoX x, GotoY y, GotoTheta T, DriveSubsystem driveSubsystem)

@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.commands;
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.controller.PIDController;
+import com.arcrobotics.ftclib.controller.PIDFController;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.facade.RobotHardware;
@@ -13,13 +14,13 @@ import org.firstinspires.ftc.teamcode.facade.drive.DriveSubsystem;
 public class GotoX extends CommandBase {
 
     Telemetry m_telemetry;
-        public static double P = 0.06d, I = 0.1d, D = 0.0011d;
+        public static double P = 0.032d, I = 0.05d, D = 0.0002d, F = 0.0d;
     double CurrentPos = 0.0d;
     public double pmax = 1.0d;
 
-    public double Tolerance = 3.5;
+    public double Tolerance = 4;
 
-    public static double DefaultTolerance = 3.5;
+    public static double DefaultTolerance = 4;
 
     public GotoX()
     {
@@ -33,16 +34,16 @@ public class GotoX extends CommandBase {
         return false;
     }
     DriveSubsystem m_DriveSubsystem;
-    PIDController pid;
+    PIDFController pid;
 
-    private double m_Target = 0.0d;
+    public double m_Target = 0.0d;
     public double Power = 0.0d;
 
     public boolean active = true;
     RobotHardware m_Robot;
     public GotoX(double x, Telemetry telemetry, DriveSubsystem driveSubsystem, RobotHardware robot)
     {
-        pid = new PIDController(P, I, D);
+        pid = new PIDFController(P, I, D, F);
         pid.setSetPoint(x);
         m_telemetry = telemetry;
         m_DriveSubsystem = driveSubsystem;
@@ -62,6 +63,20 @@ public class GotoX extends CommandBase {
         m_Target = pos;
         pid.setSetPoint(pos);
 
+    }
+
+    public void increment(double inc)
+    {
+        m_Target -= inc;
+        pid.setSetPoint(m_Target);
+        Tolerance = DefaultTolerance;
+    }
+
+    public void increment(double inc, double tol)
+    {
+        m_Target -= inc;
+        pid.setSetPoint(m_Target);
+        Tolerance = tol;
     }
     @Override
     public void execute()

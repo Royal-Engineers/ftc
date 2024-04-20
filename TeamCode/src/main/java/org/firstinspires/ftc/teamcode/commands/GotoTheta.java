@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.commands;
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.controller.PIDController;
+import com.arcrobotics.ftclib.controller.PIDFController;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.facade.RobotHardware;
@@ -17,19 +18,16 @@ import java.sql.ParameterMetaData;
 public class GotoTheta extends CommandBase {
 
     Telemetry m_telemetry;
-    public static double P = 0.025d, I= 0.1d, D = 0.00285d;
+    public static double P = 0.018, I= 0.1d, D = 0.0007d, F = 0.00d;
 
     public double pmax = 1.0d;
-    public double Tolerance = 3.5;
-    public static double DefaultTolerance = 3.5;
+    public static double DefaultTolerance = 5;
 
-    public GotoTheta()
-    {
-        Tolerance = DefaultTolerance;
-    }
+    public static double Tolerance = 5;
+
     double CurrentPos = 0.0d;
     DriveSubsystem m_DriveSubsystem;
-    PIDController pid;
+    PIDFController pid;
 
     public boolean isWithinTolerance()
     {
@@ -38,7 +36,7 @@ public class GotoTheta extends CommandBase {
             return true;
         return false;
     }
-    private double m_Target = 0.0d;
+    public double m_Target = 0.0d;
 
     public double Power = 0.0d;
     RobotHardware m_Robot;
@@ -46,7 +44,7 @@ public class GotoTheta extends CommandBase {
     public boolean active = true;
     public GotoTheta(double Theta, Telemetry telemetry, DriveSubsystem driveSubsystem, RobotHardware robot)
     {
-        pid = new PIDController(P, I, D);
+        pid = new PIDFController(P, I, D, F);
         pid.setSetPoint(Theta);
         m_telemetry = telemetry;
         m_DriveSubsystem = driveSubsystem;
@@ -80,7 +78,7 @@ public class GotoTheta extends CommandBase {
             Power = 0.0d;
             return;
         }
-
+        m_telemetry.addData("THETA target", m_Target);
 
 
         Power = Math.abs(pid.calculate(m_Target + Math.min(p1, p2)));

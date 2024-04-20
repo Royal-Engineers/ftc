@@ -22,6 +22,7 @@ import org.firstinspires.ftc.teamcode.facade.interfaces.i_gamepad;
 import org.firstinspires.ftc.teamcode.facade.drive.DriveSubsystem;
 import org.firstinspires.ftc.teamcode.facade.drive.OdometryComponent;
 import org.firstinspires.ftc.teamcode.pipelines.PipelineDreapta;
+import org.firstinspires.ftc.teamcode.pipelines.PipelineStanga;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 @Disabled
@@ -49,7 +50,7 @@ public class AutoRosuPanel extends CommandOpMode {
         Robot = new RobotHardware();
         Robot.init(gamepad1, gamepad2, telemetry, hardwareMap);
 
-        pipeline = new PipelineDreapta(telemetry,  PipelineDreapta.team.rosu);
+        pipeline = new PipelineStanga(telemetry,  PipelineStanga.team.rosu);
         Robot.camera.setPipeline(pipeline);
 
         m_DriveSubsystem = new DriveSubsystem(Robot);

@@ -14,19 +14,17 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.facade.RobotHardware;
 
 @Config
-
 public class DriveSubsystem {
 
     public boolean TelemeteryEnabled = true;
     private RobotHardware robot;
-    public static double P=0.95,I=0,D=0.05,alpha=0.8;
+    public static double P=0.95,I=0,D=0.055,alpha=0.8;
     private double error,lasterror,derror,lastderror,reference,lastreference,integralsum,ok;
     private double L = 1.6, W=1.2;
     private double R = Math.hypot(L/2, W/2);
     private swerveModule moduleFrontRight, moduleFrontLeft, moduleBackLeft, moduleBackRight;
     private Gamepad gamepad1;
-    public static boolean robotcentric=false;
-    private double vx,vy,w,lastvx,lastvy,lastw,lastinputw,lastbotHeading,ax,ay,e,botHeading,dbotHeading,headingteoretic,inputw,rez;
+    private double vx,vy,w,lastvx,lastvy,lastw,lastinputw,lastbotHeading,ax,ay,e,botHeading,dbotHeading,inputw,rez;
     private double[] vm=new double[5];
     private double[] am=new double[5];
     private double[] wm=new double[5];
@@ -59,10 +57,8 @@ public class DriveSubsystem {
         rx[3]=W/2; ry[3]=-L/2; beta[3]=atan2(ry[3],rx[3]); if(beta[3]<0) beta[3]=beta[3]+2*Math.PI;
         lastvx=0; lastvy=0;
         lastw=0; lastbotHeading=0;
-        headingteoretic=0;
         lastinputw=0; reference=0;
-        lastreference=0; ok=0;
-        headingteoretic=0; error=0;
+        lastreference=0; ok=0; error=0;
         lasterror=0; lastderror=0;
         integralsum=0;
         dt.reset();
@@ -88,16 +84,14 @@ public class DriveSubsystem {
         rx[3]=W/2; ry[3]=-L/2; beta[3]=atan2(ry[3],rx[3]); if(beta[3]<0) beta[3]=beta[3]+2*Math.PI;
         lastvx=0; lastvy=0;
         lastw=0; lastbotHeading=0;
-        headingteoretic=0;
         lastinputw=0; reference=0;
-        lastreference=0; ok=0;
-        headingteoretic=0; error=0;
+        lastreference=0; ok=0; error=0;
         lasterror=0; lastderror=0;
         integralsum=0;
         dt.reset();
         dt.reset();
     }
-    boolean targetreached(double theta1,double theta2)
+    public boolean targetreached(double theta1,double theta2)
     {
         if(theta1>Math.PI) theta1=theta1-2*Math.PI;
         if(theta2>Math.PI) theta2=theta2-2*Math.PI;
@@ -170,7 +164,7 @@ public class DriveSubsystem {
             else dbotHeading=dbotHeading-2*Math.PI;
         }
 
-        if(inputw==0 && lastinputw!=0) ok=1;
+        /*if(inputw==0 && lastinputw!=0) ok=1;
         if(inputw!=0 && lastinputw==0) lastw=0;
         if(inputw==0 && lastinputw==0 && ok==1) {reference=botHeading; ok=0;}
 
@@ -209,7 +203,7 @@ public class DriveSubsystem {
         if(reference<Math.PI) dashboardTelemetry.addData("reference", reference);
         else dashboardTelemetry.addData("reference", 2*Math.PI-reference);
         dashboardTelemetry.addData("output", rez);
-        dashboardTelemetry.update();
+        dashboardTelemetry.update();*/
 
         ax=(vx-lastvx)/dt.time();
         ay=(vy-lastvy)/dt.time();
@@ -242,6 +236,12 @@ public class DriveSubsystem {
         AddTelemetry();
     }
 
+    boolean reached = false;
+
+    public boolean reached_target()
+    {
+        return reached;
+    }
     public void UpdateAuto(double fwd, double str, double rcw){
 
         vx=str;
@@ -264,47 +264,6 @@ public class DriveSubsystem {
         {
             if(dbotHeading<0) dbotHeading=dbotHeading+2*Math.PI;
             else dbotHeading=dbotHeading-2*Math.PI;
-        }
-
-        if(inputw==0 && lastinputw!=0) ok=1;
-        if(inputw!=0 && lastinputw==0) lastw=0;
-        if(inputw==0 && lastinputw==0 && ok==1) {reference=botHeading; ok=0;}
-
-        if(reference!=lastreference)
-        {
-            integralsum=0;
-            lasterror=0;
-            lastderror=0;
-            lastreference=reference;
-        }
-        if(targetreached(reference,botHeading)==false && inputw==0 && lastinputw==0)
-        {
-            error=reference-botHeading;
-            if(error>Math.PI) error=error-2*Math.PI;
-            if(error<-Math.PI) error=2*Math.PI+error;
-
-            derror=error-lasterror;
-            derror=alpha*lastderror+(1-alpha)*derror;
-            lastderror=derror;
-
-            double d=derror/dt.time();
-            integralsum=integralsum+error*dt.time();
-
-            if(integralsum>1) integralsum=1;
-            if(integralsum<-1) integralsum=-1;
-
-            double rez=P*error+I*integralsum+D*d;
-
-            lasterror=error;
-            lastreference=reference;
-            w=w+rez; if(w>1) w=1; if(w<-1) w=-1;
-
-            if(botHeading<Math.PI) dashboardTelemetry.addData("unghi",botHeading);
-            else dashboardTelemetry.addData("unghi", 2*Math.PI-botHeading);
-            if(reference<Math.PI) dashboardTelemetry.addData("reference", reference);
-            else dashboardTelemetry.addData("reference", 2*Math.PI-reference);
-            dashboardTelemetry.addData("output", rez);
-            dashboardTelemetry.update();
         }
 
         ax=(vx-lastvx)/dt.time();

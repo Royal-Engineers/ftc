@@ -34,10 +34,10 @@ public class PipelineDreapta extends OpenCvPipeline {
     private team culoare;
 
 
-    public PipelineDreapta(Telemetry telemetry, team culoare)
+    public PipelineDreapta(Telemetry telemetry)
     {
-        this.telemetry = telemetry;        this.culoare = culoare;
-
+        this.telemetry = telemetry;
+        this.culoare = team.rosu;
     }
 
 

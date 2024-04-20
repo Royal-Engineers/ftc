@@ -15,7 +15,7 @@ public class Retract extends ParallelCommandGroup {
         super(
                 new SequentialCommandGroup(
                         new InstantCommand(()->{m_Robot.m_Claw.setPosition(RobotHardware.s_ClawTransfer);}),
-                        new WaitCommand(800),
+                        new WaitCommand(1600),
                         new InstantCommand(()->{m_Robot.m_Bar.SetPosition(0.0);}),
                         new InstantCommand(()->{m_Robot.m_ClawAngleServo.setPosition(RobotHardware.s_IdleClawAngle);}),
                  new WaitCommand(400),

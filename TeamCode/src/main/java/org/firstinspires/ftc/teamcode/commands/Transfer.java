@@ -21,19 +21,20 @@ public class Transfer extends SequentialCommandGroup {
     public static double clawAngle4 = 0.83;
     public static double bar4 = -0.09;
 
-    public static double clawAngle5 = 0.84;
-    public static double bar5 = -0.109;
+    public static double clawAngle5 = 0.85;
+    public static double bar5 = -0.129;
 
     public static double clawAngle6 = 0.835;
     public static double bar6 = -0.155;
 
-    public static double clawAngle7 = 0.89;
+    public static double clawAngle7 = 0.91;
     public static double bar7 = -0.17;
 
     public Transfer(RobotHardware m_Robot)
     {
         super(
                 new BombasticLiftPos(m_Robot, m_Robot.m_Lift, Lift.e_LiftPosition.LowPos),
+                new InstantCommand(()->{m_Robot.m_Claw2.setPosition(RobotHardware.s_Claw2Transfer);}),
                 new InstantCommand(()->{m_Robot.m_Claw.setPosition(RobotHardware.s_ClawTransfer);}),
                 new InstantCommand(()->{m_Robot.m_ClawAngleServo.setPosition(clawAngle1);}),
                 new InstantCommand(()->{m_Robot.m_Bar.SetPosition(bar1);}),
@@ -57,10 +58,12 @@ public class Transfer extends SequentialCommandGroup {
                 new InstantCommand(()->{m_Robot.m_Bar.SetPosition(bar7);}),
                 new WaitCommand(5),
                 new InstantCommand(()->{m_Robot.m_Claw.setPosition(RobotHardware.s_ClawlClosedPos);}),
-                new WaitCommand(25),
+                new WaitCommand(150),
                 new InstantCommand(()->{m_Robot.m_Bar.SetPosition(0.0);}),
-                new InstantCommand(()->{m_Robot.m_ClawAngleServo.setPosition(RobotHardware.s_IdleClawAngle);})
+                new InstantCommand(()->{m_Robot.m_ClawAngleServo.setPosition(RobotHardware.s_IdleClawAngle);}),
+                new WaitCommand(250),
+                new InstantCommand(()->{m_Robot.m_Claw2.setPosition(RobotHardware.s_IdleClaw2Angle);})
 
-        );
+                );
     }
 }

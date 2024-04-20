@@ -3,7 +3,9 @@ package org.firstinspires.ftc.teamcode.executables;
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
+import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.commands.GotoTheta;
@@ -11,6 +13,7 @@ import org.firstinspires.ftc.teamcode.commands.GotoX;
 import org.firstinspires.ftc.teamcode.commands.GotoY;
 import org.firstinspires.ftc.teamcode.commands.KeepPosition;
 import org.firstinspires.ftc.teamcode.commands.FollowPath;
+import org.firstinspires.ftc.teamcode.commands.SpecialCommands.StackCommand;
 import org.firstinspires.ftc.teamcode.facade.RobotHardware;
 import org.firstinspires.ftc.teamcode.facade.interfaces.i_gamepad;
 import org.firstinspires.ftc.teamcode.facade.drive.DriveSubsystem;
@@ -92,9 +95,14 @@ public class testastic extends CommandOpMode {
             CommandScheduler.getInstance().schedule(PositionCommand);
 
                 CommandScheduler.getInstance().schedule(new SequentialCommandGroup(
-                        new FollowPath(x1, y1, t1, PositionCommand, 10, 10, 10),
-                        new FollowPath(x2, y2, t2, PositionCommand, 10, 10, 10),
-                        new FollowPath(x3, y3, t3, PositionCommand)
+/*                        new FollowPath(x1, y1, t1, PositionCommand),
+                        new FollowPath(x2, y2, t2, PositionCommand),
+                        new FollowPath(x3, y3, t3, PositionCommand)*/
+                                               new FollowPath(0, 0, 90, PositionCommand),
+
+                        new InstantCommand(()->{Robot.m_ServoIntake.setPosition(0.62);}),
+                        new WaitCommand(1000),
+                        new StackCommand(Robot, PositionCommand, 0, 10, 90)
 
 
                         ));

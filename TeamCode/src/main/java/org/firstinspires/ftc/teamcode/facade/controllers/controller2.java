@@ -53,10 +53,35 @@ int GyatLevel = 0;
                 }),
                 new InstantCommand(()->
                 {
-
                     m_Robot.m_Lift.SetTargetPosition(750, 1.0);
                 })
         );
+
+        controller.getGamepadButton(GamepadKeys.Button.DPAD_DOWN).toggleWhenPressed(
+                new SequentialCommandGroup(
+                        new InstantCommand(()->
+                        {
+                            m_Robot.m_Bar.SetPosition(0.3);
+                        }),
+                        new WaitCommand(200),
+                        new InstantCommand(()->
+                        {
+                            m_Robot.m_ServoIntake.setPosition(RobotHardware.OuttakePos);
+                            m_Robot.motorIntake.setPower(-0.8);
+                        })
+                        ),
+                new SequentialCommandGroup(
+                        new InstantCommand(()->
+                        {
+                            m_Robot.m_ServoIntake.setPosition(RobotHardware.IntakePos);
+                            m_Robot.motorIntake.setPower(0.0);
+                        }),
+                        new WaitCommand(200),
+                            new InstantCommand(()->{m_Robot.m_Claw.setPosition(RobotHardware.s_ClawOpenPos);}),
+                                    new WaitCommand(800),
+                                    new InstantCommand(()->{m_Robot.m_Bar.SetPosition(0.0);}),
+                                    new InstantCommand(()->{m_Robot.m_ClawAngleServo.setPosition(RobotHardware.s_IdleClawAngle);}
+                )));
 
         controller.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenPressed(
                 new InstantCommand(()->{
@@ -77,36 +102,31 @@ int GyatLevel = 0;
 
     }
 
-    static double PosIntake = 0.86;
     @Override
     public void update() {
         if (gamepad.left_stick_y < -MinPush )
             sg_CommandScheduler.schedule(
                     new InstantCommand(()->{
-                            m_Robot.m_ClawAngleServo.setPosition(m_Robot.m_ClawAngleServo.getPosition() - 0.01);}
+                            m_Robot.m_ServoIntake.setPosition(m_Robot.m_ServoIntake.getPosition() - 0.01);}
             ));
         else if ( gamepad.left_stick_y > MinPush )
             sg_CommandScheduler.schedule(
                     new InstantCommand(()->{
-                        m_Robot.m_ClawAngleServo.setPosition(m_Robot.m_ClawAngleServo.getPosition() + 0.01);}
+                        m_Robot.m_ServoIntake.setPosition(m_Robot.m_ServoIntake.getPosition() + 0.01);}
                     ));
-/*
+
         if (gamepad.left_trigger > MinPush )
             sg_CommandScheduler.schedule(
                     new InstantCommand(()->{
-                        PosIntake-=0.01d;
-                        if ( PosIntake < 0)
-                            PosIntake = 0;
-                        m_Robot.m_ServoIntake.setPosition(PosIntake);}
+
+                        m_Robot.m_Claw2.setPosition(m_Robot.m_Claw2.getPosition() -0.01);}
                     ));
         else if ( gamepad.right_trigger > MinPush )
             sg_CommandScheduler.schedule(
                     new InstantCommand(()->{
-                        PosIntake+=0.01d;
-                        if ( PosIntake > 1)
-                            PosIntake = 1;
-                        m_Robot.m_ServoIntake.setPosition(PosIntake);}
-                    ));*/
+                        m_Robot.m_Claw2.setPosition(m_Robot.m_Claw2.getPosition() +0.01);}
+
+                    ));
     }
 
 

@@ -14,7 +14,7 @@ public class BreakBeamCommand extends CommandBase {
 
     public int FramesNeeded = 60;
 
-    public  int Frames = 0;
+    public  static int Frames = 0;
     TouchSensor m_BreakBeam;
     public BreakBeamCommand(RobotHardware robothardware)
     {
@@ -24,8 +24,15 @@ public class BreakBeamCommand extends CommandBase {
     @Override
     public void initialize()
     {
+        Frames = 0;
         m_BreakBeam = m_RobotHardware.BreakBeam;
         m_Telemetry = m_RobotHardware.m_telemetry;
+    }
+
+
+    public int GetFrames()
+    {
+        return Frames;
     }
 
     @Override

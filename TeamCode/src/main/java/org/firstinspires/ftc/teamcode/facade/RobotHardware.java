@@ -17,7 +17,6 @@ import com.qualcomm.robotcore.hardware.IMU;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.commands.DistanceSensorCommand;
 import org.firstinspires.ftc.teamcode.facade.drive.absoluteAnalogEncoder;
 import org.firstinspires.ftc.teamcode.facade.drive.swerveModule;
 import org.firstinspires.ftc.teamcode.facade.intake.Bar;
@@ -33,7 +32,9 @@ import  com.qualcomm.robotcore.hardware.TouchSensor;
 public class RobotHardware {
 
     public TouchSensor BreakBeam;
+
     public DistanceSensor m_DistanceSensor;
+    //public DistanceSensor m_DistanceSensor;
     public final static boolean DebugMode = true;
     private static RobotHardware instance = null;
 
@@ -71,23 +72,35 @@ public class RobotHardware {
 
     private ServoEx m_BombasticServo1, m_SexyServo2;
 
-    public ServoEx m_Claw;
+    public ServoEx m_Claw, m_Claw2;
     public ServoExEx m_ClawAngleServo;
 
     public ServoEx m_ServoAvion;
 
     public ServoEx m_ServoIntake;
 
-    public static double s_ClawOpenPos =  0.148d;
-    public static double s_ClawlClosedPos = 0.33d;
+    public static double s_ClawOpenPos =  0.23d;
+    public static double s_ClawlClosedPos = 0.33d, s_Claw2ClosedPos = 0.5d;
 
     public static double s_ScoringClawAngle = 0.0d;
-    public static double s_ClawTransfer = 0.25d;
-    public static double s_IdleClawAngle = 0.75d;
+    public static double s_ClawTransfer = 0.25d, s_Claw2Transfer = 0.0d;
+    public static double s_IdleClawAngle = 0.75d, s_IdleClaw2Angle = 0.25d;
 
     public RobotHardware(){
     }
-    public static double IntakePos = 0.9;
+    public static double IntakePos = 0.92d;
+    public static double OuttakePos = 0.067d;
+
+    public static double FrontRight = 320
+            ;
+
+    public static double BackRight = 215;
+
+    public static double FrontLeft = 30;
+
+    public static double BackLeft = 185;
+
+
 
     public void init(Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry, HardwareMap hardwaremap){
         this.m_HardwareMap = hardwaremap;
@@ -107,7 +120,7 @@ public class RobotHardware {
 
         InitializeMotors();
 
-        m_Lift = new Lift(this, m_telemetry, m_LiftMainMotor, m_LiftInvMotor, 0, 2000);
+        m_Lift = new Lift(this, m_telemetry, m_LiftMainMotor, m_LiftInvMotor, 0, 2200);
 
         servoFrontRight = m_HardwareMap.get(CRServo.class, "servoFrontRight");
         servoFrontLeft = m_HardwareMap.get(CRServo.class, "servoFrontLeft");
@@ -118,10 +131,10 @@ public class RobotHardware {
         aencoderFrontLeft = m_HardwareMap.get(AnalogInput.class, "encoderFrontLeft");
         aencoderBackRight = m_HardwareMap.get(AnalogInput.class, "encoderBackRight");
         aencoderBackLeft = m_HardwareMap.get(AnalogInput.class, "encoderBackLeft");
-        encoderFrontRight = new absoluteAnalogEncoder(aencoderFrontRight, 35, true);
-        encoderFrontLeft = new absoluteAnalogEncoder(aencoderFrontLeft, 200, true);
-        encoderBackLeft = new absoluteAnalogEncoder(aencoderBackLeft, 195, true);
-        encoderBackRight = new absoluteAnalogEncoder(aencoderBackRight, 215, true);
+        encoderFrontRight = new absoluteAnalogEncoder(aencoderFrontRight, FrontRight, true);
+        encoderFrontLeft = new absoluteAnalogEncoder(aencoderFrontLeft, FrontLeft, true);
+        encoderBackLeft = new absoluteAnalogEncoder(aencoderBackLeft, BackLeft, true);
+        encoderBackRight = new absoluteAnalogEncoder(aencoderBackRight, BackRight, true);
 
         moduleFrontRight = new swerveModule(motorFrontRight, servoFrontRight, encoderFrontRight, m_telemetry);
         moduleFrontLeft = new swerveModule(motorFrontLeft, servoFrontLeft, encoderFrontLeft, m_telemetry);
@@ -158,8 +171,10 @@ public class RobotHardware {
                 RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
 
         m_Claw = new SimpleServo(m_HardwareMap, "claw", 0, 1);
+        m_Claw2 = new SimpleServo(m_HardwareMap, "claw2", 0, 1);
         m_ClawAngleServo = new ServoExEx(m_HardwareMap, "clawAngle", 0, 1, s_IdleClawAngle);
         m_Claw.setPosition(s_ClawTransfer);
+        m_Claw2.setPosition(s_IdleClaw2Angle);
 
         int cameraMonitorViewId = m_HardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", m_HardwareMap.appContext.getPackageName());
        camera = OpenCvCameraFactory.getInstance().createWebcam(m_HardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
@@ -178,7 +193,6 @@ public class RobotHardware {
 
             }
         });
-        DistanceSensorCommand.ok = false;
     }
 
 
@@ -212,14 +226,18 @@ public class RobotHardware {
 
     }
 
+    public int frames_since_start = 0;
     public void Update()
     {
+        m_telemetry.addData("Frames_Since_Start", ++frames_since_start);
         m_Lift.UpdateTelemetry();
         m_Bar.UpdateTelemetry();
         m_telemetry.addData("Poz Ghiara:", m_ClawAngleServo.getPosition());
         m_telemetry.addData("pozintake", m_ServoIntake.getPosition());
         m_telemetry.addData("BreakBeam", BreakBeam.isPressed());
-        m_telemetry.addData("DublaTelemetrieSenzor", m_DistanceSensor.getDistance(DistanceUnit.CM));
+        m_telemetry.addData("SERVO MAIN REAL POS->", m_BombasticServo1.getPosition());
+        m_telemetry.addData("SERVO BOMBASTIC REAL POS", m_SexyServo2.getPosition());
+       // m_telemetry.addData("DublaTelemetrieSenzor", m_DistanceSensor.getDistance(DistanceUnit.CM));
 
     }
 }

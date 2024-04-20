@@ -4,7 +4,6 @@ import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 
 import org.firstinspires.ftc.teamcode.commands.BreakBeamCommand;
-import org.firstinspires.ftc.teamcode.commands.DistanceSensorCommand;
 import org.firstinspires.ftc.teamcode.facade.RobotHardware;
 import org.firstinspires.ftc.teamcode.facade.interfaces.i_gamepad;
 import org.firstinspires.ftc.teamcode.facade.drive.DriveSubsystem;
@@ -12,6 +11,7 @@ import org.firstinspires.ftc.teamcode.facade.drive.OdometryComponent;
 import org.firstinspires.ftc.teamcode.facade.controllers.controller1;
 import org.firstinspires.ftc.teamcode.facade.controllers.controller2;
 import org.firstinspires.ftc.teamcode.pipelines.PipelineDreapta;
+import org.firstinspires.ftc.teamcode.pipelines.PipelineStanga;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp
@@ -37,7 +37,7 @@ public class TeleOp extends CommandOpMode {
         Robot = new RobotHardware();
         Robot.init(gamepad1, gamepad2, telemetry, hardwareMap);
 
-        pipeline = new PipelineDreapta(telemetry, PipelineDreapta.team.rosu);
+        pipeline = new PipelineStanga(telemetry, PipelineStanga.team.rosu);
         Robot.camera.setPipeline(pipeline);
 
         m_DriveSubsystem = new DriveSubsystem(Robot, true);
@@ -53,7 +53,6 @@ public class TeleOp extends CommandOpMode {
         Robot.camera.setPipeline(null);
 
         CommandScheduler.getInstance().schedule(new BreakBeamCommand(Robot));
-        CommandScheduler.getInstance().schedule(new DistanceSensorCommand(Robot));
 
 
     }

@@ -40,8 +40,6 @@ public class Lift {
         m_InvMotor = InvMotor;
         m_MaxPosition = MaxPosition;
         m_MinPosition = MinPositon;
-        if ( m_MaxPosition > 2000 )
-            m_MaxPosition = 2000;
     }
 
     public int GetLiftPosition()

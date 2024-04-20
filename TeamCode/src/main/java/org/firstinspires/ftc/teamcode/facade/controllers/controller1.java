@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.facade.interfaces.i_gamepad;
 public class controller1 extends i_gamepad {
 
 
-    private static int LiftIncrement = 30;
+    private static int LiftIncrement = 50;
 
 
     public controller1(Gamepad gamepad, RobotHardware robot){
@@ -37,7 +37,7 @@ public class controller1 extends i_gamepad {
                 new InstantCommand(()->{m_Robot.motorIntake.setPower(0.0f);})
         );
 
-        controller.getGamepadButton(GamepadKeys.Button.A).whenPressed(
+        controller.getGamepadButton(GamepadKeys.Button.DPAD_DOWN).whenPressed(
                 new InstantCommand(()->{
                     if ( Math.abs(m_Robot.m_Claw.getPosition() - RobotHardware.s_ClawlClosedPos) < 0.01)
                         m_Robot.m_Claw.setPosition(RobotHardware.s_ClawOpenPos);
@@ -47,29 +47,66 @@ public class controller1 extends i_gamepad {
                 })
         );
 
+
+        controller.getGamepadButton(GamepadKeys.Button.A).whenPressed(
+                new SequentialCommandGroup(
+                        new InstantCommand(()->{
+                            m_Robot.m_Claw.setPosition(0.27);
+                        }),
+                        new WaitCommand(50),
+                        new InstantCommand(()->{
+                            m_Robot.m_Claw.setPosition(0.15);
+                            m_Robot.m_Claw2.setPosition(0.41);
+                        })
+                )
+        );
+
+        controller.getGamepadButton(GamepadKeys.Button.Y).toggleWhenPressed(
+                new InstantCommand(()->
+                {
+                    m_Robot.m_Claw2.setPosition(RobotHardware.s_IdleClaw2Angle);
+
+                }),
+                new InstantCommand(()->
+                {
+                    m_Robot.m_Claw2.setPosition(RobotHardware.s_Claw2ClosedPos);
+                })
+        );
+
         controller.getGamepadButton(GamepadKeys.Button.B).whenPressed(
                         new Transfer(m_Robot)
         );
 
         controller.getGamepadButton(GamepadKeys.Button.LEFT_STICK_BUTTON).whenPressed(
-                new ParallelCommandGroup(
+
+                new SequentialCommandGroup(
+                    new ParallelCommandGroup(
                         new InstantCommand(()->{m_Robot.m_Lift.SetStatePosition(Lift.e_LiftPosition.MidPos);}),
                         new InstantCommand(()->{m_Robot.m_Bar.SetPosition(0.57);}),
                         new InstantCommand(()->{m_Robot.m_ClawAngleServo.setPosition(RobotHardware.s_ScoringClawAngle);})
+                    ),
+                        new WaitCommand(200),
+                        new InstantCommand(()->{m_Robot.m_Claw2.setPosition(RobotHardware.s_Claw2ClosedPos);})
                 )
         );
 
         controller.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenPressed(
-                new ParallelCommandGroup(
+
+                new SequentialCommandGroup(
+                    new ParallelCommandGroup(
                         new InstantCommand(()->{m_Robot.m_Lift.SetStatePosition(Lift.e_LiftPosition.MaxPos);}),
                         new InstantCommand(()->{m_Robot.m_Bar.SetPosition(0.57);}),
                         new InstantCommand(()->{m_Robot.m_ClawAngleServo.setPosition(RobotHardware.s_ScoringClawAngle);})
-                )        );
+                    ),
+                        new WaitCommand(200),
+                        new InstantCommand(()->{m_Robot.m_Claw2.setPosition(RobotHardware.s_Claw2ClosedPos);})
+                )
+                );
 
         controller.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenPressed(
                 new ParallelCommandGroup(
                         new InstantCommand(()->{m_Robot.m_Claw.setPosition(RobotHardware.s_ClawOpenPos);}),
-                        new WaitCommand(800),
+                        new InstantCommand(()->{m_Robot.m_Claw2.setPosition(RobotHardware.s_IdleClaw2Angle);}),
                         new InstantCommand(()->{m_Robot.m_Lift.SetStatePosition(Lift.e_LiftPosition.LowPos);}),
                         new InstantCommand(()->{m_Robot.m_Bar.SetPosition(0.0);}),
                         new InstantCommand(()->{m_Robot.m_ClawAngleServo.setPosition(RobotHardware.s_IdleClawAngle);})
@@ -83,7 +120,6 @@ public class controller1 extends i_gamepad {
                 }),
                 new InstantCommand(()->
                 {
-
                       m_Robot.m_Lift.SetTargetPosition(750, 1.0);
                 })
                 );
@@ -95,13 +131,16 @@ public class controller1 extends i_gamepad {
         );
         controller.getGamepadButton(GamepadKeys.Button.X).whenPressed(
                 new SequentialCommandGroup(
-                new InstantCommand(()->{m_Robot.m_ClawAngleServo.setPosition(0.81);}),
+                        new InstantCommand(()->{m_Robot.m_Claw2.setPosition(RobotHardware.s_Claw2Transfer);}),
+        new InstantCommand(()->{m_Robot.m_ClawAngleServo.setPosition(0.81);}),
                 new InstantCommand(()->{m_Robot.m_Bar.SetPosition(-0.076);}),
                 new WaitCommand(100),
                         new InstantCommand(()->{
                             m_Robot.m_ClawAngleServo.setPosition(RobotHardware.s_IdleClawAngle);
                             m_Robot.m_Bar.SetPosition(0.0d);
-                        })
+                        }),
+                        new WaitCommand(250),
+                new InstantCommand(()->{m_Robot.m_Claw2.setPosition(RobotHardware.s_IdleClaw2Angle);})
                 )
         );
 

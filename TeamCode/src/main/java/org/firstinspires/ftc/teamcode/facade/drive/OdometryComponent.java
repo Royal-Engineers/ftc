@@ -3,14 +3,16 @@ package org.firstinspires.ftc.teamcode.facade.drive;
 import static java.lang.Math.PI;
 
 import com.arcrobotics.ftclib.hardware.motors.Motor;
+import com.qualcomm.robotcore.hardware.IMU;
 
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.facade.RobotHardware;
 
 public class OdometryComponent {
 
     private boolean TelemeteryEnabled = true;
-    public static double X = 0.0d, Y = 0.0d, theta = 0.0d, Theta = 0.0d;
+    public static double X = 0.0d, Y = 0.0d, theta = 0.0d, Theta = 0.0d, botHeading;
     private RobotHardware robot;
 
     private double L = 31.5d;//left to right
@@ -28,9 +30,14 @@ public class OdometryComponent {
     private double n_left = 0.0d, n_right = 0.0d, n_front = 0.0d;
     private double new_nLeft = 0.0d, new_nRight = 0.0d, new_nFront = 0.0d;
     private Motor EncoderLeft, EncoderRight, EncoderFront;
+    IMU imu;
 
     public OdometryComponent(RobotHardware robot){
         this.robot = robot;
+
+        imu = this.robot.m_imu;
+        imu.resetYaw();
+        imu.initialize(this.robot.imu_parameters);
 
         EncoderLeft = new Motor(robot.m_HardwareMap, "motorFrontLeft");
         EncoderRight = new Motor(robot.m_HardwareMap, "motorIntake");
@@ -68,6 +75,17 @@ public class OdometryComponent {
         if(theta<0) theta=theta+2*Math.PI;
         if(theta>2*Math.PI) theta=theta-2*Math.PI;
 
+        botHeading =-imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+        if(0<=botHeading && botHeading<=Math.PI/2)
+            botHeading=Math.PI/2-botHeading;
+        else if(Math.PI/2<=botHeading && botHeading<=Math.PI)
+            botHeading=2*Math.PI+Math.PI/2-botHeading;
+        else
+            botHeading=-botHeading+Math.PI/2;
+        botHeading=botHeading-Math.PI/2;
+        if(botHeading<0) botHeading=botHeading+2*Math.PI;
+
+        theta=botHeading;
         Theta = Math.toDegrees(theta);
         AddTelemetry();
     }
